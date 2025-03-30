@@ -7,12 +7,12 @@
 
     <fragment
         android:id="@+id/bookDetailFragment"
-        android:name="com.example.summary.sample.ui.book.BookDetailFragment"
+        android:name="com.sample.summary.sample.ui.book.BookDetailFragment"
         android:label="fragment_book_detail"
         tools:layout="@layout/fragment_book_detail" />
     <fragment
         android:id="@+id/bookFragment"
-        android:name="com.example.summary.sample.ui.book.BookFragment"
+        android:name="com.sample.summary.sample.ui.book.BookFragment"
         android:label="BookFragment"
         tools:layout="@layout/fragment_book_list" >
         <action

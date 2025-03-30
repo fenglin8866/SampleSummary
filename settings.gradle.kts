@@ -53,4 +53,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "SampleSummary"
 include(":app")
-include(":lib")
+include(":core:ui")
+include(":data:database")
+include(":data:repository")
+include(":feature:book")
