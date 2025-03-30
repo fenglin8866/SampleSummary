@@ -1,4 +1,4 @@
-package com.sample.feature.book
+package com.sample.feature.car
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,29 +20,29 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sample.core.ui.theme.MyApplicationTheme
-import com.sample.feature.book.BookUiState.Success
+import com.sample.feature.car.BookUiState.Success
 
 
 @Composable
-fun BookScreen(modifier: Modifier = Modifier, viewModel: BookViewModel = hiltViewModel()) {
+fun CarScreen(modifier: Modifier = Modifier, viewModel: CarViewModel = hiltViewModel()) {
     val items by viewModel.uiState.collectAsStateWithLifecycle()
     if (items is Success) {
-        BookScreen(
+        CarScreen(
             items = (items as Success).data,
-            onSave = { name -> viewModel.addBook(name) },
+            onSave = { name -> viewModel.addCar(name) },
             modifier = modifier
         )
     }
 }
 
 @Composable
-internal fun BookScreen(
+internal fun CarScreen(
     items: List<String>,
     onSave: (name: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier) {
-        var nameMyModel by remember { mutableStateOf("Compose") }
+        var nameMyModel by remember { mutableStateOf("xiaomi") }
         Row(
             modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -66,7 +66,7 @@ internal fun BookScreen(
 @Composable
 private fun DefaultPreview() {
     MyApplicationTheme {
-        BookScreen(listOf("Compose", "Room", "Kotlin"), onSave = {})
+        CarScreen(listOf("Compose", "Room", "Kotlin"), onSave = {})
     }
 }
 
@@ -74,6 +74,6 @@ private fun DefaultPreview() {
 @Composable
 private fun PortraitPreview() {
     MyApplicationTheme {
-        BookScreen(listOf("Compose", "Room", "Kotlin"), onSave = {})
+        CarScreen(listOf("Compose", "Room", "Kotlin"), onSave = {})
     }
 }

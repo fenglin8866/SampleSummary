@@ -1,11 +1,11 @@
-package com.sample.feature.book
+package com.sample.feature.car
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sample.data.repository.book.BookRepository
-import com.sample.feature.book.BookUiState.Loading
-import com.sample.feature.book.BookUiState.Success
-import com.sample.feature.book.BookUiState.Error
+import com.sample.data.repository.car.CarRepository
+import com.sample.feature.car.BookUiState.Loading
+import com.sample.feature.car.BookUiState.Success
+import com.sample.feature.car.BookUiState.Error
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -17,18 +17,18 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class BookViewModel @Inject constructor(
-    private val mBookRepository: BookRepository
+class CarViewModel @Inject constructor(
+    private val mCarRepository: CarRepository
 ) : ViewModel() {
 
-    val uiState: StateFlow<BookUiState> = mBookRepository
-        .bookNames.map<List<String>, BookUiState> { Success(data = it) }
+    val uiState: StateFlow<BookUiState> = mCarRepository
+        .carNames.map<List<String>, BookUiState> { Success(data = it) }
         .catch { emit(Error(it)) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), Loading)
 
-    fun addBook(name: String) {
+    fun addCar(name: String) {
         viewModelScope.launch {
-            mBookRepository.add(name)
+            mCarRepository.add(name)
         }
     }
 }

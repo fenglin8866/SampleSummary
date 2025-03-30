@@ -1,28 +1,56 @@
 package com.sample.data.repository.book
 
-import com.sample.data.database.book.Book
-import com.sample.data.database.book.BookDao
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class DefaultBookRepository @Inject constructor(private val bookDao: BookDao) : BookRepository {
+class DefaultBookRepository @Inject constructor() : BookRepository {
+    override val observeAllBooks: Flow<List<Book>>
+        get() = allItems
 
-    fun getBookForName(name: String) = bookDao.getBooks(name)
-
-    fun getBookForId(id: Int) = bookDao.getBooks(id)
-
-    fun getBooks() = bookDao.getBooks()
-
-    suspend fun addBook(book: Book) {
-        bookDao.insertBook(book)
+    override fun observeBookById(id: Long): Flow<Book> =observeAllBooks.map { items ->
+        items.firstOrNull { book -> book.id == id }
+            ?: throw NoSuchElementException("$id not found")
     }
 
-    override val bookNames: Flow<List<String>>
-        get() = bookDao.getBooks().map { items -> items.map { it.bookName } }
-
-    override suspend fun add(name: String) {
-        bookDao.insertBook(Book(bookName = name))
+    override suspend fun bookmark(id: Long, isBookmarked: Boolean) {
+        allItems.getAndUpdate { items ->
+            items.map { book ->
+                if(book.id == id) {
+                    book.copy(isBookmarked = isBookmarked)
+                } else {
+                    book
+                }
+            }
+        }
     }
+
+    private val allItems: MutableStateFlow<List<Book>> = MutableStateFlow(
+        listOf(
+            Book(
+                id = 1,
+                title = "Compose",
+                description = "Description",
+                timestamp = 1672368617954,
+                isBookmarked = false
+            ),
+            Book(
+                id = 2,
+                title = "Lifecycle",
+                description = "Description",
+                timestamp = 1664678230741,
+                isBookmarked = false
+            ),
+            Book(
+                id = 3,
+                title = "Navigation",
+                description = "Description",
+                timestamp = 1667884312189,
+                isBookmarked = false
+            )
+        )
+    )
 
 }

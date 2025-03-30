@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.sample.feature.book"
+    namespace = "com.sample.feature.car"
 
     defaultConfig {
 
@@ -29,7 +29,6 @@ dependencies {
 
     implementation(project(":data:repository"))
     implementation(project(":core:ui"))
-    implementation(project(":core:util"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

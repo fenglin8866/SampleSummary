@@ -2,8 +2,11 @@ package com.sample.data.repository.book
 
 import kotlinx.coroutines.flow.Flow
 
-interface BookRepository {
-    val bookNames: Flow<List<String>>
 
-    suspend fun add(name: String)
+interface BookRepository {
+    val observeAllBooks: Flow<List<Book>>
+
+    fun observeBookById(id: Long): Flow<Book>
+
+    suspend fun bookmark(id: Long, isBookmarked: Boolean)
 }

@@ -2,7 +2,7 @@ package com.sample.data.database.di
 
 import android.content.Context
 import com.sample.data.database.AppDatabase
-import com.sample.data.database.book.BookDao
+import com.sample.data.database.car.CarDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +15,7 @@ import javax.inject.Singleton
 class DatabaseModule {
 
     @Provides
-    fun provideBookDao(appDatabase: AppDatabase): BookDao {
+    fun provideCarDao(appDatabase: AppDatabase): CarDao {
         return appDatabase.bookDao()
     }
 
