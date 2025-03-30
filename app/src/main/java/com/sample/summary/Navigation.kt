@@ -20,17 +20,43 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.sample.feature.book.BookScreen
+import androidx.navigation.navArgument
+import com.sample.feature.book.details.DetailsRoute
+import com.sample.feature.book.list.ListRoute
+import com.sample.feature.car.CarScreen
 
 @Composable
-fun MainNavigation() {
-    val navController = rememberNavController()
+fun MainNavigation(
+    navController: NavHostController = rememberNavController()
+) {
+    NavHost(navController = navController, startDestination = "list") {
 
-    NavHost(navController = navController, startDestination = "main") {
-        composable("main") { BookScreen(modifier = Modifier.padding(16.dp)) }
-        // TODO: Add more destinations
+        composable("main") {
+            CarScreen(modifier = Modifier.padding(16.dp))
+        }
+
+        composable("list") {
+            ListRoute(
+                onGoToItem = { id ->
+                    navController.navigate("details/$id")
+                }
+            )
+        }
+
+        composable(
+            "details/{id}",
+            listOf(navArgument("id") { type = NavType.LongType })
+        ) {
+            DetailsRoute(
+                onGoBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
     }
 }

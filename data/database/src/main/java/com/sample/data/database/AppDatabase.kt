@@ -4,13 +4,13 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.sample.data.database.book.Book
-import com.sample.data.database.book.BookDao
+import com.sample.data.database.car.Car
+import com.sample.data.database.car.CarDao
 
-@Database(entities = [Book::class], version = 1)
+@Database(entities = [Car::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
 
-    abstract fun bookDao(): BookDao
+    abstract fun bookDao(): CarDao
 
     companion object {
 
