@@ -15,7 +15,7 @@
  */
 
 import com.android.build.gradle.BaseExtension
-import com.example.convention.configureCompose
+import com.sample.convention.configureCompose
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure

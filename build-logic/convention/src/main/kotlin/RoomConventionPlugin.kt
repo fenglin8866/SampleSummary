@@ -21,7 +21,7 @@ import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import com.google.devtools.ksp.gradle.KspExtension
 import androidx.room.gradle.RoomExtension
-import com.example.convention.libs
+import com.sample.convention.libs
 
 class RoomConventionPlugin : Plugin<Project> {
 

@@ -9,4 +9,5 @@ plugins {
     alias(libs.plugins.navigation.safeargs.kotlin) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.room) apply false
+    alias(libs.plugins.kotlin.jvm) apply false
 }
