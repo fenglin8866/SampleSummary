@@ -55,6 +55,10 @@ gradlePlugin {
             id = libs.plugins.common.lifecycle.get().pluginId
             implementationClass = "LifecycleConventionPlugin"
         }
+        register("paging") {
+            id = libs.plugins.common.paging.get().pluginId
+            implementationClass = "PagingConventionPlugin"
+        }
     }
 }
 
