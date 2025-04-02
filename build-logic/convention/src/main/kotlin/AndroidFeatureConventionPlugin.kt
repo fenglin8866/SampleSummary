@@ -24,9 +24,10 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             apply(plugin = "common.android.library")
-            apply(plugin = "common.hilt")
             apply(plugin = "common.lifecycle")
-            apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
+            apply(plugin = "common.navigation")
+            apply(plugin = "common.room")
+            apply(plugin = "common.hilt")
             dependencies {
 
             }

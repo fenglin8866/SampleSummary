@@ -13,11 +13,12 @@ class NavigationConventionPlugin : Plugin<Project> {
 
             dependencies {
                 //kotlin序列号库,需要添加插件kotlin-serialization
-                "implementation"(libs.findLibrary("kotlinx-serialization-json").get())
-                "implementation"(libs.findLibrary("androidx-navigation-ui-ktx").get())
-                "implementation"(libs.findLibrary("androidx-navigation-fragment-ktx").get())
-                "implementation"(libs.findLibrary("androidx-navigation-compose").get())
-                "androidTestImplementation"(libs.findLibrary("androidx-navigation-testing").get())
+                "implementation"(libs.findLibrary("kotlinx.serialization.json").get())
+                "implementation"(libs.findLibrary("androidx.navigation.ui.ktx").get())
+                "implementation"(libs.findLibrary("androidx.navigation.fragment.ktx").get())
+                "androidTestImplementation"(libs.findLibrary("androidx.navigation.testing").get())
+
+                "implementation"(libs.findLibrary("hilt.navigation.fragment").get())
             }
         }
     }

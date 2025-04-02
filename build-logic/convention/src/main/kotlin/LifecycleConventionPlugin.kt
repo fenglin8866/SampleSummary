@@ -25,20 +25,14 @@ class LifecycleConventionPlugin : Plugin<Project> {
         with(target) {
 
             dependencies {
-                // Lifecycles only (without ViewModel or LiveData)
                 "implementation"(libs.findLibrary("androidx.lifecycle.runtime.ktx").get())
-                // Lifecycle utilities for Compose
-                "implementation"(libs.findLibrary("androidx.lifecycle.runtime.compose").get())
-                // ViewModel
                 "implementation"(libs.findLibrary("androidx.lifecycle.viewmodel.ktx").get())
-                // ViewModel utilities for Compose
-                "implementation"(libs.findLibrary("androidx.lifecycle.viewmodel.compose").get())
-                // LiveData
                 "implementation"(libs.findLibrary("androidx.lifecycle.livedata.ktx").get())
-                // Saved state module for ViewModel
                 "implementation"(libs.findLibrary("androidx.lifecycle.viewmodel.savedstate").get())
-                // alternately - if using Java8, use the following instead of lifecycle-compiler
                 "implementation"(libs.findLibrary("androidx.lifecycle.common.java8").get())
+                "implementation"(libs.findLibrary("androidx.lifecycle.service").get())
+                "implementation"(libs.findLibrary("androidx.lifecycle.process").get())
+                "testImplementation"(libs.findLibrary("androidx.lifecycle.runtime.testing").get())
             }
         }
     }

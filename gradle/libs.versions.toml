@@ -253,3 +253,4 @@ common-compose = { id = "common.compose" }
 common-hilt = { id = "common.hilt" }
 common-room = { id = "common.room" }
 common-navigation = { id = "common.navigation" }
+common-paging = { id = "common.paging" }

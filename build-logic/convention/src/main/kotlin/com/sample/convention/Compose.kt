@@ -34,6 +34,12 @@ internal fun Project.configureCompose(baseExtension: BaseExtension) {
             "androidTestImplementation"(libs.findLibrary("androidx-compose-ui-test-junit4").get())
             "debugImplementation"(libs.findLibrary("androidx-compose-ui-tooling").get())
             "debugImplementation"(libs.findLibrary("androidx-compose-ui-test-manifest").get())
+
+
+            "implementation"(libs.findLibrary("androidx.lifecycle.runtime.compose").get())
+            "implementation"(libs.findLibrary("androidx.lifecycle.viewmodel.compose").get())
+            "implementation"(libs.findLibrary("androidx.navigation.compose").get())
+            "implementation"(libs.findLibrary("hilt.navigation.compose").get())
         }
     }
 }
