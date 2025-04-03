@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/txt_version_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text=""
+        android:textColor="#fa1b07d2"
+        android:textSize="16dp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#aca9a9" />
+
+    <LinearLayout
+        android:id="@+id/layout_check_new_version"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_check_new_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="1. check new version"
+            android:textColor="#fa1b07d2"
+            android:textStyle="bold"
+            android:theme="@style/Widget.AppCompat.Button" />
+
+        <TextView
+            android:id="@+id/txt_check_new_version"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text=""
+            android:textColor="#fa1b07d2" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#aca9a9" />
+
+    <LinearLayout
+        android:id="@+id/layout_download_new_version"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_download_new_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:clickable="false"
+            android:enabled="false"
+            android:text="2. Click To Download"
+            android:textColor="#8b8a8a"
+            android:textStyle="bold"
+            android:theme="@style/Widget.AppCompat.Button" />
+
+        <ProgressBar
+            android:id="@+id/bar_download_new_version"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:max="100"
+            android:progress="0" />
+
+        <TextView
+            android:id="@+id/txt_download_new_version"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text=""
+            android:textColor="#fa1b07d2"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#aca9a9" />
+
+    <LinearLayout
+        android:id="@+id/layout_download_new_version_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_download_new_version_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:clickable="false"
+            android:enabled="false"
+            android:text="3. Pause Downloadind"
+            android:textColor="#8b8a8a"
+            android:textStyle="bold"
+            android:theme="@style/Widget.AppCompat.Button" />
+
+        <TextView
+            android:id="@+id/txt_download_new_version_status"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text=""
+            android:textColor="#fa1b07d2"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#aca9a9" />
+
+    <LinearLayout
+        android:id="@+id/layout_install_new_version"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_install_new_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:clickable="false"
+            android:enabled="false"
+            android:text="4. Install APK"
+            android:textColor="#8b8a8a"
+            android:textStyle="bold"
+            android:theme="@style/Widget.AppCompat.Button" />
+
+        <TextView
+            android:id="@+id/txt_install_new_version"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text=""
+            android:textColor="#fa1b07d2"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_log"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/txt_log"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text=""
+            android:textColor="#fa7d7d83"
+            android:textSize="14dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_app_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Get AppID "
+            android:textStyle="bold"
+            android:theme="@style/Widget.AppCompat.Button" />
+
+        <TextView
+            android:id="@+id/txt_device_id"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text=""
+            android:textColor="#fa1b07d2"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+
+</LinearLayout>

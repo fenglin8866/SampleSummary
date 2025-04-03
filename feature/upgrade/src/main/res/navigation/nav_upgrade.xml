@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_upgrade"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.sample.feature.upgrade.AppUpgradeFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main">
+        <action
+            android:id="@+id/action_to_appUpgradeDialog"
+            app:destination="@id/appUpgradeDialogFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/appUpgradeDialogFragment"
+        android:name="com.sample.feature.upgrade.AppUpgradeDialogFragment"
+        android:label="AppUpgradeDialogFragment"
+        tools:layout="@layout/fragment_dialog_upgrade" />
+    <fragment
+        android:id="@+id/appIdFragment"
+        android:name="com.sample.feature.upgrade.AppIdFragment"
+        android:label="AppIdFragment"
+        tools:layout="@layout/fragment_app_id">
+        <argument
+            android:name="appId"
+            app:argType="string" />
+        <deepLink app:uri="https://test.upgrade.cn/{appId}" />
+    </fragment>
+
+
+</navigation>
