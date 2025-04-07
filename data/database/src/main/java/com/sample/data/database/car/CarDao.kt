@@ -1,5 +1,6 @@
 package com.sample.data.database.car
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -21,6 +22,10 @@ interface CarDao {
 
     @Query("select * from car where name in (:names)")
     fun getCars(vararg names: String): Flow<List<Car>>
+
+
+    @Query("select * from car")
+    fun getCars2(): LiveData<List<Car>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCar(car: Car)

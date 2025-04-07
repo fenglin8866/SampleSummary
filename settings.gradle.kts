@@ -54,9 +54,9 @@ dependencyResolutionManagement {
 rootProject.name = "SampleSummary"
 include(":app")
 include(":core:ui")
+include(":core:util")
 include(":data:database")
 include(":data:repository")
 include(":feature:car")
-include(":core:util")
 include(":feature:book")
 include(":feature:upgrade")

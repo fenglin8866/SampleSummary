@@ -31,7 +31,7 @@ android {
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.aar"))))
 
-    implementation(files("libs/NubiaAppUpgrade_V2.0.0-release4.aar"))
+    implementation(files("libs/NubiaAppUpgrade_V2.0.1-release.aar"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

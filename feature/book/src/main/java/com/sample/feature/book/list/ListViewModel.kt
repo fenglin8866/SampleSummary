@@ -35,6 +35,11 @@ class ListViewModel @Inject constructor(
     private val bookRepository: BookRepository
 ) : ViewModel() {
 
+    /**
+     * SharingStarted.WhileSubscribed(5000),
+     * 1、有订阅者时才开始收集
+     * 2、当最后一个订阅者取消后，会等待5秒，如果这段时间内没有新的订阅者，就停止收集
+     */
     val uiState: StateFlow<ListUiState> = bookRepository
         .observeAllBooks
         .map<List<Book>, ListUiState> { items ->

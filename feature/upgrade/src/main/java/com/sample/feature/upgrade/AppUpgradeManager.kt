@@ -14,7 +14,7 @@ import javax.inject.Singleton
 @Singleton
 class AppUpgradeManager @Inject constructor(@ApplicationContext val context: Context) {
 
-    private var isDebugEnv = true
+    private var isDebugEnv = false
 
     private val mManager =
         NubiaUpgradeManager.getInstance(context, getAppKey(), getSecretKey())
@@ -24,7 +24,7 @@ class AppUpgradeManager @Inject constructor(@ApplicationContext val context: Con
     init {
         val build = NubiaUpdateConfiguration.Builder()
         val configuration = build
-            .setAbroadApp(true)//app是国内应用还是海外应用，不设置，默认是国内
+            .setAbroadApp(false)//app是国内应用还是海外应用，不设置，默认是国内
             .setReportEnabled(true)//升级是否进行数据上报，不设置，默认是上报
             //.setAppID("xxxx") //设置应用id，用于个性化升级，不设置，默认优先VAID，取不到本地生成随机数存储
             .setDownloadRunMode(
@@ -37,6 +37,7 @@ class AppUpgradeManager @Inject constructor(@ApplicationContext val context: Con
             .build()
         mManager.setConfiguration(configuration)
         mManager.debug(isDebugEnv)
+        //NuLog.debug(true)
     }
 
     fun checkUpdate(callback: (VersionData?, Int?) -> Unit) {
