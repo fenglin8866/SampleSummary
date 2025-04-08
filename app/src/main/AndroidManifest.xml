@@ -25,7 +25,7 @@
         </activity>
 
         <activity
-            android:name="com.sample.summary.test.TestActivity"
+            android:name="com.sample.summary.test.LoginActivity"
             android:exported="true" >
         </activity>
     </application>

@@ -23,14 +23,6 @@ abstract class BaseViewModel<UIState : Any, UIIntent : Any>(initialState: UIStat
     )
     val eventFlow: SharedFlow<UIEvent> = _eventFlow
 
-    // 处理 UiIntent，更新 UIState 或发送事件
-    fun handleIntent(intent: UIIntent) {
-        when (intent) {
-            is OnLoginClicked -> onLoginClicked()
-            is OnNavigateToHome -> onNavigateToHome()
-        }
-    }
-
     protected fun sendEvent(event: UIEvent) {
         viewModelScope.launch {
             _eventFlow.emit(event)
@@ -39,6 +31,14 @@ abstract class BaseViewModel<UIState : Any, UIIntent : Any>(initialState: UIStat
 
     protected fun updateState(reducer: UIState.() -> UIState) {
         _uiState.value = _uiState.value.reducer()
+    }
+
+    // 处理 UiIntent，更新 UIState 或发送事件
+    fun handleIntent(intent: UIIntent) {
+        when (intent) {
+            is OnLoginClicked -> onLoginClicked()
+            is OnNavigateToHome -> onNavigateToHome()
+        }
     }
 
     // UIIntent 实现

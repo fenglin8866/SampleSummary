@@ -4,14 +4,14 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class TestViewModel : BaseViewModel<MainUIState, UIIntent>(MainUIState()) {
+class LoginViewModel : BaseViewModel<LoginUIState, UIIntent>(LoginUIState()) {
 
     override fun onLoginClicked() {
         updateState { copy(isLoading = true) }
 
         viewModelScope.launch {
             delay(1000)
-            updateState { copy(isLoading = false, username = "张三") }
+            updateState { copy(isLoading = false, isLoginSuccess = true) }
             sendEvent(UIEvent.Toast("登录成功"))
         }
     }
