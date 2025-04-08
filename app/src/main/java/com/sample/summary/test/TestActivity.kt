@@ -19,7 +19,7 @@ class TestActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.loginButton.setOnClickListener {
-            viewModel.onLoginClicked()
+            viewModel.handleIntent(UIIntent.OnLoginClicked)
         }
 
         observeState()

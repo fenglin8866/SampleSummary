@@ -4,9 +4,9 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class TestViewModel : BaseViewModel<MainUIState>(MainUIState()) {
+class TestViewModel : BaseViewModel<MainUIState, UIIntent>(MainUIState()) {
 
-    fun onLoginClicked() {
+    override fun onLoginClicked() {
         updateState { copy(isLoading = true) }
 
         viewModelScope.launch {
@@ -16,7 +16,7 @@ class TestViewModel : BaseViewModel<MainUIState>(MainUIState()) {
         }
     }
 
-    fun onNavigateToHome() {
+    override fun onNavigateToHome() {
         sendEvent(UIEvent.Navigate("home"))
     }
 }
