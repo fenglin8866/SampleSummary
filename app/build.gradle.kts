@@ -33,6 +33,7 @@ dependencies {
     implementation(project(":feature:car"))
     implementation(project(":feature:book"))
     implementation(project(":feature:upgrade"))
+    implementation(project(":feature:login"))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.ktx)

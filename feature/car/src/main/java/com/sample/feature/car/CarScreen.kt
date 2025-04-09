@@ -2,6 +2,7 @@ package com.sample.feature.car
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -44,10 +45,11 @@ internal fun CarScreen(
     Column(modifier) {
         var nameMyModel by remember { mutableStateOf("xiaomi") }
         Row(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
+            modifier = Modifier.width(IntrinsicSize.Max).padding(bottom = 10.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             TextField(
+                modifier = Modifier.width(200.dp),
                 value = nameMyModel,
                 onValueChange = { nameMyModel = it }
             )

@@ -16,9 +16,11 @@
 
 package com.sample.summary
 
+import android.content.Intent
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -29,6 +31,8 @@ import androidx.navigation.navArgument
 import com.sample.feature.book.details.DetailsRoute
 import com.sample.feature.book.list.ListRoute
 import com.sample.feature.car.CarScreen
+import com.sample.feature.login.LoginActivity
+import com.sample.feature.upgrade.UpgradeActivity
 
 @Composable
 fun MainNavigation(
@@ -41,9 +45,16 @@ fun MainNavigation(
         }
 
         composable("list") {
+            val content = LocalContext.current
             ListRoute(
                 onGoToItem = { id ->
-                    navController.navigate("details/$id")
+                    when (id) {
+                        1L -> content.startActivity(Intent(content, UpgradeActivity::class.java))
+                        2L -> content.startActivity(Intent(content, LoginActivity::class.java))
+                        3L -> navController.navigate("main")
+                        else -> navController.navigate("details/$id")
+                    }
+
                 }
             )
         }

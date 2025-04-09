@@ -1,4 +1,4 @@
-package com.sample.summary.test
+package com.sample.core.basic.ui
 
 sealed class UIEvent {
     data class Toast(val message: String) : UIEvent()

@@ -1,10 +1,10 @@
 plugins {
     alias(libs.plugins.common.android.library)
-    alias(libs.plugins.common.compose)
+    alias(libs.plugins.common.lifecycle)
 }
 
 android {
-    namespace = "com.sample.core.ui"
+    namespace = "com.sample.core.basic"
 
     defaultConfig {
 
@@ -21,10 +21,8 @@ android {
             )
         }
     }
-
 }
 
 dependencies {
-
-
+    implementation(libs.material)
 }

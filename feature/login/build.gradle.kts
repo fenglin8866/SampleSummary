@@ -1,10 +1,10 @@
 plugins {
     alias(libs.plugins.common.android.library)
-    alias(libs.plugins.common.compose)
+    alias(libs.plugins.common.lifecycle)
 }
 
 android {
-    namespace = "com.sample.core.ui"
+    namespace = "com.sample.feature.login"
 
     defaultConfig {
 
@@ -21,10 +21,11 @@ android {
             )
         }
     }
-
 }
 
 dependencies {
-
-
+    implementation(project(":core:basic"))
+    implementation(libs.androidx.activity.ktx)
+    implementation(libs.androidx.fragment.ktx)
+    implementation(libs.material)
 }

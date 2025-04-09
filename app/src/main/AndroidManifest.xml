@@ -24,10 +24,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name="com.sample.summary.test.LoginActivity"
-            android:exported="true" >
-        </activity>
     </application>
 
 </manifest>

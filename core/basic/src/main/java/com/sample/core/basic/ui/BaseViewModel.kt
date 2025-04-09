@@ -1,4 +1,4 @@
-package com.sample.summary.test
+package com.sample.core.basic.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,8 +8,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import com.sample.summary.test.UIIntent.OnLoginClicked
-import com.sample.summary.test.UIIntent.OnNavigateToHome
 
 abstract class BaseViewModel<UIState : Any, UIIntent : Any>(initialState: UIState) : ViewModel() {
 
@@ -34,14 +32,6 @@ abstract class BaseViewModel<UIState : Any, UIIntent : Any>(initialState: UIStat
     }
 
     // 处理 UiIntent，更新 UIState 或发送事件
-    fun handleIntent(intent: UIIntent) {
-        when (intent) {
-            is OnLoginClicked -> onLoginClicked()
-            is OnNavigateToHome -> onNavigateToHome()
-        }
-    }
+    abstract fun handleIntent(intent: UIIntent)
 
-    // UIIntent 实现
-    abstract fun onLoginClicked()
-    abstract fun onNavigateToHome()
 }

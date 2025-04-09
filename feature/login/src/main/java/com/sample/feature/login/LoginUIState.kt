@@ -1,4 +1,4 @@
-package com.sample.summary.test
+package com.sample.feature.login
 
 data class LoginUIState(
     val isLoading: Boolean = false,
