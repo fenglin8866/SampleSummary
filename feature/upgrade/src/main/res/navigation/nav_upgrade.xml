@@ -7,21 +7,21 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.sample.feature.upgrade.AppUpgradeFragment"
+        android:name="com.sample.feature.upgrade.ui.AppUpgradeFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_main">
+        tools:layout="@layout/fragment_upgrade">
         <action
             android:id="@+id/action_to_appUpgradeDialog"
             app:destination="@id/appUpgradeDialogFragment" />
     </fragment>
     <dialog
         android:id="@+id/appUpgradeDialogFragment"
-        android:name="com.sample.feature.upgrade.AppUpgradeDialogFragment"
+        android:name="com.sample.feature.upgrade.ui.AppUpgradeDialogFragment"
         android:label="AppUpgradeDialogFragment"
         tools:layout="@layout/fragment_dialog_upgrade" />
     <fragment
         android:id="@+id/appIdFragment"
-        android:name="com.sample.feature.upgrade.AppIdFragment"
+        android:name="com.sample.feature.upgrade.ui.AppIdFragment"
         android:label="AppIdFragment"
         tools:layout="@layout/fragment_app_id">
         <argument

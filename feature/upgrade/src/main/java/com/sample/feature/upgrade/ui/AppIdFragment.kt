@@ -1,7 +1,8 @@
-package com.sample.feature.upgrade
+package com.sample.feature.upgrade.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.sample.core.basic.ui.BaseFragment
 import com.sample.feature.upgrade.databinding.FragmentAppIdBinding
 
 

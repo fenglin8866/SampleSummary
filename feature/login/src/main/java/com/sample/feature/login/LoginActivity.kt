@@ -46,11 +46,11 @@ class LoginActivity : AppCompatActivity() {
         lifecycleScope.launch {
             // repeatOnLifecycle launches the block in a new coroutine every time the
             // lifecycle is in the STARTED state (or above) and cancels it when it's STOPPED.
-             repeatOnLifecycle(Lifecycle.State.STARTED) {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
                 // Trigger the flow and start listening for values.
                 // This happens when lifecycle is STARTED and stops
                 // collecting when the lifecycle is STOPPED
-                 viewModel.eventFlow.collect {
+                viewModel.eventFlow.collect {
                     // Process item
                 }
             }
@@ -79,7 +79,11 @@ class LoginActivity : AppCompatActivity() {
                             //startActivity(Intent(this@LoginActivity, UpgradeActivity::class.java))
                         }
 
-                        is UIEvent.Back -> finish()
+                        UIEvent.Back -> finish()
+
+                        else -> {
+
+                        }
                     }
                 }
 

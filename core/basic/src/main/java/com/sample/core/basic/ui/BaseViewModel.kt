@@ -31,6 +31,10 @@ abstract class BaseViewModel<UIState : Any, UIIntent : Any>(initialState: UIStat
         _uiState.value = _uiState.value.reducer()
     }
 
+    protected fun updateState(state: UIState) {
+        _uiState.value = state
+    }
+
     // 处理 UiIntent，更新 UIState 或发送事件
     abstract fun handleIntent(intent: UIIntent)
 

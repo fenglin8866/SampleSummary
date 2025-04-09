@@ -1,4 +1,4 @@
-package com.sample.feature.upgrade
+package com.sample.feature.upgrade.ui
 
 import android.graphics.Color
 import android.os.Bundle
@@ -9,7 +9,9 @@ import androidx.fragment.app.DialogFragment
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.sample.feature.upgrade.ui.viewmodel.AppUpgradeViewModel
 import com.sample.feature.upgrade.databinding.FragmentDialogUpgradeBinding
+import com.sample.feature.upgrade.ui.state.UpgradeUIIntent
 import kotlin.system.exitProcess
 
 class AppUpgradeDialogFragment : DialogFragment() {
@@ -48,9 +50,9 @@ class AppUpgradeDialogFragment : DialogFragment() {
                     }
                     setOnClickListener {
                         if (viewModel.isApkExist()) {
-                            viewModel.installApp()
+                            viewModel.handleIntent(UpgradeUIIntent.OnInstallAppClicked)
                         } else {
-                            viewModel.downloadApp()
+                            viewModel.handleIntent(UpgradeUIIntent.OnDownloadAppClicked)
                         }
                         findNavController().popBackStack()
                     }

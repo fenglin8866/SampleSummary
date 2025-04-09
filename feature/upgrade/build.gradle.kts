@@ -29,6 +29,9 @@ android {
 
 }
 dependencies {
+
+    implementation(project(":core:basic"))
+
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.aar"))))
 
     implementation(files("libs/NubiaAppUpgrade_V2.0.1-release.aar"))
