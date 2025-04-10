@@ -1,4 +1,4 @@
-package com.sample.feature.upgrade
+package com.sample.feature.upgrade.repository
 
 import android.content.Context
 import cn.nubia.upgrade.api.NubiaUpdateConfiguration
@@ -7,6 +7,7 @@ import cn.nubia.upgrade.api.RunMode
 import cn.nubia.upgrade.http.IDownLoadListener
 import cn.nubia.upgrade.http.IGetVersionListener
 import cn.nubia.upgrade.model.VersionData
+import com.sample.feature.upgrade.R
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
