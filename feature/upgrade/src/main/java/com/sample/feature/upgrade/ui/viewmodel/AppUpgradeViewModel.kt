@@ -2,6 +2,7 @@ package com.sample.feature.upgrade.ui.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import cn.nubia.upgrade.model.VersionData
 import com.sample.core.basic.ui.BaseMiddlewareViewModel
 import com.sample.core.basic.ui.event.UIEvent
