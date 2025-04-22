@@ -2,7 +2,7 @@ package com.sample.feature.upgrade.ui
 
 import android.graphics.Color
 import cn.nubia.upgrade.model.VersionData
-import com.sample.core.basic.ui.ViewStateBinder
+import com.sample.core.basic.ui.view.ViewStateBinder
 import com.sample.feature.upgrade.databinding.FragmentUpgradeBinding
 import com.sample.feature.upgrade.ui.state.UpgradeUIState
 

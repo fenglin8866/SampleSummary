@@ -2,6 +2,7 @@ package com.sample.core.basic.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sample.core.basic.ui.event.UIEvent
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,6 +34,18 @@ abstract class BaseViewModel<UIState : Any, UIIntent : Any>(initialState: UIStat
 
     protected fun updateState(state: UIState) {
         _uiState.value = state
+    }
+
+    /**
+     * intent批量分发
+     */
+    fun dispatchIntents(vararg intents: UIIntent) {
+        intents.forEach { handleIntent(it) }
+    }
+
+    // DSL 风格 Intent 内部再分发
+    protected fun dispatch(intent: UIIntent) {
+        handleIntent(intent)
     }
 
     // 处理 UiIntent，更新 UIState 或发送事件

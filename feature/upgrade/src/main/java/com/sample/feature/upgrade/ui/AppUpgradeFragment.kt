@@ -10,7 +10,7 @@ import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.sample.core.basic.ui.BaseFragment
-import com.sample.core.basic.ui.UIEvent
+import com.sample.core.basic.ui.event.UIEvent
 import com.sample.feature.upgrade.R
 import com.sample.feature.upgrade.ui.viewmodel.AppUpgradeViewModel
 import com.sample.feature.upgrade.databinding.FragmentUpgradeBinding

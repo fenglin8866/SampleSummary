@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import cn.nubia.upgrade.model.VersionData
 import com.sample.core.basic.ui.BaseViewModel
-import com.sample.core.basic.ui.UIEvent
+import com.sample.core.basic.ui.event.UIEvent
 import com.sample.feature.upgrade.repository.AppUpgradeManager
 import com.sample.feature.upgrade.ui.state.UpgradeUIIntent
 import com.sample.feature.upgrade.ui.state.UpgradeUIState

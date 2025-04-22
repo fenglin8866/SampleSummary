@@ -1,7 +1,7 @@
 package com.sample.feature.login
 
 import android.view.View
-import com.sample.core.basic.ui.ViewStateBinder
+import com.sample.core.basic.ui.view.ViewStateBinder
 import com.sample.feature.login.databinding.ActivityLoginBinding
 
 class LoginViewBinder : ViewStateBinder<ActivityLoginBinding, LoginUIState> {

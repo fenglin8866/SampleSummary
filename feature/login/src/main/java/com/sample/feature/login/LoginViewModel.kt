@@ -2,7 +2,7 @@ package com.sample.feature.login
 
 import androidx.lifecycle.viewModelScope
 import com.sample.core.basic.ui.BaseViewModel
-import com.sample.core.basic.ui.UIEvent
+import com.sample.core.basic.ui.event.UIEvent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

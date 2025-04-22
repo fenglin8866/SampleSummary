@@ -9,7 +9,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.snackbar.Snackbar
-import com.sample.core.basic.ui.UIEvent
+import com.sample.core.basic.ui.event.UIEvent
 import com.sample.feature.login.databinding.ActivityLoginBinding
 import kotlinx.coroutines.launch
 
