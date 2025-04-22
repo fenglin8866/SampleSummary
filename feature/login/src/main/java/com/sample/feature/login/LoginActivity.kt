@@ -50,14 +50,14 @@ class LoginActivity : AppCompatActivity() {
                 // Trigger the flow and start listening for values.
                 // This happens when lifecycle is STARTED and stops
                 // collecting when the lifecycle is STOPPED
-                viewModel.eventFlow.collect {
+                viewModel.uiEvent.collect {
                     // Process item
                 }
             }
         }
 
         lifecycleScope.launch {
-            viewModel.eventFlow
+            viewModel.uiEvent
                 .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .collect { event ->
                     when (event) {
@@ -92,11 +92,11 @@ class LoginActivity : AppCompatActivity() {
 
     private fun userIntent() {
         binding.loginButton.setOnClickListener {
-            viewModel.handleIntent(LoginUIIntent.OnLoginClicked)
+            viewModel.dispatchIntent(LoginUIIntent.OnLoginClicked)
         }
 
         binding.upgradeButton.setOnClickListener {
-            viewModel.handleIntent(LoginUIIntent.OnNavigateToHome)
+            viewModel.dispatchIntent(LoginUIIntent.OnNavigateToHome)
         }
     }
 }

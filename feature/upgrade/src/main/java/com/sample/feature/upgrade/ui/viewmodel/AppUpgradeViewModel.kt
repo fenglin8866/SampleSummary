@@ -3,8 +3,12 @@ package com.sample.feature.upgrade.ui.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import cn.nubia.upgrade.model.VersionData
-import com.sample.core.basic.ui.BaseViewModel
+import com.sample.core.basic.ui.BaseMiddlewareViewModel
 import com.sample.core.basic.ui.event.UIEvent
+import com.sample.core.basic.ui.middleware.ExceptionCatchingMiddleware
+import com.sample.core.basic.ui.middleware.IntentMiddleware
+import com.sample.core.basic.ui.middleware.LocalCrashReporter
+import com.sample.core.basic.ui.middleware.LoggingMiddleware
 import com.sample.feature.upgrade.repository.AppUpgradeManager
 import com.sample.feature.upgrade.ui.state.UpgradeUIIntent
 import com.sample.feature.upgrade.ui.state.UpgradeUIState
@@ -14,7 +18,14 @@ import javax.inject.Inject
 @HiltViewModel
 class AppUpgradeViewModel @Inject constructor(
     private val appUpgradeManager: AppUpgradeManager
-) : BaseViewModel<UpgradeUIState, UpgradeUIIntent>(UpgradeUIState.Loading) {
+) : BaseMiddlewareViewModel<UpgradeUIState, UpgradeUIIntent>(UpgradeUIState.Loading) {
+
+    override fun buildMiddlewares(): List<IntentMiddleware<UpgradeUIIntent>> {
+        return mutableListOf(
+            ExceptionCatchingMiddleware(LocalCrashReporter),
+            LoggingMiddleware()
+        )
+    }
 
     private var _versionData: MutableLiveData<VersionData> = MutableLiveData()
 

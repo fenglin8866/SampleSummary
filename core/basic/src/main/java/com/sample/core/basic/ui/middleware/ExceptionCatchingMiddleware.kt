@@ -1,5 +1,7 @@
 package com.sample.core.basic.ui.middleware
 
+import com.sample.core.basic.ui.utils.LogUtils
+
 class ExceptionCatchingMiddleware<I>(
     private val crashReporter: CrashReporter
 ) : IntentMiddleware<I> {
@@ -20,7 +22,7 @@ interface CrashReporter {
 
 object LocalCrashReporter : CrashReporter {
     override fun report(throwable: Throwable, message: String?) {
-        println("[CrashReporter] $message\n${throwable.stackTraceToString()}")
+        LogUtils.d(message = "[CrashReporter] $message\n${throwable.stackTraceToString()}")
     }
 }
 

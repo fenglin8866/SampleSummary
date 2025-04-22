@@ -50,9 +50,9 @@ class AppUpgradeDialogFragment : DialogFragment() {
                     }
                     setOnClickListener {
                         if (viewModel.isApkExist()) {
-                            viewModel.handleIntent(UpgradeUIIntent.OnInstallAppClicked)
+                            viewModel.dispatchIntent(UpgradeUIIntent.OnInstallAppClicked)
                         } else {
-                            viewModel.handleIntent(UpgradeUIIntent.OnDownloadAppClicked)
+                            viewModel.dispatchIntent(UpgradeUIIntent.OnDownloadAppClicked)
                         }
                         findNavController().popBackStack()
                     }
