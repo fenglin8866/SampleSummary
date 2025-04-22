@@ -1,5 +1,6 @@
 package com.sample.core.demo.utils
 
+import com.sample.core.demo.model.ResultState
 import kotlinx.coroutines.flow.*
 
 /**
@@ -31,14 +32,6 @@ fun <T> Flow<T>.catchLog(): Flow<T> =
         throw e
     }
 
-/**
- * Flow onSuccess / onError / onLoading 链式调用
- */
-sealed class ResultState<out T> {
-    object Loading : ResultState<Nothing>()
-    data class Success<T>(val data: T) : ResultState<T>()
-    data class Error(val throwable: Throwable) : ResultState<Nothing>()
-}
 
 fun <T> Flow<ResultState<T>>.onSuccess(action: suspend (T) -> Unit): Flow<ResultState<T>> =
     onEach { state ->

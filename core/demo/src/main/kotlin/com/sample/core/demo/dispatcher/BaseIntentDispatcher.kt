@@ -7,20 +7,23 @@ import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import java.util.PriorityQueue
 
 class BaseIntentDispatcher<I : Any>(
     private val middlewares: List<IntentMiddleware<I>> = emptyList(),
     private val onIntentHandled: suspend (I) -> Unit,
 ) {
 
-    private val mutex = Mutex() // 确保事务串行处理
-    private val channel = Channel<IntentWrapper<I>>(Channel.UNLIMITED)
+    private val mutex = Mutex()
+    private val queue = PriorityQueue<IntentWrapper<I>>(compareByDescending { it.priority })
+    private val channel = Channel<Unit>(Channel.UNLIMITED)
 
     fun CoroutineScope.start() {
         launch {
             channel.consumeAsFlow()
-                .collect { wrapper ->
+                .collect {
                     mutex.withLock {
+                        val wrapper = queue.poll() ?: return@withLock
                         handle(wrapper.intent)
                     }
                 }
@@ -28,7 +31,10 @@ class BaseIntentDispatcher<I : Any>(
     }
 
     suspend fun dispatch(intent: I, priority: Int = 0) {
-        channel.send(IntentWrapper(intent, priority))
+        mutex.withLock {
+            queue.offer(IntentWrapper(intent, priority))
+        }
+        channel.send(Unit)
     }
 
     private suspend fun handle(intent: I) {
