@@ -3,6 +3,11 @@ package com.sample.core.basic.ui.dispatcher
 import com.sample.core.basic.ui.middleware.IntentMiddleware
 import java.util.PriorityQueue
 
+/**
+ * intent调度器封装
+ * 1、intent的优先级分配处理
+ * 2、中间件执行
+ */
 class BaseIntentDispatcher<I>(
     private val middlewares: List<IntentMiddleware<I>> = emptyList(),
     private val onIntentHandled: suspend (I) -> Unit

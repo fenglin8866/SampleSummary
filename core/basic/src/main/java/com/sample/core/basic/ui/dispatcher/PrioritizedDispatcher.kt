@@ -2,6 +2,9 @@ package com.sample.core.basic.ui.dispatcher
 
 import java.util.PriorityQueue
 
+/**
+ * 定义Intent优先级容器
+ */
 data class PrioritizedIntent<I>(
     val intent: I,
     val priority: Int = 0
