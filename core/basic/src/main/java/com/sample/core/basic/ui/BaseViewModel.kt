@@ -17,8 +17,6 @@ abstract class BaseViewModel<State : Any, Intent : Any>(initialState: State) : V
 
     private val _uiState = MutableStateFlow(initialState)
 
-    val uiState: StateFlow<State> = _uiState.asStateFlow()
-
   //  private val _uiEvent = MutableSharedFlow<UIEvent>()
 
     private val _uiEvent = MutableSharedFlow<UIEvent>(
@@ -27,6 +25,8 @@ abstract class BaseViewModel<State : Any, Intent : Any>(initialState: State) : V
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
 
+    val uiState: StateFlow<State> = _uiState.asStateFlow()
+
     val uiEvent: SharedFlow<UIEvent> = _uiEvent.asSharedFlow()
 
     protected fun updateState(reducer: State.() -> State) {
@@ -34,14 +34,14 @@ abstract class BaseViewModel<State : Any, Intent : Any>(initialState: State) : V
         _uiState.update(reducer)
     }
 
+    protected fun updateState(state: State) {
+        _uiState.value = state
+    }
+
     protected fun sendEvent(event: UIEvent) {
         viewModelScope.launch {
             _uiEvent.emit(event)
         }
-    }
-
-    protected fun updateState(state: State) {
-        _uiState.value = state
     }
 
     /**
