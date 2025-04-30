@@ -11,7 +11,7 @@ class PagingConventionPlugin : Plugin<Project> {
                 "implementation"(libs.findLibrary("androidx.paging.runtime.ktx").get())
                 //paging比较少用，暂不添加到compose插件中
                 "implementation"(libs.findLibrary("androidx.paging.compose").get())
-                "testImplementation "(libs.findLibrary("androidx.paging.common").get())
+               // "testImplementation "(libs.findLibrary("androidx.paging.common").get())
 
                 "implementation"(libs.findLibrary("androidx.room.paging").get())
             }
