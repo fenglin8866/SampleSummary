@@ -11,7 +11,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-@AndroidEntryPoint
+/*@AndroidEntryPoint
 class ArticleFragment : Fragment(R.layout.fragment_article) {
 
     private val viewModel: ArticleViewModel by viewModels()
@@ -27,5 +27,5 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
             }
         }
     }
-}
+}*/
 //Assuming defaults.
