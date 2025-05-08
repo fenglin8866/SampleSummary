@@ -37,6 +37,7 @@
             <option value="$PROJECT_DIR$/feature/book" />
             <option value="$PROJECT_DIR$/feature/car" />
             <option value="$PROJECT_DIR$/feature/login" />
+            <option value="$PROJECT_DIR$/feature/migration" />
             <option value="$PROJECT_DIR$/feature/upgrade" />
           </set>
         </option>
