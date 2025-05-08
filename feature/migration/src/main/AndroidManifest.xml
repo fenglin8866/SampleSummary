@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <permission
+        android:name="com.sample.permission.READ_DATA"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.sample.permission.READ_DATA" />
+
+    <application>
+        <activity
+            android:name=".remote.MigrationActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:process=":migration_process"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="com.sample.feature.intent.action.View" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <provider
+            android:name=".remote.MigrationDataProvider"
+            android:authorities="com.sample.provider"
+            android:exported="true"
+            android:grantUriPermissions="true"
+            android:process=":migration_process"
+            android:readPermission="com.sample.permission.READ_DATA" />
+
+        <service
+            android:name=".remote.MigrationFinishService"
+            android:exported="true"
+            android:permission="com.sample.permission.READ_DATA"
+            android:process=":migration_process" />
+
+        <service
+            android:name=".client.MigrationJobService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+    </application>
+
+</manifest>
