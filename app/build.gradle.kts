@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.common.lifecycle)
     alias(libs.plugins.common.hilt)
     alias(libs.plugins.common.navigation)
+    alias(libs.plugins.common.paging)
 }
 
 android {
@@ -41,5 +42,6 @@ dependencies {
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.material)
+    implementation(libs.retrofit)
 
 }
