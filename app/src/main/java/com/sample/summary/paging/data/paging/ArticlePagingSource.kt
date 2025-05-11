@@ -23,6 +23,13 @@ class ArticlePagingSource(
     }
 
     override fun getRefreshKey(state: PagingState<Int, Article>): Int? {
+        // Try to find the page key of the closest page to anchorPosition from
+        // either the prevKey or the nextKey; you need to handle nullability
+        // here.
+        //  * prevKey == null -> anchorPage is the first page.
+        //  * nextKey == null -> anchorPage is the last page.
+        //  * both prevKey and nextKey are null -> anchorPage is the
+        //    initial page, so return null.
         return state.anchorPosition?.let {
             state.closestPageToPosition(it)?.prevKey?.plus(1)
                 ?: state.closestPageToPosition(it)?.nextKey?.minus(1)

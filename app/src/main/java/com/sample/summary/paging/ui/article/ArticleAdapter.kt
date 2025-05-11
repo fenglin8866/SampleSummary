@@ -7,9 +7,9 @@ import android.widget.TextView
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.sample.summary.R
 import com.sample.summary.paging.data.model.Article
 
-/*
 class ArticleAdapter : PagingDataAdapter<Article, ArticleAdapter.ArticleViewHolder>(DIFF_CALLBACK) {
 
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
@@ -34,4 +34,3 @@ class ArticleAdapter : PagingDataAdapter<Article, ArticleAdapter.ArticleViewHold
         }
     }
 }
-*/

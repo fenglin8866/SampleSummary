@@ -11,14 +11,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-/*@AndroidEntryPoint
+@AndroidEntryPoint
 class ArticleFragment : Fragment(R.layout.fragment_article) {
 
     private val viewModel: ArticleViewModel by viewModels()
     private val adapter = ArticleAdapter()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.articleList)
         recyclerView.adapter = adapter
 
         lifecycleScope.launch {
@@ -27,5 +27,4 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
             }
         }
     }
-}*/
-//Assuming defaults.
+}
