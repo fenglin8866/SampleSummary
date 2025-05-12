@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 The Android Open Source Project
+ * Copyright (C) 2020 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package com.sample.dev.paging.advanced.model
+package com.sample.dev.paging.advanced.db
 
-import java.lang.Exception
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-/**
- * RepoSearchResult from a search, which contains List<Repo> holding query data,
- * and a String of network error state.
- */
-sealed class RepoSearchResult {
-    data class Success(val data: List<Repo>) : RepoSearchResult()
-    data class Error(val error: Exception) : RepoSearchResult()
-}
+@Entity(tableName = "remote_keys")
+data class RemoteKeys(
+    @PrimaryKey val repoId: Long,
+    val prevKey: Int?,
+    val nextKey: Int?
+)
