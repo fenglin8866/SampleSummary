@@ -33,9 +33,11 @@
             <option value="$PROJECT_DIR$/data/database" />
             <option value="$PROJECT_DIR$/data/repository" />
             <option value="$PROJECT_DIR$/dev" />
-            <option value="$PROJECT_DIR$/dev/paging" />
             <option value="$PROJECT_DIR$/dev/pagingadvanced" />
             <option value="$PROJECT_DIR$/dev/pagingbasic" />
+            <option value="$PROJECT_DIR$/dev/paginglib" />
+            <option value="$PROJECT_DIR$/dev/pagingreddit" />
+            <option value="$PROJECT_DIR$/dev/pagingsample" />
             <option value="$PROJECT_DIR$/devsamplle" />
             <option value="$PROJECT_DIR$/feature" />
             <option value="$PROJECT_DIR$/feature/book" />

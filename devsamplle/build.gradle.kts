@@ -30,9 +30,10 @@ android {
 dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:basic"))
-    implementation(project(":dev:paging"))
+    implementation(project(":dev:pagingsample"))
     implementation(project(":dev:pagingbasic"))
     implementation(project(":dev:pagingadvanced"))
+    implementation(project(":dev:pagingreddit"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.fragment.ktx)
