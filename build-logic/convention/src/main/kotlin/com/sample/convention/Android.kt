@@ -36,7 +36,7 @@ internal fun Project.configureAndroid(
         compileSdk = 35
 
         defaultConfig {
-            minSdk = 24
+            minSdk = 26
         }
 
         compileOptions {
