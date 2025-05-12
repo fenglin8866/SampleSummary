@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.common.android.library)
     alias(libs.plugins.common.lifecycle)
+    alias(libs.plugins.common.paging)
 }
 
 android {

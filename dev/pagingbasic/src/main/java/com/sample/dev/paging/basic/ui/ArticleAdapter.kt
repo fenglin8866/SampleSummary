@@ -18,15 +18,15 @@ package com.sample.dev.paging.basic.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import com.sample.dev.paging.basic.data.Article
 import com.sample.dev.paging.basic.databinding.ArticleViewholderBinding
 
 /**
  * Adapter for an [Article] [List].
  */
-class ArticleAdapter : ListAdapter<Article, ArticleViewHolder>(ARTICLE_DIFF_CALLBACK) {
+class ArticleAdapter : PagingDataAdapter<Article, ArticleViewHolder>(ARTICLE_DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder =
         ArticleViewHolder(

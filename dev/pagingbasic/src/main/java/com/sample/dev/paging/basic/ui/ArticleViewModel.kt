@@ -18,11 +18,18 @@ package com.sample.dev.paging.basic.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.sample.dev.paging.basic.data.Article
 import com.sample.dev.paging.basic.data.ArticleRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+
+private const val ITEMS_PER_PAGE = 50
 
 /**
  * ViewModel for the [ArticleActivity] screen.
@@ -33,12 +40,15 @@ class ArticleViewModel(
 ) : ViewModel() {
 
     /**
-     * Stream of [Article]s for the UI.
+     * Stream of immutable states representative of the UI.
      */
-    val items: StateFlow<List<Article>> = repository.articleStream
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = listOf()
-        )
+    val items: Flow<PagingData<Article>> = Pager(
+        config = PagingConfig(pageSize = ITEMS_PER_PAGE, enablePlaceholders = false),
+        pagingSourceFactory = { repository.articlePagingSource() }
+    )
+        .flow
+        // cachedIn allows paging to remain active in the viewModel scope, so even if the UI
+        // showing the paged data goes through lifecycle changes, pagination remains cached and
+        // the UI does not have to start paging from the beginning when it resumes.
+        .cachedIn(viewModelScope)
 }
