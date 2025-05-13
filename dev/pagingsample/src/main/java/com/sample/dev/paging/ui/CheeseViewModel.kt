@@ -16,6 +16,7 @@
 
 package com.sample.dev.paging.ui
 
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -70,7 +71,10 @@ class CheeseViewModel(private val dao: CheeseDao) : ViewModel() {
         .map { pagingData ->
             pagingData
                 // Map cheeses to common UI model.
-                .map { cheese -> CheeseListItem.Item(cheese) }
+                .map { cheese ->
+                    Log.i("xxh111","cheese=${cheese.name}")
+                    CheeseListItem.Item(cheese)
+                }
                 .insertSeparators { before: CheeseListItem?, after: CheeseListItem? ->
                     if (before == null && after == null) {
                         // List is empty after fully loaded; return null to skip adding separator.

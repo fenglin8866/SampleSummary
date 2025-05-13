@@ -16,6 +16,7 @@
 
 package com.sample.dev.paging.basic.data
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import kotlinx.coroutines.delay
@@ -44,6 +45,12 @@ class ArticlePagingSource : PagingSource<Int, Article>() {
 
         // Simulate a delay for loads adter the initial load
         if (startKey != STARTING_KEY) delay(LOAD_DELAY_MILLIS)
+
+        Log.d("xxh111","load key=${params.key} size=${params.loadSize}")
+
+        range.forEach{
+            Log.d("xxh111","range it=${it} ")
+        }
 
         return LoadResult.Page(
             data = range.map { number ->

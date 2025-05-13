@@ -17,6 +17,7 @@
 package com.sample.dev.paging.basic.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -24,6 +25,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.paging.LoadState.Loading
+import androidx.paging.map
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -57,6 +59,7 @@ class ArticleActivity : AppCompatActivity() {
             // but still visible on the screen, for example in a multi window app
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 items.collectLatest {
+                    Log.i("xxh111", "collectLatest it=$it")
                     articleAdapter.submitData(it)
                 }
             }
@@ -67,6 +70,9 @@ class ArticleActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 articleAdapter.loadStateFlow.collect {
+                    val a = it.source.prepend is Loading
+                    val b = it.source.append is Loading
+                    Log.i("xxh111", "a=$a b=$b")
                     binding.prependProgress.isVisible = it.source.prepend is Loading
                     binding.appendProgress.isVisible = it.source.append is Loading
                 }

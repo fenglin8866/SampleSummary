@@ -22,6 +22,9 @@ class ArticlePagingSource(
         }
     }
 
+    /**
+     * 刷新时使用该方法获取key
+     */
     override fun getRefreshKey(state: PagingState<Int, Article>): Int? {
         // Try to find the page key of the closest page to anchorPosition from
         // either the prevKey or the nextKey; you need to handle nullability
@@ -30,6 +33,11 @@ class ArticlePagingSource(
         //  * nextKey == null -> anchorPage is the last page.
         //  * both prevKey and nextKey are null -> anchorPage is the
         //    initial page, so return null.
+        /**
+         * 根据anchorPosition获取最靠近的item。
+         * 获取item的prekey，然后+1，
+         * 如果prekey为空，获取item的nextkey，然后-1
+         */
         return state.anchorPosition?.let {
             state.closestPageToPosition(it)?.prevKey?.plus(1)
                 ?: state.closestPageToPosition(it)?.nextKey?.minus(1)
