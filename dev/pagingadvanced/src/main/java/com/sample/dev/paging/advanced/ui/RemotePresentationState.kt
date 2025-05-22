@@ -23,7 +23,6 @@ enum class RemotePresentationState {
  * successful [RemoteMediator] fetches always cause invalidation of the [PagingSource] as in the
  * case of the [PagingSource] provide by Room.
  */
-@OptIn(ExperimentalCoroutinesApi::class)
 fun Flow<CombinedLoadStates>.asRemotePresentationState(): Flow<RemotePresentationState> =
     scan(RemotePresentationState.INITIAL) { state, loadState ->
         when (state) {

@@ -4,8 +4,8 @@ import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.LoadState.NotLoading
 import androidx.paging.LoadState.Loading
+import androidx.paging.LoadState.Error
 import androidx.paging.LoadStates
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.scan
 import androidx.paging.PagingDataAdapter
@@ -32,7 +32,6 @@ import com.sample.dev.paging.lib.reddit.paging.MergedState.SOURCE_LOADING
  * [Loading] in cases where invalidation doesn't happen because the fetched network data represents
  * exactly what is already cached in DB.
  */
-@OptIn(ExperimentalCoroutinesApi::class)
 fun Flow<CombinedLoadStates>.asMergedLoadStates(): Flow<LoadStates> {
     val syncRemoteState = LoadStatesMerger()
     return scan(syncRemoteState.toLoadStates()) { _, combinedLoadStates ->
@@ -44,6 +43,9 @@ fun Flow<CombinedLoadStates>.asMergedLoadStates(): Flow<LoadStates> {
 /**
  * Track the combined [LoadState] of [RemoteMediator] and [PagingSource], so that each load type
  * is only set to [NotLoading] when [RemoteMediator] load is applied on presenter-side.
+ *
+ * 跟踪 [RemoteMediator] 和 [PagingSource] 的组合 [LoadState]，
+ * 以便仅在演示器端应用 [RemoteMediator] 负载时，每种加载类型才设置为 [NotLoading]。
  */
 private class LoadStatesMerger {
     var refresh: LoadState = NotLoading(endOfPaginationReached = false)
@@ -68,6 +70,7 @@ private class LoadStatesMerger {
     /**
      * For every new emission of [CombinedLoadStates] from the original [Flow], update the
      * [MergedState] of each [LoadType] and compute the new [LoadState].
+     * 对于从原始 [Flow] 发出的 [CombinedLoadStates] 的每个新发射，更新每个 [LoadType] 的 [MergedState] 并计算新的 [LoadState]。
      */
     fun updateFromCombinedLoadStates(combinedLoadStates: CombinedLoadStates) {
         computeNextLoadStateAndMergedState(
@@ -111,58 +114,32 @@ private class LoadStatesMerger {
     ): Pair<LoadState, MergedState> {
         if (remoteState == null) return sourceState to NOT_LOADING
 
-       /* return when (currentMergedState) {
-            NOT_LOADING -> when (remoteState) {
-                is Loading -> Loading to REMOTE_STARTED
-                is Error<*, *> -> remoteState to REMOTE_ERROR
-                else -> NotLoading(remoteState.endOfPaginationReached) to NOT_LOADING
-            }
-            REMOTE_STARTED -> when {
-                remoteState is Error<*, *> -> remoteState to REMOTE_ERROR
-                sourceRefreshState is Loading -> Loading to SOURCE_LOADING
-                else -> Loading to REMOTE_STARTED
-            }
-            REMOTE_ERROR -> when (remoteState) {
-                is Error<*, *> -> remoteState to REMOTE_ERROR
-                else -> Loading to REMOTE_STARTED
-            }
-            SOURCE_LOADING -> when {
-                sourceRefreshState is Error<*, *> -> sourceRefreshState to SOURCE_ERROR
-                remoteState is Error<*, *> -> remoteState to REMOTE_ERROR
-                sourceRefreshState is NotLoading -> {
-                    NotLoading(remoteState.endOfPaginationReached) to NOT_LOADING
-                }
-                else -> Loading to SOURCE_LOADING
-            }
-            SOURCE_ERROR -> when (sourceRefreshState) {
-                is Error<*, *> -> sourceRefreshState to SOURCE_ERROR
-                else -> sourceRefreshState to SOURCE_LOADING
-            }
-        }*/
-        //fixme
         return when (currentMergedState) {
             NOT_LOADING -> when (remoteState) {
                 is Loading -> Loading to REMOTE_STARTED
-                else -> remoteState to REMOTE_ERROR
+                is Error -> remoteState to REMOTE_ERROR
+                else -> NotLoading(remoteState.endOfPaginationReached) to NOT_LOADING
             }
             REMOTE_STARTED -> when {
-                true -> remoteState to REMOTE_ERROR
+                remoteState is Error -> remoteState to REMOTE_ERROR
                 sourceRefreshState is Loading -> Loading to SOURCE_LOADING
                 else -> Loading to REMOTE_STARTED
             }
             REMOTE_ERROR -> when (remoteState) {
-                else -> remoteState to REMOTE_ERROR
+                is Error -> remoteState to REMOTE_ERROR
+                else -> Loading to REMOTE_STARTED
             }
             SOURCE_LOADING -> when {
-                true -> sourceRefreshState to SOURCE_ERROR
-                true -> remoteState to REMOTE_ERROR
+                sourceRefreshState is Error -> sourceRefreshState to SOURCE_ERROR
+                remoteState is Error -> remoteState to REMOTE_ERROR
                 sourceRefreshState is NotLoading -> {
                     NotLoading(remoteState.endOfPaginationReached) to NOT_LOADING
                 }
                 else -> Loading to SOURCE_LOADING
             }
             SOURCE_ERROR -> when (sourceRefreshState) {
-                else -> sourceRefreshState to SOURCE_ERROR
+                is Error -> sourceRefreshState to SOURCE_ERROR
+                else -> sourceRefreshState to SOURCE_LOADING
             }
         }
     }
@@ -170,35 +147,43 @@ private class LoadStatesMerger {
 
 /**
  * State machine used to compute [LoadState] values in [LoadStatesMerger].
+ * 用于计算 [LoadStatesMerger] 中的 [LoadState] 值的状态机。
  *
  * This allows [LoadStatesMerger] to track whether to block transitioning to [NotLoading] from the
  * [Loading] state if it was triggered by [RemoteMediator], until [PagingSource] invalidates and
  * completes [REFRESH].
+ * 这允许 [LoadStatesMerger] 跟踪是否阻止从 [Loading] 状态转换到 [NotLoading]（如果该状态是由 [RemoteMediator] 触发的），
+ * 直到 [PagingSource] 使 [REFRESH] 失效并完成。
  */
 private enum class MergedState {
     /**
      * Idle state; defer to remote state for endOfPaginationReached.
+     * 闲置状态，
      */
     NOT_LOADING,
 
     /**
      * Remote load triggered; start listening for source refresh.
+     * 远程加载触发，开始监听source的刷新
      */
     REMOTE_STARTED,
 
     /**
      * Waiting for remote in error state to get retried
+     * 正在等待处于错误状态的远程重试
      */
     REMOTE_ERROR,
 
     /**
      * Source refresh triggered by remote invalidation, once this completes we can be sure
      * the next generation was loaded.
+     * 由远程失效触发的源刷新，一旦完成，我们可以确保已加载下一代。
      */
     SOURCE_LOADING,
 
     /**
      *  Remote load completed, but waiting for source refresh in error state to get retried.
+     *  远程加载已完成，但正在等待处于错误状态的源刷新重试。
      */
     SOURCE_ERROR,
 }

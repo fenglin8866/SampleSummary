@@ -24,6 +24,7 @@ import com.sample.dev.paging.advanced.R
 
 /**
  * Adapter for the list of repositories.
+ * 不同布局的Adapter。通过viewType区分
  */
 class ReposAdapter : PagingDataAdapter<UiModel, ViewHolder>(UIMODEL_COMPARATOR) {
 
