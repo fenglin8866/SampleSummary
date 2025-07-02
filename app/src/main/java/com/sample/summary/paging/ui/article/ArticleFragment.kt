@@ -21,10 +21,10 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
         val recyclerView = view.findViewById<RecyclerView>(R.id.articleList)
         recyclerView.adapter = adapter
 
-        lifecycleScope.launch {
+        /*lifecycleScope.launch {
             viewModel.articleFlow.collectLatest {
                 adapter.submitData(it)
             }
-        }
+        }*/
     }
 }

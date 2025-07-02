@@ -12,9 +12,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ArticleViewModel @Inject constructor(
-    private val repository: ArticleRepository
+    repository: ArticleRepository
 ) : ViewModel() {
 
-    val articleFlow: Flow<PagingData<Article>> =
-        repository.getArticlePagingFlow().cachedIn(viewModelScope)
+    /*val articleFlow: Flow<PagingData<Article>> =
+        repository.getArticlePagingFlow().cachedIn(viewModelScope)*/
 }

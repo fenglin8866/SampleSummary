@@ -10,12 +10,12 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ArticleRepository @Inject constructor(
-    private val apiService: ApiService
+    //private val apiService: ApiService
 ) {
-    fun getArticlePagingFlow(): Flow<PagingData<Article>> {
+    /*fun getArticlePagingFlow(): Flow<PagingData<Article>> {
         return Pager(
             config = PagingConfig(pageSize = 20),
             pagingSourceFactory = { ArticlePagingSource(apiService) }
         ).flow
-    }
+    }*/
 }
