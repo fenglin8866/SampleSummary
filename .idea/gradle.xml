@@ -40,6 +40,10 @@
             <option value="$PROJECT_DIR$/feature/migrationclient" />
             <option value="$PROJECT_DIR$/feature/migrationremote" />
             <option value="$PROJECT_DIR$/feature/upgrade" />
+            <option value="$PROJECT_DIR$/lang" />
+            <option value="$PROJECT_DIR$/lang/lang_java" />
+            <option value="$PROJECT_DIR$/lang/lang_kotlin" />
+            <option value="$PROJECT_DIR$/lang/langtest" />
           </set>
         </option>
       </GradleProjectSettings>

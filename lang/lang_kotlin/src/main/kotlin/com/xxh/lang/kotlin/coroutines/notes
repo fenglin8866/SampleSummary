@@ -1,0 +1,108 @@
+1.协程的概念
+协程内顺序执行
+全局协程想守护线程
+核心：那些是顺序，那些是并发。并发时间维度是一致，同时都在进行。
+
+2.基础
+生命周期
+创建  运行  正在完成   完成
+
+取消    正在取消
+
+
+
+
+创建
+    runBlocking
+    GlobalScope
+    launch
+    coroutineScope
+      开启一个新协程，会阻塞当前协程，直到执行完成（包含内部子协程）,但协程的并发协程不影响
+
+    async
+     1.异步，有返回，可以使用懒启动（懒启动需要提前调用start，不然await才启动）
+     2.立即启动，await会阻塞当前协程，直到有返回,类似join的效果。
+     3.结构化并发,可以使用coroutineScope{}封装在一个方法中
+    withContext
+    withTimeout
+    =========================
+    0.父协程必须等所有子协程执行完才结束
+    1.子协程，但创建多个协程，如果前面协程执行完后面协程会复用前面的协程
+    2.launch与async，coroutineScope之间是并发，但coroutineScope会阻塞当前协程，一般在最后
+    3.withContext，withTimeout，coroutineScope都会阻塞当前协程
+    4.GlobalScope.launch与其他协程都是并发，且不会阻塞
+
+取消
+  协程的取消是协作的，必须有挂起函数才能取消，纯计算的无法取消
+  取消是抛CancellationException异常，内部处理，不会抛出。
+  1.cancelAndJoin()
+  2.取消没有挂起函数的协程，添加yield(),isActive
+  3.资源释放 try{ }finally{ }，如果finally存在耗时操作，使用withContext(NonCancellable){},会阻塞调用协程
+
+超时
+  withTimeout(){} 抛异常TimeoutCancellationException,可以使用捕获
+  withTimeoutOrNull(){}
+
+异常
+调试
+==================
+运行
+  join()
+  挂起函数
+    处理耗时操作，必须在协程内调用或挂起函数调用。
+  结构化并发
+    1.父协程必须等所有子协程执行完才结束
+    2.父协程取消，父协程内所有子协程都取消
+    3.协程内有异常，所有的协程都取消
+  协程上下（job，调度器）
+    调度器
+      指定协程运行在那个或那些线程中。
+      Main：主线程
+      Default：后台默认线程池。
+      IO：共享后台默认线程池，超过数量扩充
+      Unconfined：进入协程是运行在调用者线程，当运行在挂起函数，挂起函数恢复时，协程运行在挂起函数的线程内
+                  注意如果两个join挂起函数，后调用但先执行完了，协程运行在最后执行完的挂起函数中。
+
+    协程上下文
+      默认调度器; 使用newSingleThreadContext(); 构建线程池使用.asCoroutineDispatcher()
+
+  构建器
+
+3.高级
+Flow
+   1.是什么
+     是一个响应式框架，封装事件发射-(处理)-接收。特别是针对一边处理一边发射的情况。代替回调，比回调灵活，强大
+
+   2.概念
+     流是冷的，构建的flow立即返回，内部代码块在末端操作调用的时候才启动
+     流的调用一致性。构建和收集在同一个协程内
+     创建的协程使用flowOn，收集器协程外层构建
+
+   3.使用
+      创建
+      flow{}，asFlow(),emptyFlow(),flowOf()
+
+      发射
+      emit()
+
+      收集
+      collect()
+
+
+   4.操作符
+      flowOn
+
+    过渡操作符
+      conflate
+      buffer:针对的是发射，收集保持不变
+
+      flowOn，buffer，take，map，filter，transform
+
+
+
+    末端操作符
+      reduce，fold，collect，first，last，single等等
+      toSet
+
+
+Channel

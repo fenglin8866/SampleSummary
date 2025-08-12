@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/java_navigation"
+    app:startDestination="@+id/navigation_java">
+
+    <fragment
+        android:id="@id/navigation_java"
+        android:name="com.xxh.lang.java.ui.JavaFragment"
+        tools:layout="@layout/fragment_java" />
+</navigation>
