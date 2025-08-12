@@ -41,8 +41,8 @@ android {
 }
 
 dependencies {
-    implementation(project(":lang:lang_java"))
-    implementation(project(":lang:lang_kotlin"))
+    implementation(project(":xlang:lang_java"))
+    implementation(project(":xlang:lang_kotlin"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
