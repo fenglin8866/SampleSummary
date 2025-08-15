@@ -13,7 +13,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
 
             extensions.configure<LibraryExtension> {
                 configureAndroid(this)
-                defaultConfig.targetSdk = 35
+                defaultConfig.targetSdk = 36
             }
         }
     }

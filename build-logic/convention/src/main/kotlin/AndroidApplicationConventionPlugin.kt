@@ -14,7 +14,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             extensions.configure<ApplicationExtension> {
                 configureAndroid(this)
                 defaultConfig.testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-                defaultConfig.targetSdk = 35
+                defaultConfig.targetSdk = 36
             }
         }
     }
