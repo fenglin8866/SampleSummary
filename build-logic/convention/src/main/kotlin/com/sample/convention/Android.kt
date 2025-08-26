@@ -40,8 +40,8 @@ internal fun Project.configureAndroid(
         }
 
         compileOptions {
-            sourceCompatibility = JavaVersion.VERSION_17
-            targetCompatibility = JavaVersion.VERSION_17
+            sourceCompatibility = JavaVersion.VERSION_21
+            targetCompatibility = JavaVersion.VERSION_21
         }
 
         buildFeatures {
@@ -55,7 +55,7 @@ internal fun Project.configureAndroid(
      */
     configure<KotlinAndroidProjectExtension> {
         compilerOptions.apply {
-            jvmTarget = JvmTarget.JVM_17
+            jvmTarget = JvmTarget.JVM_21
             // Enable experimental coroutines APIs, including Flow
             freeCompilerArgs.add(
                 "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
