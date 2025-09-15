@@ -59,6 +59,7 @@ retrofit = "3.0.0"
 
 accompanist = "0.37.3"
 timber = "5.0.1"
+composeMaterial3 = "1.5.1"
 
 [libraries]
 #向后兼容UI组件，确保MaterialDesign和基本UI兼容旧系统
