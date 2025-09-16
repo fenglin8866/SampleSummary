@@ -3,6 +3,7 @@ package com.xxh.compose.effect
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.Scaffold
 
@@ -18,32 +19,34 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ScaffoldSample(
     state: MutableState<Boolean>,
     scaffoldState: ScaffoldState = rememberScaffoldState()
 ) {
 
-    LaunchedEffect(state.value) {
-        scaffoldState.snackbarHostState.showSnackbar(
-            "Error message","Retry message"
-        )
+    if (state.value) {
+        LaunchedEffect( scaffoldState.snackbarHostState) {
+            scaffoldState.snackbarHostState.showSnackbar(
+                "Error message", "Retry message"
+            )
+        }
     }
 
     Scaffold(
+        scaffoldState = scaffoldState,
         topBar = {
             TopAppBar(
                 title = { Text("脚手架示例") }
             )
         },
-        content = {
+        content = {  innerPadding ->
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize().padding(innerPadding),
                 contentAlignment = Alignment.Center
             ) {
                 Button(onClick = {
-                    state.value=!state.value
+                    state.value = !state.value
                 }) {
                     Text("Error occurs")
                 }

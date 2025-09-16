@@ -4,14 +4,18 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.xxh.compose.effect.LaunchedEffectSample
+import com.xxh.compose.effect.RememberCoroutineScopSample
+import com.xxh.compose.effect.RememberUpdateStateSample
 import com.xxh.compose.ui.theme.SampleSummaryTheme
 
 class MainActivity : ComponentActivity() {
@@ -25,25 +29,43 @@ class MainActivity : ComponentActivity() {
                         name = "Android",
                         modifier = Modifier.padding(innerPadding)
                     )
+
                 }*/
-                LaunchedEffectSample()
+                //想要全局控制
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    contentWindowInsets = WindowInsets.safeDrawing
+                ) { innerPadding ->
+                    Box(modifier = Modifier.padding(innerPadding)) {
+                        Test()
+                    }
+                }
+                //想要单独某个布局避开系统栏
+                /*Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(WindowInsets.statusBars.asPaddingValues())
+                ) {
+
+                }*/
             }
         }
     }
 }
 
+
+
+
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+fun Test() {
+    //RememberCoroutineScopSample()
+    RememberUpdateStateSample()
 }
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     SampleSummaryTheme {
-        Greeting("Android")
+        Test()
     }
 }
