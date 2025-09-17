@@ -14,6 +14,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.xxh.compose.base.Message
+import com.xxh.compose.base.MessageCard
+import com.xxh.compose.base.MessageSample
 import com.xxh.compose.effect.RememberCoroutineScopSample
 import com.xxh.compose.effect.RememberUpdateStateSample
 import com.xxh.compose.ui.theme.SampleSummaryTheme
@@ -59,7 +62,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Test() {
     //RememberCoroutineScopSample()
-    RememberUpdateStateSample()
+    //RememberUpdateStateSample()
+    MessageSample()
 }
 
 @Preview(showBackground = true)
