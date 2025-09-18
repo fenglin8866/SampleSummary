@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.xxh.compose.base.ConstraintLayoutSample
 import com.xxh.compose.base.Message
 import com.xxh.compose.base.MessageCard
 import com.xxh.compose.base.MessageSample
@@ -63,7 +64,8 @@ class MainActivity : ComponentActivity() {
 fun Test() {
     //RememberCoroutineScopSample()
     //RememberUpdateStateSample()
-    MessageSample()
+    //MessageSample()
+    ConstraintLayoutSample()
 }
 
 @Preview(showBackground = true)
