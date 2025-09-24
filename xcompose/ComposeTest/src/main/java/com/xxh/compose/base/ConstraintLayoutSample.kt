@@ -7,6 +7,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -40,6 +41,7 @@ fun ConstraintLayoutContent() {
             //ConstraintLayout中水平居中
             centerHorizontallyTo(parent)
         })
+        LocalView.current
     }
 }
 
