@@ -20,6 +20,7 @@ import com.xxh.compose.base.MessageCard
 import com.xxh.compose.base.MessageSample
 import com.xxh.compose.effect.RememberCoroutineScopSample
 import com.xxh.compose.effect.RememberUpdateStateSample
+import com.xxh.compose.test.UITestScreen
 import com.xxh.compose.ui.theme.SampleSummaryTheme
 
 class MainActivity : ComponentActivity() {
@@ -41,7 +42,9 @@ class MainActivity : ComponentActivity() {
                     contentWindowInsets = WindowInsets.safeDrawing
                 ) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
-                        Test()
+                      //  Test()
+//                        UITestScreen()
+                        RememberUpdateStateSample()
                     }
                 }
                 //想要单独某个布局避开系统栏
