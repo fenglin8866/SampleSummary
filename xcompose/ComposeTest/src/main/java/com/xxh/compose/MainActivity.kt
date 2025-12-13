@@ -15,14 +15,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.xxh.compose.base.ConstraintLayoutSample
+import com.xxh.compose.base.CreateCompositionLocalSample
 import com.xxh.compose.base.Message
 import com.xxh.compose.base.MessageCard
 import com.xxh.compose.base.MessageSample
 import com.xxh.compose.effect.RememberCoroutineScopSample
 import com.xxh.compose.effect.RememberUpdateStateSample
-import com.xxh.compose.nav3.NavExample2
-import com.xxh.compose.nav3.NavExample4
-import com.xxh.compose.test.UITestScreen
 import com.xxh.compose.ui.theme.SampleSummaryTheme
 
 class MainActivity : ComponentActivity() {
@@ -45,8 +43,6 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
                         Test()
-//                        UITestScreen()
-                        //RememberUpdateStateSample()
                     }
                 }
                 //想要单独某个布局避开系统栏
@@ -70,8 +66,8 @@ fun Test() {
     //RememberCoroutineScopSample()
     //RememberUpdateStateSample()
     //MessageSample()
-//    ConstraintLayoutSample()
-    NavExample4()
+   // ConstraintLayoutSample()
+    CreateCompositionLocalSample()
 }
 
 @Preview(showBackground = true)

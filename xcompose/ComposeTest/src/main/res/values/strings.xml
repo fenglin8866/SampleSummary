@@ -2,5 +2,6 @@
     <string name="app_name">composetest</string>
     <plurals name="fruit_title">
         <item quantity="one">fruit</item>
+        <item quantity="other">fruits</item>
     </plurals>
 </resources>
