@@ -15,18 +15,10 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavEntry
-import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import kotlinx.serialization.Serializable
-
-@Serializable
-object HomePager : NavKey
-
-@Serializable
-data class ProductDetail(val name: String) : NavKey
 
 @Composable
 fun NavExample() {
@@ -58,7 +50,7 @@ fun NavExample() {
             }
 
             is ProductDetail -> NavEntry(key) {
-                ContentOrange(title = "Detail name=" + key.name)
+                ContentOrange(title = "Detail name=" + key.id)
             }
 
             else -> NavEntry(Unit) {
@@ -103,7 +95,7 @@ fun NavExample2() {
             }
 
             is ProductDetail -> NavEntry(key) {
-                ContentOrange(title = "Detail name=" + key.name)
+                ContentOrange(title = "Detail name=" + key.id)
             }
 
             else -> NavEntry(HomePager) {
@@ -137,23 +129,13 @@ fun NavExample3() {
                 })
             }
             entry<ProductDetail> {
-                ContentOrange(title = "Detail name=" + it.name)
+                ContentOrange(title = "Detail name=" + it.id)
             }
         })
 }
 
-@Serializable
-data object ScreenA : NavKey
-
-@Serializable
-data object ScreenB : NavKey
-
-@Serializable
-data object ScreenC : NavKey
-
 @Composable
 fun NavExample4() {
-
     val backStack = rememberNavBackStack(ScreenA)
     NavDisplay(
         backStack = backStack,

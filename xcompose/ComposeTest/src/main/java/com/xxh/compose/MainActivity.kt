@@ -21,6 +21,9 @@ import com.xxh.compose.base.MessageCard
 import com.xxh.compose.base.MessageSample
 import com.xxh.compose.effect.RememberCoroutineScopSample
 import com.xxh.compose.effect.RememberUpdateStateSample
+import com.xxh.compose.nav3.NavExample2
+import com.xxh.compose.nav3.NavExample4
+import com.xxh.compose.test.UITestScreen
 import com.xxh.compose.ui.theme.SampleSummaryTheme
 
 class MainActivity : ComponentActivity() {
@@ -43,6 +46,8 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
                         Test()
+//                        UITestScreen()
+                        //RememberUpdateStateSample()
                     }
                 }
                 //想要单独某个布局避开系统栏
@@ -66,8 +71,9 @@ fun Test() {
     //RememberCoroutineScopSample()
     //RememberUpdateStateSample()
     //MessageSample()
-   // ConstraintLayoutSample()
-    CreateCompositionLocalSample()
+//    ConstraintLayoutSample()
+   // CreateCompositionLocalSample()
+    NavExample4()
 }
 
 @Preview(showBackground = true)
