@@ -12,15 +12,17 @@ object LogsRecorder {
 
     private var isRecordLogs = true
 
-    private val dependencies: ObjectDependencies by lazy {
+    /*private val dependencies: ObjectDependencies by lazy {
         EntryPointAccessors.fromApplication(
             Browser.getContext().applicationContext,
             ObjectDependencies::class.java
         )
-    }
+    }*/
 
-    private val repository: LoggerRepository
-        get() = dependencies.getRepository()
+    private val dependencies: ObjectDependencies?=null
+
+    private val repository: LoggerRepository?
+        get() = dependencies?.getRepository()
 
     private val scope = CoroutineScope(Dispatchers.IO)
 
@@ -33,7 +35,7 @@ object LogsRecorder {
         if (isRecordLogs) {
             val endTime = System.currentTimeMillis()
             scope.launch {
-                repository.addLog(msg, startTime, endTime)
+                repository?.addLog(msg, startTime, endTime)
             }
         }
     }

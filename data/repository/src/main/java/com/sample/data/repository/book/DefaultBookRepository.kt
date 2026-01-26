@@ -45,6 +45,13 @@ class DefaultBookRepository @Inject constructor() : BookRepository {
             ),
             Book(
                 id = 3,
+                title = "Logger",
+                description = "Description",
+                timestamp = 1664679230742,
+                isBookmarked = false
+            ),
+            Book(
+                id = 4,
                 title = "Navigation",
                 description = "Description",
                 timestamp = 1667884312189,

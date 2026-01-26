@@ -34,6 +34,7 @@ dependencies {
     implementation(project(":feature:book"))
     implementation(project(":feature:upgrade"))
     implementation(project(":feature:login"))
+    implementation(project(":feature:logger"))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.ktx)

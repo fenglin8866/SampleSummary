@@ -16,9 +16,7 @@
 
 package com.sample.feature.logger.logs.ui
 
-import android.content.Intent
 import android.net.Uri
-import android.provider.DocumentsContract
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
@@ -26,12 +24,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.sample.feature.logger.basic.BaseFragment
 import com.sample.feature.logger.databinding.FragmentLogsBinding
 import com.sample.feature.logger.logs.ui.contract.LogUIEvent
 import com.sample.feature.logger.logs.ui.contract.LogUIIntent
 import com.sample.feature.logger.logs.ui.contract.LogUIState
 import com.sample.feature.logger.logs.ui.viewmodel.LogsViewModel
+import com.sample.feature.logger.logs.util.FileUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -66,8 +66,8 @@ class LogsFragment : BaseFragment<FragmentLogsBinding>() {
     }
 
     private fun initView() {
-        binding.titleBar.setTitleText("Logs")
         adapter = LogsViewAdapter(emptyList())
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
     }
 
@@ -123,7 +123,7 @@ class LogsFragment : BaseFragment<FragmentLogsBinding>() {
         binding.exportLogs.setOnClickListener {
             viewModel.dispatchIntent(LogUIIntent.OnExportClicked)
         }
-        binding.openLogsDir.setOnClickListener {
+        binding.openDir.setOnClickListener {
             viewModel.dispatchIntent(LogUIIntent.OnOpenClicked)
         }
         binding.startLog.setOnClickListener {
@@ -132,25 +132,17 @@ class LogsFragment : BaseFragment<FragmentLogsBinding>() {
         binding.endLog.setOnClickListener {
             viewModel.dispatchIntent(LogUIIntent.OnEndClicked)
         }
-
-        binding.titleBar.setOnTitleBarClickListener(object :
-            TitleBar.OnTitleBarClickListener {
-            override fun onLeftButtonClick() {
-                viewModel.dispatchIntent(LogUIIntent.OnBackClicked)
-            }
-
-            override fun onRightButtonClick() {
-
-            }
-        })
     }
 
     private fun openLogDir(uri: Uri) {
-        val intent = Intent(Intent.ACTION_VIEW).apply {
+       /* val intent = Intent(Intent.ACTION_VIEW).apply {
             setDataAndType(uri, DocumentsContract.Document.MIME_TYPE_DIR)
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
-        startActivity(intent)
+        startActivity(intent)*/
+        FileUtil().openFileManager(requireContext()) {
+
+        }
     }
 
 }

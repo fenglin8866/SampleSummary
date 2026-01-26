@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
+import com.sample.core.basic.ui.utils.LogUtils
 import com.sample.feature.logger.logs.repository.Log
 import java.io.OutputStream
 import javax.inject.Inject
@@ -29,7 +30,7 @@ class FileUtil @Inject constructor() {
                 intent.putExtra("set_folder_path", fileParent)
                 jumpFileDir(context, intent, pkg, cls)
             } catch (e2: Exception) {
-                NuLog.e("DownloadSettingActivity", "openFileManager err" + e2.message)
+                LogUtils.e("DownloadSettingActivity", "openFileManager err" + e2.message)
                 try {
                     pkg = "cn.nubia.myfile"
                     cls = "cn.nubia.myfile.CategoryActivity"

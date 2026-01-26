@@ -32,4 +32,5 @@ dependencies {
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.material)
     implementation(libs.androidx.fragment)
+    implementation(libs.androidx.recyclerview)
 }
