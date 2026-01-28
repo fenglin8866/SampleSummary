@@ -1,0 +1,70 @@
+Event的处理
+======================================
+1.封装全局UIEvent。
+2.UIEvent分类：可丢弃，不可丢弃
+-----------------------------
+演变过程
+1.ViewModel中管理所有的Event事件，不区分功能模块与全局模块，导致一些全局事件没有复用，出现冗余。
+参考:BaseUIEventViewModel
+
+2.封装全局Event事件，在UI基类中collect，ViewModel发送；构建单例和全局作用域,可以配合Hilt使用。
+全局事件与功能事件进行分离，分别使用密封类封装，减少when判断遗漏。
+参考：GlobalEventBus，GlobalUiEventDispatcher
+
+3.能不能将全局Event与功能Event合并在一起，例如使用继承。
+实践：不在一个包中的密封类无法使用继承，由于管理问题，不建议将全局Event与功能Event封装在一个包。
+解决：通过定义公共接口统一全局Event与功能Event，由于不是密封类，when不会编译检查，特别注意分支处理。
+参考：BaseAllUIEventViewModel
+-----------------------------
+使用方式
+场景1
+没有UI事件：BaseViewModel + BaseFragment
+
+场景2
+有全局事件
+  方式1：全部事件由ViewModel管理，UI只负责收集。
+  BaseAllUIEventViewModel + DefaultUIEventDispatcher
+
+  方式2：ViewModel只负责功能事件，全局事件定义为单例，依赖注入ViewModel，UI
+  GlobalEventBus/GlobalUiEventDispatcher + BaseUIEventViewModel/BaseViewModel
+-------------------------------
+注意点：
+1.事件发送间隔不要太短，防止阻塞或丢弃。
+
+emit方法挂起的场景
+a.没有collector
+b.collector 处理很慢
+c.buffer满了
+使用场景
+1.ViewModel内
+2.UIEvent不能丢（Toast、Dialog、Navigation）
+
+tryEmit方法丢弃的场景，立即返回，不阻塞当前线程。
+a.没有collector
+b.buffer满
+c.SharedFlow配置太小
+使用场景
+1.非关键事件
+2.防抖 / 连续触发
+3.日志、埋点、调试事件
+4.不希望阻塞当前线程（例如主线程）
+
+Fragment处理
+======================================
+Fragment封装，目标关注点分类，只负责显示数据与用户交互
+1.不触发数据的加载，触发加载放在ViewModel中，防止配置变化时反复触发。
+2.封装状态：数据与元素绑定，构建显示。
+3.UI事件：与UI相关，必须由UI驱动。例如Toast，Context，Dialog，导航等等。
+4.用户意图：用户行为与元素绑定，UI组件只负责事件的分发，相关业务逻辑集中在ViewModel中处理，避免Fragment生命周期发生变化时，不影响业务逻辑，减少异常报错。
+用户行为可能触发UI状态，UI事件。
+5.封装元素与状态的绑定ViewStateBinder，一些复杂的UI组件例如RecyclerView，不包含在内。
+避免反复构建，定义为全局类。
+
+
+全局防抖处理
+======================================
+
+
+
+SP/DataStore封装响应式
+======================================

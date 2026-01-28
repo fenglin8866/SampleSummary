@@ -1,4 +1,4 @@
-package com.sample.feature.logger.basic.event
+package com.sample.core.basic.event2
 
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -6,6 +6,9 @@ import kotlinx.coroutines.flow.SharedFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * 依赖注释基类ViewModel和Activity/Fragment，
+ */
 @Singleton
 class GlobalUiEventDispatcher @Inject constructor() {
     private val _events = MutableSharedFlow<GlobalUiEvent>(

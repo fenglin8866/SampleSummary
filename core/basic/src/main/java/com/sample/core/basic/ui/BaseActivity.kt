@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.snackbar.Snackbar
+import com.sample.core.basic.R
 import com.sample.core.basic.eventbus.GlobalEvent
 import com.sample.core.basic.eventbus.GlobalEventBus
 import kotlinx.coroutines.launch
@@ -44,7 +45,7 @@ abstract class BaseActivity<T : ViewBinding> : AppCompatActivity() {
                             Toast.makeText(this@BaseActivity, event.message, Toast.LENGTH_SHORT).show()
                         }
                         is GlobalEvent.Snackbar -> {
-                            Snackbar.make(findViewById(android.R.id.content), event.message, Snackbar.LENGTH_SHORT).show()
+                           // Snackbar.make(findViewById(R.id.content), event.message, Snackbar.LENGTH_SHORT).show()
                         }
                         is GlobalEvent.Navigate -> {
                             Toast.makeText(this@BaseActivity, "跳转至：${event.route}", Toast.LENGTH_SHORT).show()

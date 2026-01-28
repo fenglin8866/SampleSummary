@@ -83,6 +83,16 @@ class LogsFragment : BaseFragment<FragmentLogsBinding>() {
         }
     }
 
+    private fun observeEvents() {
+        lifecycleScope.launch {
+            viewModel.uiEvent
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect { event ->
+                    handleUIEvents(event)
+                }
+        }
+    }
+
     private fun render(state: LogUIState) {
         when (state) {
             is LogUIState.LogsData -> {
@@ -91,16 +101,6 @@ class LogsFragment : BaseFragment<FragmentLogsBinding>() {
             }
 
             is LogUIState.Empty -> Unit
-        }
-    }
-
-    private fun observeEvents() {
-        lifecycleScope.launch {
-            viewModel.uiEvent
-                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-                .collect { event ->
-                    handleUIEvents(event)
-                }
         }
     }
 

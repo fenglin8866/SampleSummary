@@ -1,0 +1,14 @@
+Logger功能开发总结
+==========================
+架构
+1.怎么统一UiEvent，全局Event与功能Event的如何结合。
+2.UI组件（Activity/Fragment）的解耦。
+    a、只显示数据，不加载数据。
+    b、只处理UI相关事件，其他逻辑都分离。
+    c、只分发用户事件，不处理。
+状态 + UI事件 + 用户行为分发。
+
+3.复杂的ViewModel怎么关注点分离
+
+知识点
+Flow，StateFlow，SharedFlow，Hilt

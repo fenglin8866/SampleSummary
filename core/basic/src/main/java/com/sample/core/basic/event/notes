@@ -1,0 +1,22 @@
+好，直接给你一版 「可直接落地」的 UIEventDispatcher，完全贴合你现在的
+BaseViewModel + SharedFlow + 多事件类型 + 防丢 / 可丢策略 的思路 👍
+而且我会顺手把 emit / tryEmit 的选择权“收口”，以后你在业务里基本不用纠结。
+
+设计目标（对齐你的架构）
+✔ UIEvent 集中管理
+✔ 不同事件 自动选择 emit / tryEmit
+✔ ViewModel 内 不关心协程细节
+✔ 支持 关键事件不丢 / 高频事件可丢
+✔ 后面可扩展：防抖、优先级、Middleware（你之前提过）
+
+
+六、你这套设计的“隐形收益”
+
+✔ UIEvent 语义即可靠性策略
+✔ 不会出现「Toast 偶尔不弹」
+✔ 不会出现「emit 卡住主线程」
+✔ 后面你可以很轻松加：
+delay / throttle
+Middleware（拦截某些 UIEvent）
+事务型 UIEvent（你之前提过）
+优先级 UIEvent

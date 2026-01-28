@@ -1,4 +1,4 @@
-package com.sample.feature.logger.basic.event
+package com.sample.core.basic.event2
 
 sealed interface GlobalUiEvent {
     data class Toast(val message: String) : GlobalUiEvent
