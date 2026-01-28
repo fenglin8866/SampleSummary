@@ -10,5 +10,7 @@ Logger功能开发总结
 
 3.复杂的ViewModel怎么关注点分离
 
+4.UserCase的封装
+
 知识点
 Flow，StateFlow，SharedFlow，Hilt

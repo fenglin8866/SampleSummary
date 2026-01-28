@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 abstract class BaseStateFragment<T : ViewBinding, State : Any> : BaseFragment<T>() {
 
     override fun setup() {
+        super.setup()
         collectUiStates()
     }
 

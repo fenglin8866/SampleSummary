@@ -20,12 +20,8 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.sample.feature.logger.basic.BaseFragment
+import com.sample.core.basic2.fragment.BaseStateAndDefaultEventFragment
 import com.sample.feature.logger.databinding.FragmentLogsBinding
 import com.sample.feature.logger.logs.ui.contract.LogUIEvent
 import com.sample.feature.logger.logs.ui.contract.LogUIIntent
@@ -33,20 +29,16 @@ import com.sample.feature.logger.logs.ui.contract.LogUIState
 import com.sample.feature.logger.logs.ui.viewmodel.LogsViewModel
 import com.sample.feature.logger.logs.util.FileUtil
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import javax.inject.Inject
-
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 
 /**
  * Fragment that displays the database logs.
  */
 @AndroidEntryPoint
-class LogsFragment : BaseFragment<FragmentLogsBinding>() {
+class LogsFragment : BaseStateAndDefaultEventFragment<FragmentLogsBinding, LogUIState, LogUIEvent>() {
 
     private val viewModel: LogsViewModel by viewModels()
-
-    @Inject
-    lateinit var viewBinder: LogsViewBinder
 
     private lateinit var adapter: LogsViewAdapter
 
@@ -57,43 +49,18 @@ class LogsFragment : BaseFragment<FragmentLogsBinding>() {
         return FragmentLogsBinding.inflate(inflater, container, false)
     }
 
-    override fun setupViews() {
-        super.setupViews()
-        initView()
-        observeUiState()
-        observeEvents()
-        userIntent()
-    }
 
-    private fun initView() {
+    override fun initView() {
         adapter = LogsViewAdapter(emptyList())
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
     }
 
-    private fun observeUiState() {
-        lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { state ->
-                    //避免重复创建实例
-                    // viewBinder.bind(binding, state)
-                    render(state)
-                }
-            }
-        }
+    override fun provideUIState(): StateFlow<LogUIState> {
+        return viewModel.uiState
     }
 
-    private fun observeEvents() {
-        lifecycleScope.launch {
-            viewModel.uiEvent
-                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-                .collect { event ->
-                    handleUIEvents(event)
-                }
-        }
-    }
-
-    private fun render(state: LogUIState) {
+    override fun render(state: LogUIState) {
         when (state) {
             is LogUIState.LogsData -> {
                 adapter.logsDataSet = state.logs
@@ -104,8 +71,12 @@ class LogsFragment : BaseFragment<FragmentLogsBinding>() {
         }
     }
 
+    override fun provideUIEvents(): SharedFlow<LogUIEvent> {
+        return viewModel.uiEvent
+    }
 
-    private fun handleUIEvents(event: LogUIEvent) {
+
+    override fun handleModuleEvents(event: LogUIEvent) {
         when (event) {
             is LogUIEvent.OpenLogDir -> {
                 openLogDir(event.dirUri)
@@ -116,7 +87,8 @@ class LogsFragment : BaseFragment<FragmentLogsBinding>() {
     /**
      * Context参数不建议参数传递
      */
-    private fun userIntent() {
+
+    override fun userIntent() {
         binding.clearLogs.setOnClickListener {
             viewModel.dispatchIntent(LogUIIntent.OnClearClicked)
         }

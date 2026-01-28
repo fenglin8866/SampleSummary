@@ -1,9 +1,9 @@
 package com.sample.feature.logger.logs.ui.viewmodel
 
 import androidx.lifecycle.viewModelScope
-import com.sample.feature.logger.basic.BaseViewModel
-import com.sample.feature.logger.basic.event.GlobalUiEvent
-import com.sample.feature.logger.basic.event.GlobalUiEventDispatcher
+import com.sample.core.basic2.event.DefaultUiEvent
+import com.sample.core.basic2.event.UIEvent
+import com.sample.core.basic2.viewmodel.BaseDefaultUIEventViewModel
 import com.sample.feature.logger.logs.domain.ExportResult
 import com.sample.feature.logger.logs.domain.LogsUserCase
 import com.sample.feature.logger.logs.ui.contract.LogUIEvent
@@ -17,8 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LogsViewModel @Inject constructor(
     private val userCase: LogsUserCase,
-    private val eventDispatcher: GlobalUiEventDispatcher
-) : BaseViewModel<LogUIState, LogUIIntent, LogUIEvent>(LogUIState.Empty) {
+) : BaseDefaultUIEventViewModel<LogUIState, LogUIIntent, UIEvent>(LogUIState.Empty) {
 
     /*val logs: StateFlow<List<Log>> =
         logsRepository.getAllLogs().stateIn(
@@ -37,7 +36,7 @@ class LogsViewModel @Inject constructor(
             }
 
             LogUIIntent.OnBackClicked -> {
-                eventDispatcher.emit(GlobalUiEvent.Back)
+                uiEventDispatcher.dispatch(DefaultUiEvent.Back)
             }
 
             LogUIIntent.OnStartClicked -> {
@@ -72,11 +71,11 @@ class LogsViewModel @Inject constructor(
                 val result = userCase.exportLogs((uiState.value as LogUIState.LogsData).logs)
                 when (result) {
                     is ExportResult.Success -> {
-                        eventDispatcher.emit(GlobalUiEvent.Toast("Export Success"))
+                        uiEventDispatcher.dispatch(DefaultUiEvent.Toast("Export Success"))
                     }
 
                     is ExportResult.Failed -> {
-                        eventDispatcher.emit(GlobalUiEvent.Toast("Export Failed"))
+                        uiEventDispatcher.dispatch(DefaultUiEvent.Toast("Export Failed"))
                     }
                 }
             }

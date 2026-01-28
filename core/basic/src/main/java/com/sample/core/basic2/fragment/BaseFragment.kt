@@ -30,6 +30,11 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
     }
 
     open fun setup(){
+        initView()
+        userIntent()
+    }
+
+    open fun initView(){
 
     }
 
