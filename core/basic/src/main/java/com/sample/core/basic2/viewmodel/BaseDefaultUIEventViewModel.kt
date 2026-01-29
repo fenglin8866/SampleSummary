@@ -46,15 +46,15 @@ import kotlinx.coroutines.flow.SharedFlow
  * 处理的事件包含功能模块UI事件和全局UI事件
  * uiEvent不是密封类型，注意else->Unit的处理，但不要遗漏相关分支。
  */
-abstract class BaseDefaultUIEventViewModel<State : Any, Intent : Any, E : UIEvent>(initialState: State) :
+abstract class BaseDefaultUIEventViewModel<State : Any, Intent : Any>(initialState: State) :
     BaseViewModel<State, Intent>(initialState) {
 
-    protected val uiEventDispatcher = DefaultUIEventDispatcher<E>(viewModelScope)
+    protected val uiEventDispatcher = DefaultUIEventDispatcher<UIEvent>(viewModelScope)
 
-    val uiEvent: SharedFlow<E>
+    val uiEvent: SharedFlow<UIEvent>
         get() = uiEventDispatcher.events
 
-    protected fun sendEvent(event: E) {
+    protected fun sendEvent(event: UIEvent) {
         uiEventDispatcher.dispatch(event)
     }
 

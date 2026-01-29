@@ -21,6 +21,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.sample.core.basic2.event.UIEvent
 import com.sample.core.basic2.fragment.BaseStateAndDefaultEventFragment
 import com.sample.feature.logger.databinding.FragmentLogsBinding
 import com.sample.feature.logger.logs.ui.contract.LogUIEvent
@@ -36,7 +37,7 @@ import kotlinx.coroutines.flow.StateFlow
  * Fragment that displays the database logs.
  */
 @AndroidEntryPoint
-class LogsFragment : BaseStateAndDefaultEventFragment<FragmentLogsBinding, LogUIState, LogUIEvent>() {
+class LogsFragment : BaseStateAndDefaultEventFragment<FragmentLogsBinding, LogUIState>() {
 
     private val viewModel: LogsViewModel by viewModels()
 
@@ -71,15 +72,16 @@ class LogsFragment : BaseStateAndDefaultEventFragment<FragmentLogsBinding, LogUI
         }
     }
 
-    override fun provideUIEvents(): SharedFlow<LogUIEvent> {
+    override fun provideUIEvents(): SharedFlow<UIEvent> {
         return viewModel.uiEvent
     }
 
-
-    override fun handleModuleEvents(event: LogUIEvent) {
-        when (event) {
-            is LogUIEvent.OpenLogDir -> {
-                openLogDir(event.dirUri)
+    override fun handleModuleEvents(event: UIEvent) {
+        if (event is LogUIEvent){
+            when (event) {
+                is LogUIEvent.OpenLogDir -> {
+                    openLogDir(event.dirUri)
+                }
             }
         }
     }

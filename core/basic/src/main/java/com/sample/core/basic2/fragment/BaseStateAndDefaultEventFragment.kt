@@ -6,11 +6,11 @@ import com.sample.core.basic2.event.AppUIEvent
 import com.sample.core.basic2.event.DefaultUiEvent
 import com.sample.core.basic2.event.UIEvent
 
-abstract class BaseStateAndDefaultEventFragment<T : ViewBinding, State : Any, Event : UIEvent> :
-    BaseStateAndEventFragment<T, State, Event>() {
+abstract class BaseStateAndDefaultEventFragment<T : ViewBinding, State : Any> :
+    BaseStateAndEventFragment<T, State, UIEvent>() {
 
 
-    override fun handleUIEvents(event: Event) {
+    override fun handleUIEvents(event: UIEvent) {
         when (event) {
             is AppUIEvent -> handleDefaultEvents(event)
             else -> Unit
@@ -20,7 +20,7 @@ abstract class BaseStateAndDefaultEventFragment<T : ViewBinding, State : Any, Ev
     /**
      * 统一处理模块UI事件
      */
-    abstract fun handleModuleEvents(event: Event)
+    abstract fun handleModuleEvents(event: UIEvent)
 
     protected fun handleDefaultEvents(event: AppUIEvent) {
         when (event) {

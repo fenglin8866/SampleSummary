@@ -2,7 +2,6 @@ package com.sample.feature.logger.logs.ui.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.sample.core.basic2.event.DefaultUiEvent
-import com.sample.core.basic2.event.UIEvent
 import com.sample.core.basic2.viewmodel.BaseDefaultUIEventViewModel
 import com.sample.feature.logger.logs.domain.ExportResult
 import com.sample.feature.logger.logs.domain.LogsUserCase
@@ -11,22 +10,33 @@ import com.sample.feature.logger.logs.ui.contract.LogUIIntent
 import com.sample.feature.logger.logs.ui.contract.LogUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LogsViewModel @Inject constructor(
     private val userCase: LogsUserCase,
-) : BaseDefaultUIEventViewModel<LogUIState, LogUIIntent, UIEvent>(LogUIState.Empty) {
+) : BaseDefaultUIEventViewModel<LogUIState, LogUIIntent>(LogUIState.Empty) {
 
     /*val logs: StateFlow<List<Log>> =
-        logsRepository.getAllLogs().stateIn(
+        userCase.getAllLogs().stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5_000),
             emptyList()
         )*/
     init {
         loadLogs()
+    }
+
+    fun loadLogs() {
+        viewModelScope.launch {
+            userCase.getAllLogs().collect { logs ->
+                updateState(LogUIState.LogsData(logs))
+            }
+        }
     }
 
     override fun handleIntent(intent: LogUIIntent) {
@@ -53,14 +63,6 @@ class LogsViewModel @Inject constructor(
 
             LogUIIntent.OnOpenClicked -> {
                 sendEvent(LogUIEvent.OpenLogDir(userCase.getLogsUri()))
-            }
-        }
-    }
-
-    fun loadLogs() {
-        viewModelScope.launch {
-            userCase.getAllLogs().collect { logs ->
-                updateState(LogUIState.LogsData(logs))
             }
         }
     }
