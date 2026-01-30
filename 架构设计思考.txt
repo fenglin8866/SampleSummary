@@ -14,3 +14,8 @@ Logger功能开发总结
 
 知识点
 Flow，StateFlow，SharedFlow，Hilt
+
+
+架构设计总结
+1.业务逻辑处理，只负责该业务，涉及其他层的操作，如果有其他层的操作，通过返回结果，发送给对应层处理。
+参考：LogsUserCase中的导出操作

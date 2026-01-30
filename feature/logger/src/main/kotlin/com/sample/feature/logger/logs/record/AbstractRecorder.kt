@@ -24,6 +24,6 @@ abstract class AbstractRecorder {
     }
 
     private fun recordLog(msg: String) {
-        LogsRecorder.recordLog(msg, startTime)
+        LogRecorder.recordLog(msg, startTime)
     }
 }
