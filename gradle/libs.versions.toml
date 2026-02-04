@@ -47,7 +47,7 @@ arch = "2.2.0"
 lifecycle = "2.9.2"
 navigation = "2.9.3"
 room = "2.7.2"
-dataStore = "1.1.7"
+dataStore = "1.2.0"
 work = "2.10.3"
 paging = "3.3.6"
 
@@ -170,8 +170,7 @@ androidx-room-paging = { group = "androidx.room", name = "room-paging", version.
 androidx-room-testing = { group = "androidx.room", name = "room-testing", version.ref = "room" }
 
 #DataStore
-androidx-dataStore = { group = "androidx.datastore", name = "datastore", version.ref = "dataStore" }
-androidx-dataStore-core = { group = "androidx.datastore", name = "datastore-core", version.ref = "dataStore" }
+androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "dataStore" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "dataStore" }
 
 #WorkManager
