@@ -11,6 +11,9 @@ class DefaultBrowserGuideStore(
     private val dataStore: DataStore<Preferences>
 ) {
 
+    /**
+     * 上次显示的引导弹窗时间
+     */
     val lastGuideTimeFlow: Flow<Long> =
         dataStore.data.map { prefs ->
             prefs[DefaultBrowserDataStore.LAST_GUIDE_TIME] ?: 0L
@@ -23,6 +26,9 @@ class DefaultBrowserGuideStore(
         }
     }
 
+    /**
+     * 引导弹窗冷却时间
+     */
     fun cooldownMillis(): Long =
         TimeUnit.DAYS.toMillis(DefaultBrowserConfig.GUIDE_COOLDOWN_DAYS.toLong())
 }

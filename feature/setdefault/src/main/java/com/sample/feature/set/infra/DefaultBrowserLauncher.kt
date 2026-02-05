@@ -9,6 +9,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import com.sample.feature.set.repository.DefaultBrowserConfig
 
+/**
+ * 调系统能力的工具类
+ */
 class DefaultBrowserLauncher(
     private val activity: ComponentActivity,
     private val onFastReturn: () -> Unit
@@ -23,6 +26,9 @@ class DefaultBrowserLauncher(
             handleReturn()
         }
 
+    /**
+     * 启动默认浏览器设置
+     */
     fun launch() {
         launchTime = SystemClock.elapsedRealtime()
 
@@ -44,11 +50,15 @@ class DefaultBrowserLauncher(
             }
         } catch (e: Exception) {
             // ignore
+            e.printStackTrace()
         }
 
         openSettings()
     }
 
+    /**
+     * 系统弹窗返回处理
+     */
     private fun handleReturn() {
         val duration =
             SystemClock.elapsedRealtime() - launchTime
@@ -63,7 +73,7 @@ class DefaultBrowserLauncher(
         }
     }
 
-    private fun openSettings() {
+    fun openSettings() {
         activity.startActivity(
             Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS)
         )

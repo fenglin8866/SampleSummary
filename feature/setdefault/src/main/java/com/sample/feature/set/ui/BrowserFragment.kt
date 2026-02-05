@@ -2,6 +2,8 @@ package com.sample.feature.set.ui
 
 import android.os.Bundle
 import android.view.View
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -13,6 +15,8 @@ class BrowserFragment : Fragment() {
     private val viewModel: BrowserViewModel by viewModels()
 
     private lateinit var launcher: DefaultBrowserLauncher
+
+    private var webView: WebView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,8 +53,16 @@ class BrowserFragment : Fragment() {
         }
     }
 
+    private fun showGuideDialog() {
+
+    }
+
+    private fun openDefaultBrowserSettings() {
+        launcher.openSettings()
+    }
+
     private fun setupWebView() {
-        webView.webViewClient = object : WebViewClient() {
+        webView?.webViewClient = object : WebViewClient() {
             override fun onPageFinished(
                 view: WebView?,
                 url: String?

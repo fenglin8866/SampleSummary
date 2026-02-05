@@ -10,6 +10,9 @@ class DefaultBrowserGuideUseCase(
     private val store: DefaultBrowserGuideStore
 ) {
 
+    /**
+     * 是否展示引导弹窗
+     */
     suspend fun shouldShowGuide(context: Context): Boolean {
         if (checker.isDefaultBrowser(context)) return false
 

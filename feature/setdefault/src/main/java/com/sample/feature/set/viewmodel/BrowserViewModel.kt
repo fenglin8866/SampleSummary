@@ -20,8 +20,8 @@ class BrowserViewModel(
     private val _uiEvent = MutableSharedFlow<BrowserUiEvent>()
     val uiEvent: SharedFlow<BrowserUiEvent> = _uiEvent
 
-    private val _uiState =
-        MutableStateFlow(BrowserUiState())
+    private val _uiState = MutableStateFlow(BrowserUiState())
+
     val uiState: StateFlow<BrowserUiState> = _uiState
 
     /** WebView 页面加载完成 */
