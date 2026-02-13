@@ -33,6 +33,7 @@ import com.sample.feature.book.list.ListRoute
 import com.sample.feature.car.CarScreen
 import com.sample.feature.logger.logs.DevModeActivity
 import com.sample.feature.login.LoginActivity
+import com.sample.feature.set.ui.SetDefaultActivity
 import com.sample.feature.upgrade.UpgradeActivity
 
 @Composable
@@ -52,7 +53,7 @@ fun MainNavigation(
                     when (id) {
                         1L -> content.startActivity(Intent(content, UpgradeActivity::class.java))
                         2L -> content.startActivity(Intent(content, LoginActivity::class.java))
-                        3L -> content.startActivity(Intent(content, DevModeActivity::class.java))
+                        3L -> content.startActivity(Intent(content, SetDefaultActivity::class.java))
                         4L -> navController.navigate("main")
                         else -> navController.navigate("details/$id")
                     }

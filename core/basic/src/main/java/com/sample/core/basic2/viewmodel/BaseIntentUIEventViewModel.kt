@@ -11,14 +11,15 @@ import kotlinx.coroutines.launch
  * 带UI事件ViewModel
  * 侧重功能UI事件的处理
  */
-open class BaseUIEventViewModel<State : Any, Event : Any>(initialState: State) :
-    BaseViewModel<State>(initialState) {
+abstract class BaseIntentUIEventViewModel<State : Any, Intent : Any, Event : Any>(initialState: State) :
+    BaseIntentViewModel<State, Intent>(initialState) {
 
     private val _uiEvent = MutableSharedFlow<Event>(
         replay = 0,
         extraBufferCapacity = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
+
 
     val uiEvent: SharedFlow<Event> = _uiEvent.asSharedFlow()
 

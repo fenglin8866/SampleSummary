@@ -14,7 +14,6 @@ import com.sample.feature.set.repository.DefaultBrowserConfig
  */
 class DefaultBrowserLauncher(
     private val activity: ComponentActivity,
-    private val onFastReturn: () -> Unit
 ) {
 
     private var launchTime = 0L
@@ -69,7 +68,7 @@ class DefaultBrowserLauncher(
         if (duration < DefaultBrowserConfig.ROLE_RETURN_FAST_THRESHOLD &&
             !isDefault
         ) {
-            onFastReturn()
+            openSettings()
         }
     }
 

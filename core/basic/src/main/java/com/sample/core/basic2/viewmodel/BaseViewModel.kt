@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-abstract class BaseViewModel<State : Any, Intent : Any>(initialState: State) : ViewModel() {
+open class BaseViewModel<State : Any>(initialState: State) : ViewModel() {
 
     private val _uiState = MutableStateFlow(initialState)
 
@@ -20,19 +20,4 @@ abstract class BaseViewModel<State : Any, Intent : Any>(initialState: State) : V
     protected fun updateState(state: State) {
         _uiState.value = state
     }
-
-    /**
-     * intent批量分发
-     */
-    fun dispatchIntents(vararg intents: Intent) {
-        intents.forEach { handleIntent(it) }
-    }
-
-    // DSL 风格 Intent 内部再分发
-    open fun dispatchIntent(intent: Intent) {
-        handleIntent(intent)
-    }
-
-    // 处理 UiIntent，更新 UIState 或发送事件
-    protected abstract fun handleIntent(intent: Intent)
 }

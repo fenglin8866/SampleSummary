@@ -1,0 +1,34 @@
+项目简介
+    该示例是用于架构演示，一些细节没有处理，不能直接用于项目。
+
+技术
+    架构优点
+    ✅ ViewModel 不碰系统 API
+    没 RoleManager
+    没 Settings Intent
+    没 Activity 引用
+    ✅ UIEvent 只做一次性行为
+    弹 Dialog
+    跳系统页面
+    ✅ 状态 & 行为彻底分离
+    StateFlow：当前是不是默认浏览器
+    SharedFlow：弹窗 / 跳转
+    ✅ 非常好测
+    GuideUseCase：纯逻辑
+    ViewModel：事件判断
+    UI：薄到只剩 glue code
+    优化2
+    =================================
+    ✅ 完全弃用 onActivityResult
+    ✅ DataStore + Flow，线程 & 生命周期安全
+    ✅ ViewModel 只关心 决策
+    ✅ 系统行为全部留在 UI 层
+    ✅ “Don’t ask again” 处理逻辑集中、可调阈值
+
+代码管理
+
+注意点
+    实现细节+测试问题
+
+实践心得
+SP，DataStore多次读取是否有消耗，是否可以合并为一个参数，通过固定标识分割字符串。

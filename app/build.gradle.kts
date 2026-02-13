@@ -35,6 +35,7 @@ dependencies {
     implementation(project(":feature:upgrade"))
     implementation(project(":feature:login"))
     implementation(project(":feature:logger"))
+    implementation(project(":feature:setdefault"))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.ktx)

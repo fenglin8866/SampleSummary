@@ -1,68 +1,50 @@
 package com.sample.feature.set.ui
 
 import android.os.Bundle
-import android.view.View
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
+import com.sample.core.basic2.fragment.BaseStateAndEventFragment
+import com.sample.feature.set.databinding.FragmentWebviewBinding
 import com.sample.feature.set.infra.DefaultBrowserLauncher
-import com.sample.feature.set.viewmodel.BrowserViewModel
+import com.sample.feature.set.ui.contract.BrowserUiEvent
+import com.sample.feature.set.ui.contract.BrowserUiState
+import com.sample.feature.set.ui.viewmodel.BrowserViewModel
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 
-class BrowserFragment : Fragment() {
+class BrowserFragment :
+    BaseStateAndEventFragment<FragmentWebviewBinding, BrowserUiState, BrowserUiEvent>() {
 
-    private val viewModel: BrowserViewModel by viewModels()
+    private val viewModel: BrowserViewModel by viewModels {
+        BrowserViewModel.Factory
+    }
 
+    /**
+     * UI相关逻辑处理
+     * 默认浏览器设置工具类
+     */
     private lateinit var launcher: DefaultBrowserLauncher
 
-    private var webView: WebView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        launcher = DefaultBrowserLauncher(
-            requireActivity()
-        ) {
-            viewModel.onRoleReturnFast()
-        }
+        launcher = DefaultBrowserLauncher(requireActivity())
     }
 
-    override fun onViewCreated(
-        view: View,
-        savedInstanceState: Bundle?
-    ) {
-        collectUiEvent()
-        setupWebView()
+    override fun bindView(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentWebviewBinding {
+        return FragmentWebviewBinding.inflate(inflater, container, false)
     }
 
-    private fun collectUiEvent() {
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.uiEvent.collect { event ->
-                when (event) {
-                    BrowserUiEvent.ShowDefaultBrowserGuide ->
-                        showGuideDialog()
-
-                    BrowserUiEvent.LaunchRoleManager ->
-                        launcher.launch()
-
-                    BrowserUiEvent.OpenDefaultBrowserSettings ->
-                        openDefaultBrowserSettings()
-                }
-            }
-        }
-    }
-
-    private fun showGuideDialog() {
-
-    }
-
-    private fun openDefaultBrowserSettings() {
-        launcher.openSettings()
-    }
-
-    private fun setupWebView() {
-        webView?.webViewClient = object : WebViewClient() {
+    override fun initView() {
+        super.initView()
+        binding.webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(
                 view: WebView?,
                 url: String?
@@ -71,6 +53,54 @@ class BrowserFragment : Fragment() {
             }
         }
     }
+
+    override fun userIntent() {
+        super.userIntent()
+        binding.setDefault.setOnClickListener {
+            viewModel.onDefaultDialog()
+        }
+        binding.loadUrl.setOnClickListener {
+            viewModel.onPageLoaded(requireContext())
+        }
+    }
+
+    override fun provideUIEvents(): SharedFlow<BrowserUiEvent> {
+        return viewModel.uiEvent
+    }
+
+    override fun handleUIEvents(event: BrowserUiEvent) {
+        when (event) {
+            BrowserUiEvent.ShowDefaultBrowserGuide ->
+                showGuideDialog()
+
+            BrowserUiEvent.LaunchRoleManager ->
+                launcher.launch()
+
+        }
+    }
+
+    override fun provideUIState(): StateFlow<BrowserUiState> {
+        return viewModel.uiState
+    }
+
+    override fun render(state: BrowserUiState) {
+        if(state.isDefaultBrowser){
+            binding.setDefault.text = "已设置"
+        }
+    }
+
+    private fun showGuideDialog() {
+        //构建有按钮的一个弹窗
+        val guideDialog = GuideDialog(requireContext())
+        guideDialog.setOnPositiveButtonClickListener(object : OnPositiveButtonClickListener {
+            override fun onPositiveClick() {
+                // 处理“确定”按钮点击逻辑
+                viewModel.onDefaultDialog()
+            }
+        })
+        guideDialog.show()
+    }
+
 
     override fun onResume() {
         super.onResume()

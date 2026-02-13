@@ -24,6 +24,8 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
         return binding.root
     }
 
+    abstract fun bindView(inflater: LayoutInflater, container: ViewGroup?): T
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setup()
@@ -44,8 +46,6 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
     open fun userIntent(){
 
     }
-
-    abstract fun bindView(inflater: LayoutInflater, container: ViewGroup?): T
 
     /**
      * Called when fragment is destroyed.

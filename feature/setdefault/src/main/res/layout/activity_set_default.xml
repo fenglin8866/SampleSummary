@@ -7,4 +7,14 @@
     android:layout_height="match_parent"
     tools:context=".ui.SetDefaultActivity">
 
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/container"
+        android:name="com.sample.feature.set.ui.BrowserFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

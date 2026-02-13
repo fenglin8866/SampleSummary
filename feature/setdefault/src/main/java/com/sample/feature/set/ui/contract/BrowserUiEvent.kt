@@ -1,4 +1,4 @@
-package com.sample.feature.set.ui
+package com.sample.feature.set.ui.contract
 
 sealed interface BrowserUiEvent {
 
@@ -8,6 +8,4 @@ sealed interface BrowserUiEvent {
     /** 调起系统默认浏览器弹窗 */
     object LaunchRoleManager : BrowserUiEvent
 
-    /** 跳转系统设置页 */
-    object OpenDefaultBrowserSettings : BrowserUiEvent
 }
