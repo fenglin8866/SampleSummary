@@ -36,6 +36,7 @@ dependencies {
     implementation(project(":feature:login"))
     implementation(project(":feature:logger"))
     implementation(project(":feature:setdefault"))
+    implementation(project(":data:datastore"))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.ktx)

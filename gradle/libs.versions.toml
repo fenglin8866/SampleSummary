@@ -118,6 +118,7 @@ kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime",
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 kotlinx-serialization-json-okio = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json-okio", version.ref = "kotlinxSerialization" }
 kotlinx-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "kotlinxSerialization" }
+# Kotlin 多平台库
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinxSerialization" }
 
 #lifecycle

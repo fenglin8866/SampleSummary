@@ -10,7 +10,7 @@ class DefaultBookRepository @Inject constructor() : BookRepository {
     override val observeAllBooks: Flow<List<Book>>
         get() = allItems
 
-    override fun observeBookById(id: Long): Flow<Book> =observeAllBooks.map { items ->
+    override fun observeBookById(id: Long): Flow<Book> = observeAllBooks.map { items ->
         items.firstOrNull { book -> book.id == id }
             ?: throw NoSuchElementException("$id not found")
     }
@@ -18,7 +18,7 @@ class DefaultBookRepository @Inject constructor() : BookRepository {
     override suspend fun bookmark(id: Long, isBookmarked: Boolean) {
         allItems.getAndUpdate { items ->
             items.map { book ->
-                if(book.id == id) {
+                if (book.id == id) {
                     book.copy(isBookmarked = isBookmarked)
                 } else {
                     book
@@ -55,6 +55,13 @@ class DefaultBookRepository @Inject constructor() : BookRepository {
                 title = "Navigation",
                 description = "Description",
                 timestamp = 1667884312189,
+                isBookmarked = false
+            ),
+            Book(
+                id = 5,
+                title = "DataStore",
+                description = "Description",
+                timestamp = 1667886312189,
                 isBookmarked = false
             )
         )
