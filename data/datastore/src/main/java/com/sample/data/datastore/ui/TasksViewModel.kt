@@ -19,16 +19,16 @@ package com.sample.data.datastore.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import com.sample.data.datastore.data.SortOrder
 import com.sample.data.datastore.data.Task
 import com.sample.data.datastore.data.TasksRepository
+import com.sample.data.datastore.data.UserPreferences
 import com.sample.data.datastore.data.UserPreferencesRepository
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.launch
 
-/**
- * UI显示的数据模型
- */
 data class TasksUiModel(
     val tasks: List<Task>,
     val showCompleted: Boolean,
@@ -40,23 +40,27 @@ class TasksViewModel(
     private val userPreferencesRepository: UserPreferencesRepository
 ) : ViewModel() {
 
-    // Keep the show completed filter as a stream of changes
-    private val showCompletedFlow = MutableStateFlow(false)
+    val initialSetupEvent = liveData {
+        emit(userPreferencesRepository.fetchInitialPreferences())
+    }
 
-    // Keep the sort order as a stream of changes
-    private val sortOrderFlow = userPreferencesRepository.sortOrderFlow
+    // Keep the user preferences as a stream of changes
+    private val userPreferencesFlow = userPreferencesRepository.userPreferencesFlow
 
     // Every time the sort order, the show completed filter or the list of tasks emit,
     // we should recreate the list of tasks
     private val tasksUiModelFlow = combine(
         repository.tasks,
-        showCompletedFlow,
-        sortOrderFlow
-    ) { tasks: List<Task>, showCompleted: Boolean, sortOrder: SortOrder ->
+        userPreferencesFlow
+    ) { tasks: List<Task>, userPreferences: UserPreferences ->
         return@combine TasksUiModel(
-            tasks = filterSortTasks(tasks, showCompleted, sortOrder),
-            showCompleted = showCompleted,
-            sortOrder = sortOrder
+            tasks = filterSortTasks(
+                tasks,
+                userPreferences.showCompleted,
+                userPreferences.sortOrder
+            ),
+            showCompleted = userPreferences.showCompleted,
+            sortOrder = userPreferences.sortOrder
         )
     }
     val tasksUiModel = tasksUiModelFlow.asLiveData()
@@ -77,10 +81,6 @@ class TasksViewModel(
             SortOrder.NONE -> filteredTasks
             SortOrder.BY_DEADLINE -> filteredTasks.sortedByDescending { it.deadline }
             SortOrder.BY_PRIORITY -> filteredTasks.sortedBy { it.priority }
-            /**
-             * 按截止日期降序、优先级升序对任务列表进行排序
-             * 截止日期越近的任务排在前面，截止日期相同时优先级数值小的排在前面
-             */
             SortOrder.BY_DEADLINE_AND_PRIORITY -> filteredTasks.sortedWith(
                 compareByDescending<Task> { it.deadline }.thenBy { it.priority }
             )
@@ -88,15 +88,21 @@ class TasksViewModel(
     }
 
     fun showCompletedTasks(show: Boolean) {
-        showCompletedFlow.value = show
+        viewModelScope.launch {
+            userPreferencesRepository.updateShowCompleted(show)
+        }
     }
 
     fun enableSortByDeadline(enable: Boolean) {
-        userPreferencesRepository.enableSortByDeadline(enable)
+        viewModelScope.launch {
+            userPreferencesRepository.enableSortByDeadline(enable)
+        }
     }
 
     fun enableSortByPriority(enable: Boolean) {
-        userPreferencesRepository.enableSortByPriority(enable)
+        viewModelScope.launch {
+            userPreferencesRepository.enableSortByPriority(enable)
+        }
     }
 }
 
