@@ -16,3 +16,4 @@
 2.配置与数据分不同的仓库管理。通过不同的配置组合，过滤，排序显示不同的数据。例如：Task+UserPreferences
 3.构建UI显示数据模型，将不同的数据合并为UI要显示的数据。例如：TasksUiModel
 4.架构依赖要清晰，尽量保持单向依赖。例如：UI层，数据层，UI不涉及任何DataStore的操作，全部封装在Repository层。
+5.SharedPreferences的使用，通过StateFlow封装构建响应式。只需在冷启动读取一次，其他操作都是更新，减少了反复读取操作。
