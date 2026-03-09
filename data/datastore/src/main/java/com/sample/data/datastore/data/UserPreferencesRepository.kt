@@ -29,27 +29,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
-object PreferencesKeys {
-    val SORT_ORDER = stringPreferencesKey("sort_order")
-    val SHOW_COMPLETED = booleanPreferencesKey("show_completed")
-}
-
-data class UserPreferences(
-    val showCompleted: Boolean,
-    val sortOrder: SortOrder
-)
-
-/**
- * 将两个按钮合并为一个状态。不要使用两个布尔值来表示排序顺序，而是使用一个枚举值。
- * 减少状态空间
- */
-enum class SortOrder {
-    NONE,
-    BY_DEADLINE,
-    BY_PRIORITY,
-    BY_DEADLINE_AND_PRIORITY
-}
-
 /**
  * Class that handles saving and retrieving user preferences
  */
