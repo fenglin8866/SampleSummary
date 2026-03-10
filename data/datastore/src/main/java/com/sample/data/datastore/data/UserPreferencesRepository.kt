@@ -49,6 +49,7 @@ class UserPreferencesRepository(private val dataStore: DataStore<Preferences>) {
                 throw exception
             }
         }.map { preferences ->
+            Log.i("xxh1234","userPreferencesFlow")
             mapUserPreferences(preferences)
         }
 
@@ -77,7 +78,7 @@ class UserPreferencesRepository(private val dataStore: DataStore<Preferences>) {
                         SortOrder.NONE
                     }
                 }
-
+            Log.i("xxh1234","enableSortByDeadline enable=$enable sortOrder=${newSortOrder.name}")
             preferences[PreferencesKeys.SORT_ORDER] = newSortOrder.name
         }
     }
@@ -107,7 +108,7 @@ class UserPreferencesRepository(private val dataStore: DataStore<Preferences>) {
                         SortOrder.NONE
                     }
                 }
-
+            Log.i("xxh1234","enableSortByPriority enable=$enable sortOrder=${newSortOrder.name}")
             preferences[PreferencesKeys.SORT_ORDER] = newSortOrder.name
         }
     }
@@ -131,6 +132,7 @@ class UserPreferencesRepository(private val dataStore: DataStore<Preferences>) {
 
         // Get our show completed value, defaulting to false if not set:
         val showCompleted = preferences[PreferencesKeys.SHOW_COMPLETED] ?: false
+        Log.i("xxh1234","mapUserPreferences showCompleted=$showCompleted sortOrder=${sortOrder.name}")
         return UserPreferences(showCompleted, sortOrder)
     }
 }

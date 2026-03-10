@@ -16,6 +16,7 @@
 
 package com.sample.data.datastore.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
@@ -26,7 +27,10 @@ import com.sample.data.datastore.data.Task
 import com.sample.data.datastore.data.TasksRepository
 import com.sample.data.datastore.data.UserPreferences
 import com.sample.data.datastore.data.UserPreferencesRepository
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 data class TasksUiModel(
@@ -53,6 +57,7 @@ class TasksViewModel(
         repository.tasks,
         userPreferencesFlow
     ) { tasks: List<Task>, userPreferences: UserPreferences ->
+        Log.i("xxh1234","tasksUiModelFlow showCompleted=${userPreferences.showCompleted} sortOrder=${userPreferences.sortOrder.name}")
         return@combine TasksUiModel(
             tasks = filterSortTasks(
                 tasks,
@@ -63,7 +68,19 @@ class TasksViewModel(
             sortOrder = userPreferences.sortOrder
         )
     }
+
     val tasksUiModel = tasksUiModelFlow.asLiveData()
+
+    val tasksUiModel2: StateFlow<TasksUiModel> = tasksUiModelFlow
+        .stateIn(
+            scope = viewModelScope,           // ViewModel 的协程作用域
+            started = SharingStarted.WhileSubscribed(5000),  // 订阅策略
+            initialValue = TasksUiModel(      // 初始值
+                tasks = emptyList(),
+                showCompleted = false,
+                sortOrder = SortOrder.NONE
+            )
+        )
 
     private fun filterSortTasks(
         tasks: List<Task>,

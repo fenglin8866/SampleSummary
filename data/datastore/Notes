@@ -1,3 +1,12 @@
+项目介绍
+显示任务列表。
+核心元素：标题，日期，优先级，是否完成。
+要求：
+1.提供按钮，是否显示完成的任务
+2.提供优先级按钮，显示的任务列表是否按优先级排序。
+3.提供日期按钮，显示的任务列表是否按日期排序。
+4.当优先级按钮和日期按钮同时选中时，先按日期排序，日期相同的再按优先级排序。
+
 实践
 1.涉及存储DataStore的数据比较多，而且涉及不同的功能，冷启动的时候没必要全部创建，建议按功能建独立的 DataStore 文件。
     延迟初始化
@@ -17,3 +26,23 @@
 3.构建UI显示数据模型，将不同的数据合并为UI要显示的数据。例如：TasksUiModel
 4.架构依赖要清晰，尽量保持单向依赖。例如：UI层，数据层，UI不涉及任何DataStore的操作，全部封装在Repository层。
 5.SharedPreferences的使用，通过StateFlow封装构建响应式。只需在冷启动读取一次，其他操作都是更新，减少了反复读取操作。
+============================
+
+拆坑点
+1.当获取配置与按钮状态关联，构建显示时 先通过配置确定按钮状态，再设置监听。防止初始化Flow的变化导致状态不一致进入死循环。
+    例如：initialSetupEvent。
+
+2.将点击，状态更新区分开。点击->状态变化->更新UI->移除监听，修改按钮状态，添加监听。
+collect 收到数据
+    ↓
+updateTaskFilters() 更新按钮状态（设置 isChecked）
+    ↓
+触发 OnCheckedChangeListener
+    ↓
+调用 viewModel.enableSortByDeadline() 等方法
+    ↓
+修改 DataStore → userPreferencesFlow 发射新值
+    ↓
+combine 重新计算 → tasksUiModel2 发射新值
+    ↓
+回到 collect，形成无限循环
