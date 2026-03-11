@@ -7,6 +7,16 @@
 3.提供日期按钮，显示的任务列表是否按日期排序。
 4.当优先级按钮和日期按钮同时选中时，先按日期排序，日期相同的再按优先级排序。
 
+DataStore使用
+1.构建DataStore单例，可配置是否兼容SharedPreferences
+2.选择使用类型
+a.PreferenceDataStore
+	1.定义存储Key，定义获取值构建的对象（可选）
+	2.读写操作：dataStore.data.map{preferences->{ val name=preferences[keys] } }
+	3.写入操作:dataStore.edit{preferences->{ preferences[keys]="" }
+b.
+
+
 实践
 1.涉及存储DataStore的数据比较多，而且涉及不同的功能，冷启动的时候没必要全部创建，建议按功能建独立的 DataStore 文件。
     延迟初始化
@@ -26,13 +36,25 @@
 3.构建UI显示数据模型，将不同的数据合并为UI要显示的数据。例如：TasksUiModel
 4.架构依赖要清晰，尽量保持单向依赖。例如：UI层，数据层，UI不涉及任何DataStore的操作，全部封装在Repository层。
 5.SharedPreferences的使用，通过StateFlow封装构建响应式。只需在冷启动读取一次，其他操作都是更新，减少了反复读取操作。
+3.防抖的实现。分不同的场景a.本地操作,使用debounce时间间隔 + 用户提示。b.长耗时操作（网络，大文件处理），根据操作完整状态 + 用户提示。
+https://my.feishu.cn/wiki/Ko2gwEXADiXyggkzDCPcob85nLh?from=from_copylink
+------------------------------------------
+架构设计
+1.不同层级的数据转换，使用map
+2.多个Flow组合，使用combine
+3.将Repository中Flow转换为ViewModel中的StateFlow
+https://my.feishu.cn/wiki/JiCEw9A6cip93DkEYvgcGdkanOR?from=from_copylink
+4.使用State封装UI状态，UI组件响应State变化。
+5.点击封装为用户意图处理。
+6.当UI层需要使用多个Repository时，建议使用ViewModel作为中间层，将多个Repository的数据进行组合，并提供给UI层。当ViewModel比较复杂时，可以抽象一个Domain层处理
 ============================
 
 拆坑点
-1.当获取配置与按钮状态关联，构建显示时 先通过配置确定按钮状态，再设置监听。防止初始化Flow的变化导致状态不一致进入死循环。
-    例如：initialSetupEvent。
+问题：执行时序问题，当一些View状态与配置管理关联时，容易出现死循环。例如：switch按钮。
 
-2.将点击，状态更新区分开。点击->状态变化->更新UI->移除监听，修改按钮状态，添加监听。
+原因：
+先设置监听后，按钮为默认状态，再设置按钮状态，会触发监听，导致无限循环。
+
 collect 收到数据
     ↓
 updateTaskFilters() 更新按钮状态（设置 isChecked）
@@ -46,3 +68,6 @@ updateTaskFilters() 更新按钮状态（设置 isChecked）
 combine 重新计算 → tasksUiModel2 发射新值
     ↓
 回到 collect，形成无限循环
+
+解决
+先设置按钮状态，再设置监听。
