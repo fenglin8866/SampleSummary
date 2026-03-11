@@ -44,6 +44,18 @@ class TasksViewModel(
     private val userPreferencesRepository: UserPreferencesRepository
 ) : ViewModel() {
 
+    /**
+     * LiveData 被订阅时：当 Activity/Fragment 调用 observe() 开始观察，liveData { } 块内的代码才会执行，此时触发 emit
+     *
+     * 执行过程：
+     * liveData { } 创建了一个 LiveData 对象
+     * 订阅时自动启动协程执行块内代码
+     * 调用 fetchInitialPreferences() 获取初始偏好（挂起函数，从 DataStore 读取）
+     * 读取完成后 emit 发射结果
+     * 只执行一次：由于使用 liveData 构建器，除非重新订阅，否则不会重复执行
+     *
+     * 注意：这段代码用于获取初始配置，发射一次后即结束。如需持续监听偏好变化，应使用 Flow 而非 liveData。
+     */
     val initialSetupEvent = liveData {
         emit(userPreferencesRepository.fetchInitialPreferences())
     }
@@ -71,6 +83,15 @@ class TasksViewModel(
 
     val tasksUiModel = tasksUiModelFlow.asLiveData()
 
+    /**
+     * SharingStarted.WhileSubscribed(5000)
+     * 含义：
+     * UI订阅 -> 开始上游Flow
+     * UI取消 -> 5秒后停止
+     * 避免：
+     * Fragment重建
+     * 重复网络请求
+     */
     val tasksUiModel2: StateFlow<TasksUiModel> = tasksUiModelFlow
         .stateIn(
             scope = viewModelScope,           // ViewModel 的协程作用域
