@@ -1,27 +1,22 @@
 package com.sample.data.datastore.data
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.dataStore
 import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import kotlinx.serialization.Serializable
 
 private const val USER_PREFERENCES_NAME = "user_preferences"
 
-val Context.dataStore by preferencesDataStore(
-    name = USER_PREFERENCES_NAME,
-    produceMigrations = { context ->
-        // Since we're migrating from SharedPreferences, add a migration based on the
-        // SharedPreferences name
-        listOf(SharedPreferencesMigration(context, USER_PREFERENCES_NAME))
-    }
+val Context.dataStore: DataStore<UserPreferences> by dataStore(
+    fileName = USER_PREFERENCES_NAME,
+    serializer = PreferencesSerializer,
 )
 
-object PreferencesKeys {
-    val SORT_ORDER = stringPreferencesKey("sort_order")
-    val SHOW_COMPLETED = booleanPreferencesKey("show_completed")
-}
-
+@Serializable
 data class UserPreferences(
     val showCompleted: Boolean,
     val sortOrder: SortOrder

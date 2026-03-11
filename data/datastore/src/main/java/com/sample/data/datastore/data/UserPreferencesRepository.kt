@@ -33,7 +33,7 @@ import javax.inject.Inject
 /**
  * Class that handles saving and retrieving user preferences
  */
-class UserPreferencesRepository @Inject constructor(private val dataStore: DataStore<Preferences>) {
+class UserPreferencesRepository @Inject constructor(private val dataStore: DataStore<UserPreferences>) {
 
     private val TAG: String = "UserPreferencesRepo"
 
@@ -45,13 +45,10 @@ class UserPreferencesRepository @Inject constructor(private val dataStore: DataS
             // dataStore.data throws an IOException when an error is encountered when reading data
             if (exception is IOException) {
                 Log.e(TAG, "Error reading preferences.", exception)
-                emit(emptyPreferences())
+                //emit(null)
             } else {
                 throw exception
             }
-        }.map { preferences ->
-            Log.i("xxh1234", "userPreferencesFlow")
-            mapUserPreferences(preferences)
         }
 
     /**
@@ -60,10 +57,8 @@ class UserPreferencesRepository @Inject constructor(private val dataStore: DataS
     suspend fun enableSortByDeadline(enable: Boolean) {
         // updateData handles data transactionally, ensuring that if the sort is updated at the same
         // time from another thread, we won't have conflicts
-        dataStore.edit { preferences ->
-            val currentOrder = SortOrder.valueOf(
-                preferences[PreferencesKeys.SORT_ORDER] ?: SortOrder.NONE.name
-            )
+        dataStore.updateData { preferences ->
+            val currentOrder = preferences.sortOrder
 
             val newSortOrder =
                 if (enable) {
@@ -80,7 +75,7 @@ class UserPreferencesRepository @Inject constructor(private val dataStore: DataS
                     }
                 }
             Log.i("xxh1234", "enableSortByDeadline enable=$enable sortOrder=${newSortOrder.name}")
-            preferences[PreferencesKeys.SORT_ORDER] = newSortOrder.name
+            preferences.copy(sortOrder = newSortOrder)
         }
     }
 
@@ -90,10 +85,8 @@ class UserPreferencesRepository @Inject constructor(private val dataStore: DataS
     suspend fun enableSortByPriority(enable: Boolean) {
         // updateData handles data transactionally, ensuring that if the sort is updated at the same
         // time from another thread, we won't have conflicts
-        dataStore.edit { preferences ->
-            val currentOrder = SortOrder.valueOf(
-                preferences[PreferencesKeys.SORT_ORDER] ?: SortOrder.NONE.name
-            )
+        dataStore.updateData { preferences ->
+            val currentOrder = preferences.sortOrder
 
             val newSortOrder =
                 if (enable) {
@@ -110,29 +103,13 @@ class UserPreferencesRepository @Inject constructor(private val dataStore: DataS
                     }
                 }
             Log.i("xxh1234", "enableSortByPriority enable=$enable sortOrder=${newSortOrder.name}")
-            preferences[PreferencesKeys.SORT_ORDER] = newSortOrder.name
+            preferences.copy(sortOrder = newSortOrder)
         }
     }
 
     suspend fun updateShowCompleted(showCompleted: Boolean) {
-        dataStore.edit { preferences ->
-            preferences[PreferencesKeys.SHOW_COMPLETED] = showCompleted
+        dataStore.updateData { preferences ->
+            preferences.copy(showCompleted = showCompleted)
         }
-    }
-
-    private fun mapUserPreferences(preferences: Preferences): UserPreferences {
-        // Get the sort order from preferences and convert it to a [SortOrder] object
-        val sortOrder =
-            SortOrder.valueOf(
-                preferences[PreferencesKeys.SORT_ORDER] ?: SortOrder.NONE.name
-            )
-
-        // Get our show completed value, defaulting to false if not set:
-        val showCompleted = preferences[PreferencesKeys.SHOW_COMPLETED] ?: false
-        Log.i(
-            "xxh1234",
-            "mapUserPreferences showCompleted=$showCompleted sortOrder=${sortOrder.name}"
-        )
-        return UserPreferences(showCompleted, sortOrder)
     }
 }
