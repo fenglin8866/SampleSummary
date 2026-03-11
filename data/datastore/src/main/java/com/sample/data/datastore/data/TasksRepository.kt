@@ -16,17 +16,18 @@
 
 package com.sample.data.datastore.data
 
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.flowOf
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-object TasksRepository {
 
+class TasksRepository @Inject constructor() {
     private val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
 
     // In a real app, this would be coming from a data source like a database
-    val tasks = flowOf(
+    private val tasks = flowOf(
         listOf(
             Task(
                 name = "Open codelab",
@@ -67,4 +68,7 @@ object TasksRepository {
             )
         )
     )
+
+    fun getTasks()= tasks
+
 }

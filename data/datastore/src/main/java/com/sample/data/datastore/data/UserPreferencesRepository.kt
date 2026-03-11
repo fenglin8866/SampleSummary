@@ -28,11 +28,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
 /**
  * Class that handles saving and retrieving user preferences
  */
-class UserPreferencesRepository(private val dataStore: DataStore<Preferences>) {
+class UserPreferencesRepository @Inject constructor(private val dataStore: DataStore<Preferences>) {
 
     private val TAG: String = "UserPreferencesRepo"
 
@@ -49,7 +50,7 @@ class UserPreferencesRepository(private val dataStore: DataStore<Preferences>) {
                 throw exception
             }
         }.map { preferences ->
-            Log.i("xxh1234","userPreferencesFlow")
+            Log.i("xxh1234", "userPreferencesFlow")
             mapUserPreferences(preferences)
         }
 
@@ -78,7 +79,7 @@ class UserPreferencesRepository(private val dataStore: DataStore<Preferences>) {
                         SortOrder.NONE
                     }
                 }
-            Log.i("xxh1234","enableSortByDeadline enable=$enable sortOrder=${newSortOrder.name}")
+            Log.i("xxh1234", "enableSortByDeadline enable=$enable sortOrder=${newSortOrder.name}")
             preferences[PreferencesKeys.SORT_ORDER] = newSortOrder.name
         }
     }
@@ -108,7 +109,7 @@ class UserPreferencesRepository(private val dataStore: DataStore<Preferences>) {
                         SortOrder.NONE
                     }
                 }
-            Log.i("xxh1234","enableSortByPriority enable=$enable sortOrder=${newSortOrder.name}")
+            Log.i("xxh1234", "enableSortByPriority enable=$enable sortOrder=${newSortOrder.name}")
             preferences[PreferencesKeys.SORT_ORDER] = newSortOrder.name
         }
     }
@@ -119,10 +120,6 @@ class UserPreferencesRepository(private val dataStore: DataStore<Preferences>) {
         }
     }
 
-    suspend fun fetchInitialPreferences() =
-        mapUserPreferences(dataStore.data.first().toPreferences())
-
-
     private fun mapUserPreferences(preferences: Preferences): UserPreferences {
         // Get the sort order from preferences and convert it to a [SortOrder] object
         val sortOrder =
@@ -132,7 +129,10 @@ class UserPreferencesRepository(private val dataStore: DataStore<Preferences>) {
 
         // Get our show completed value, defaulting to false if not set:
         val showCompleted = preferences[PreferencesKeys.SHOW_COMPLETED] ?: false
-        Log.i("xxh1234","mapUserPreferences showCompleted=$showCompleted sortOrder=${sortOrder.name}")
+        Log.i(
+            "xxh1234",
+            "mapUserPreferences showCompleted=$showCompleted sortOrder=${sortOrder.name}"
+        )
         return UserPreferences(showCompleted, sortOrder)
     }
 }

@@ -19,25 +19,24 @@ package com.sample.data.datastore.ui
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.sample.data.datastore.data.SortOrder
-import com.sample.data.datastore.data.TasksRepository
-import com.sample.data.datastore.data.UserPreferencesRepository
-import com.sample.data.datastore.data.dataStore
 import com.sample.data.datastore.databinding.ActivityTasksBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class TasksActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityTasksBinding
     private val adapter = TasksAdapter()
 
-    private lateinit var viewModel: TasksViewModel
+    private val viewModel: TasksViewModel by viewModels()
 
     private var isInit = false
 
@@ -47,15 +46,6 @@ class TasksActivity : AppCompatActivity() {
         binding = ActivityTasksBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-
-        viewModel = ViewModelProvider(
-            this,
-            TasksViewModelFactory(
-                TasksRepository,
-                UserPreferencesRepository(dataStore)
-            )
-        )[TasksViewModel::class.java]
-
         setupRecyclerView()
         collectUiEvents()
     }
@@ -83,7 +73,6 @@ class TasksActivity : AppCompatActivity() {
         // add dividers between RecyclerView's row items
         val decoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         binding.list.addItemDecoration(decoration)
-
         binding.list.adapter = adapter
     }
 

@@ -18,19 +18,20 @@ package com.sample.data.datastore.ui
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.sample.data.datastore.data.SortOrder
 import com.sample.data.datastore.data.Task
 import com.sample.data.datastore.data.TasksRepository
 import com.sample.data.datastore.data.UserPreferences
 import com.sample.data.datastore.data.UserPreferencesRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class TasksUiModel(
     val tasks: List<Task>,
@@ -43,7 +44,8 @@ sealed interface TasksUiState {
     data class Success(val model:TasksUiModel): TasksUiState
 }
 
-class TasksViewModel(
+@HiltViewModel
+class TasksViewModel @Inject constructor(
     repository: TasksRepository,
     private val userPreferencesRepository: UserPreferencesRepository
 ) : ViewModel() {
@@ -54,19 +56,10 @@ class TasksViewModel(
     // Every time the sort order, the show completed filter or the list of tasks emit,
     // we should recreate the list of tasks
     private val tasksUiFlow: Flow<TasksUiState> = combine(
-        repository.tasks,
+        repository.getTasks(),
         userPreferencesFlow
     ) { tasks: List<Task>, userPreferences: UserPreferences ->
         Log.i("xxh1234","tasksUiModelFlow showCompleted=${userPreferences.showCompleted} sortOrder=${userPreferences.sortOrder.name}")
-       /* return@combine TasksUiModel(
-            tasks = filterSortTasks(
-                tasks,
-                userPreferences.showCompleted,
-                userPreferences.sortOrder
-            ),
-            showCompleted = userPreferences.showCompleted,
-            sortOrder = userPreferences.sortOrder
-        )*/
         return@combine if (tasks.isEmpty()) {
             TasksUiState.Loading
         } else {
@@ -122,19 +115,5 @@ class TasksViewModel(
         viewModelScope.launch {
             userPreferencesRepository.enableSortByPriority(enable)
         }
-    }
-}
-
-class TasksViewModelFactory(
-    private val repository: TasksRepository,
-    private val userPreferencesRepository: UserPreferencesRepository
-) : ViewModelProvider.Factory {
-
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(TasksViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return TasksViewModel(repository, userPreferencesRepository) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
