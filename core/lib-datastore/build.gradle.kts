@@ -1,15 +1,12 @@
 plugins {
     alias(libs.plugins.common.android.library)
-    alias(libs.plugins.common.lifecycle)
     alias(libs.plugins.common.hilt)
-    alias(libs.plugins.common.navigation)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.protobuf)
 }
 
 android {
-    namespace = "com.sample.data.datastore"
+    namespace = "com.sample.lib.datastore"
 
     defaultConfig {
 
@@ -29,15 +26,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:basic"))
-    implementation(libs.androidx.activity.ktx)
-    implementation(libs.androidx.fragment.ktx)
-    implementation(libs.material)
-    implementation(libs.androidx.fragment)
-    implementation(libs.androidx.recyclerview)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.activity)
-    implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.datastore)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.kotlinx.serialization.core)

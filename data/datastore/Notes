@@ -29,6 +29,7 @@ b.JsonDataStore
     4.写入操作:dataStore.updateData { preferences ->  preferences.copy(sortOrder = newSortOrder)}
 c.ProtoDataStore
     1.创建Proto文件，定义类型
+        注意：proto文件定义在main中的proto包下，不能放在java包中
     2.定义序列化器，生成类型包含对象的序列化方法。
         a.设置默认值
         b.写操作：t.writeTo(output)
@@ -36,7 +37,8 @@ c.ProtoDataStore
     3.读写操作：dataStore.data.map{ preferences-> { val name=preferences.name } }
     4.写入操作:dataStore.updateData { preferences-> preferences.toBuilder().setSortOrder(newSortOrder).build()}
              dataStore.updateData { preferences->  preferences.copy { sortOrder = newSortOrder  }}
-
+注意：如果proto文件没生成，删除build文件在重新生成试试。
+生成文件路径：build/generated/sources/proto
 
 原则
 1.请勿在同一进程中为给定文件创建多个 DataStore 实例，否则会破坏所有 DataStore 功能。
