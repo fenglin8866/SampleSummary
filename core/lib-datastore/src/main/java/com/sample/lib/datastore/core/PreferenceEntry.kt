@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
-class PreferenceDelegate<T>(
+class PreferenceEntry<T>(
     private val dataStore: DataStore<Preferences>,
     private val key: Preferences.Key<T>,
     private val default: T
@@ -19,9 +19,8 @@ class PreferenceDelegate<T>(
             .map { it[key] ?: default }
             .distinctUntilChanged()
 
-    suspend fun get(): T {
-        return flow.first()
-    }
+    suspend fun get(): T =
+        flow.first()
 
     suspend fun set(value: T) {
         dataStore.edit {

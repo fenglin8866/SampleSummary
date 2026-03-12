@@ -1,0 +1,49 @@
+实现功能
+下面给你一套 升级版 DataStore 架构（≈300 行思路），很多大厂 Android 项目都会用类似设计。它在前一个版本基础上增加：
+自动 Key 定义（避免字符串）
+自动 distinctUntilChanged
+Flow + suspend API
+支持 Preferences + Proto 混合
+支持 combine 多配置
+支持 Migration
+支持 加密
+方便 MVVM + Hilt
+涉及到的核心组件仍然是
+Preferences DataStore
+Proto DataStore
+
+方法调用：
+settings.darkMode.flow
+settings.darkMode.set(true)
+settings.fontSize.flow
+
+settings.uiSettingsFlow   // combine后的配置
+userStore.userFlow
+userStore.updateToken("xxx")
+
+使用示例：
+class SettingsRepository @Inject constructor(
+    private val settings: SettingsStore
+) {
+
+    val uiSettings =
+        settings.uiSettingsFlow
+
+    suspend fun setDarkMode(enable: Boolean) {
+        settings.darkMode.set(enable)
+    }
+}
+
+@HiltViewModel
+class SettingsViewModel @Inject constructor(
+    repo: SettingsRepository
+) : ViewModel() {
+
+    val uiSettings =
+        repo.uiSettings
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(),
+                UiSettings(false,14,"en")
+            )
+}

@@ -6,13 +6,13 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 
-object PreferenceKeys {
+object PreferenceFactory {
 
     fun boolean(
         dataStore: DataStore<Preferences>,
         name: String,
         default: Boolean
-    ) = PreferenceDelegate(
+    ) = PreferenceEntry(
         dataStore,
         booleanPreferencesKey(name),
         default
@@ -22,7 +22,7 @@ object PreferenceKeys {
         dataStore: DataStore<Preferences>,
         name: String,
         default: Int
-    ) = PreferenceDelegate(
+    ) = PreferenceEntry(
         dataStore,
         intPreferencesKey(name),
         default
@@ -32,7 +32,7 @@ object PreferenceKeys {
         dataStore: DataStore<Preferences>,
         name: String,
         default: String
-    ) = PreferenceDelegate(
+    ) = PreferenceEntry(
         dataStore,
         stringPreferencesKey(name),
         default

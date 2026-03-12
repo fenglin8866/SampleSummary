@@ -3,7 +3,7 @@ package com.sample.lib.datastore.preferences
 import android.content.Context
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.preferencesDataStoreFile
-import com.sample.lib.datastore.core.PreferenceKeys
+import com.sample.lib.datastore.core.PreferenceFactory
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -23,6 +23,7 @@ import javax.inject.Singleton
  *         settingsStore.darkMode.set(value)
  *     }
  * }
+ *
  *
  * @HiltViewModel
  * class SettingsViewModel @Inject constructor(
@@ -51,24 +52,21 @@ class SettingsStore @Inject constructor(
             }
         )
 
-    val darkMode =
-        PreferenceKeys.boolean(
-            dataStore,
-            "dark_mode",
-            false
-        )
+    val darkMode = PreferenceFactory.boolean(
+        dataStore,
+        "dark_mode",
+        false
+    )
 
-    val fontSize =
-        PreferenceKeys.int(
-            dataStore,
-            "font_size",
-            14
-        )
+    val fontSize = PreferenceFactory.int(
+        dataStore,
+        "font_size",
+        14
+    )
 
-    val language =
-        PreferenceKeys.string(
-            dataStore,
-            "language",
-            "en"
-        )
+    val language = PreferenceFactory.string(
+        dataStore,
+        "language",
+        "en"
+    )
 }
