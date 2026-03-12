@@ -25,8 +25,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.sample.data.datastore.data.SortOrder
 import com.sample.data.datastore.databinding.ActivityTasksBinding
+import com.sample.data.datastore.proto.UserPreferences.SortOrder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

@@ -19,11 +19,11 @@ package com.sample.data.datastore.ui
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sample.data.datastore.data.SortOrder
 import com.sample.data.datastore.data.Task
 import com.sample.data.datastore.data.TasksRepository
-import com.sample.data.datastore.data.UserPreferences
 import com.sample.data.datastore.data.UserPreferencesRepository
+import com.sample.data.datastore.proto.UserPreferences
+import com.sample.data.datastore.proto.UserPreferences.SortOrder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -90,12 +90,15 @@ class TasksViewModel @Inject constructor(
         }
         // sort the tasks
         return when (sortOrder) {
+            SortOrder.UNSPECIFIED -> filteredTasks
             SortOrder.NONE -> filteredTasks
             SortOrder.BY_DEADLINE -> filteredTasks.sortedByDescending { it.deadline }
             SortOrder.BY_PRIORITY -> filteredTasks.sortedBy { it.priority }
             SortOrder.BY_DEADLINE_AND_PRIORITY -> filteredTasks.sortedWith(
                 compareByDescending<Task> { it.deadline }.thenBy { it.priority }
             )
+            // We shouldn't get any other values
+            else -> throw UnsupportedOperationException("$sortOrder not supported")
         }
     }
 

@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+option java_package = "com.sample.data.datastore.proto";
+option java_multiple_files = true;
+
+message UserPreferences {
+  // filter for showing / hiding completed tasks
+  bool show_completed = 1;
+
+  // defines tasks sorting order: no order, by deadline, by priority, by deadline and priority
+  enum SortOrder {
+    UNSPECIFIED = 0;
+    NONE = 1;
+    BY_DEADLINE = 2;
+    BY_PRIORITY = 3;
+    BY_DEADLINE_AND_PRIORITY = 4;
+  }
+
+  // user selected tasks sorting order
+  //= 2 不是默认值，表示该字段在 protobuf 消息中的唯一标识符
+  SortOrder sort_order = 2;
+
+  string name = 3;     // 字符串类型
+  int32 id = 4;        // int 类型（proto3 没有 int，用 int32）
+  int64 time = 5;      // long 类型（proto3 用 int64）
+}

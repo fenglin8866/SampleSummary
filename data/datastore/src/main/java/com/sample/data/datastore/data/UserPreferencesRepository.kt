@@ -18,16 +18,12 @@ package com.sample.data.datastore.data
 
 import android.util.Log
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.core.stringPreferencesKey
+import com.sample.data.datastore.proto.UserPreferences
+import com.sample.data.datastore.proto.UserPreferences.SortOrder
+import com.sample.data.datastore.proto.copy
 import java.io.IOException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 /**
@@ -75,7 +71,10 @@ class UserPreferencesRepository @Inject constructor(private val dataStore: DataS
                     }
                 }
             Log.i("xxh1234", "enableSortByDeadline enable=$enable sortOrder=${newSortOrder.name}")
-            preferences.copy(sortOrder = newSortOrder)
+            preferences.copy {
+                sortOrder = newSortOrder
+            }
+           // preferences.toBuilder().setSortOrder(newSortOrder).build()
         }
     }
 
@@ -103,13 +102,17 @@ class UserPreferencesRepository @Inject constructor(private val dataStore: DataS
                     }
                 }
             Log.i("xxh1234", "enableSortByPriority enable=$enable sortOrder=${newSortOrder.name}")
-            preferences.copy(sortOrder = newSortOrder)
+            preferences.copy {
+                sortOrder = newSortOrder
+            }
         }
     }
 
-    suspend fun updateShowCompleted(showCompleted: Boolean) {
+    suspend fun updateShowCompleted(isShowCompleted: Boolean) {
         dataStore.updateData { preferences ->
-            preferences.copy(showCompleted = showCompleted)
+            preferences.copy {
+                showCompleted = isShowCompleted
+            }
         }
     }
 }
