@@ -28,11 +28,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.sample.data.datastore.ui.TasksActivity
+import com.sample.data.datastore.ui.DataStoreActivity
 import com.sample.feature.book.details.DetailsRoute
 import com.sample.feature.book.list.ListRoute
 import com.sample.feature.car.CarScreen
-import com.sample.feature.logger.logs.DevModeActivity
 import com.sample.feature.login.LoginActivity
 import com.sample.feature.set.ui.SetDefaultActivity
 import com.sample.feature.upgrade.UpgradeActivity
@@ -56,7 +55,7 @@ fun MainNavigation(
                         2L -> content.startActivity(Intent(content, LoginActivity::class.java))
                         3L -> content.startActivity(Intent(content, SetDefaultActivity::class.java))
                         4L -> navController.navigate("main")
-                        5L -> content.startActivity(Intent(content, TasksActivity::class.java))
+                        5L -> content.startActivity(Intent(content, DataStoreActivity::class.java))
                         else -> navController.navigate("details/$id")
                     }
 

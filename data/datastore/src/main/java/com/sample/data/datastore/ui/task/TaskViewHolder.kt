@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.sample.data.datastore.ui
+package com.sample.data.datastore.ui.task
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.sample.data.datastore.R
-import com.sample.data.datastore.data.Task
-import com.sample.data.datastore.data.TaskPriority
+import com.sample.data.datastore.data.tasks.Task
+import com.sample.data.datastore.data.tasks.TaskPriority
 import com.sample.data.datastore.databinding.TaskViewItemBinding
 import java.text.SimpleDateFormat
 import java.util.Locale

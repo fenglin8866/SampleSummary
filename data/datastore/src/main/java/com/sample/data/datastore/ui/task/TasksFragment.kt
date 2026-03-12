@@ -14,38 +14,40 @@
  * limitations under the License.
  */
 
-package com.sample.data.datastore.ui
+package com.sample.data.datastore.ui.task
 
-import android.os.Bundle
 import android.util.Log
-import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.sample.data.datastore.databinding.ActivityTasksBinding
+import com.sample.core.basic.ui.BaseFragment
+import com.sample.data.datastore.databinding.FragmentTasksBinding
 import com.sample.data.datastore.proto.UserPreferences.SortOrder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class TasksActivity : AppCompatActivity() {
+class TasksFragment : BaseFragment<FragmentTasksBinding>() {
 
-    private lateinit var binding: ActivityTasksBinding
     private val adapter = TasksAdapter()
 
     private val viewModel: TasksViewModel by viewModels()
 
     private var isInit = false
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        binding = ActivityTasksBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+    override fun bindView(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentTasksBinding {
+       return FragmentTasksBinding.inflate(inflater, container, false)
+    }
+
+    override fun setupViews() {
+        super.setupViews()
         setupRecyclerView()
         collectUiEvents()
     }
@@ -71,9 +73,9 @@ class TasksActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         // add dividers between RecyclerView's row items
-        val decoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-        binding.list.addItemDecoration(decoration)
-        binding.list.adapter = adapter
+        val decoration = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
+        mBinding.list.addItemDecoration(decoration)
+        mBinding.list.adapter = adapter
     }
 
     private fun userIntent() {
@@ -81,25 +83,25 @@ class TasksActivity : AppCompatActivity() {
             return
         }
         isInit = true
-        binding.sortDeadline.setOnCheckedChangeListener { _, checked ->
+        mBinding.sortDeadline.setOnCheckedChangeListener { _, checked ->
             Log.i("xxh1234", "setupOnCheckedChangeListeners sortDeadline checked=$checked")
             viewModel.enableSortByDeadline(checked)
         }
-        binding.sortPriority.setOnCheckedChangeListener { _, checked ->
+        mBinding.sortPriority.setOnCheckedChangeListener { _, checked ->
             Log.i("xxh1234", "setupOnCheckedChangeListeners sortPriority checked=$checked")
             viewModel.enableSortByPriority(checked)
         }
-        binding.showCompletedSwitch.setOnCheckedChangeListener { _, checked ->
+        mBinding.showCompletedSwitch.setOnCheckedChangeListener { _, checked ->
             Log.i("xxh1234", "setupOnCheckedChangeListeners showCompletedSwitch checked=$checked")
             viewModel.showCompletedTasks(checked)
         }
     }
 
     private fun updateTaskFilters(sortOrder: SortOrder, showCompleted: Boolean) {
-        binding.sortDeadline.isChecked =
+        mBinding.sortDeadline.isChecked =
             sortOrder == SortOrder.BY_DEADLINE || sortOrder == SortOrder.BY_DEADLINE_AND_PRIORITY
-        binding.sortPriority.isChecked =
+        mBinding.sortPriority.isChecked =
             sortOrder == SortOrder.BY_PRIORITY || sortOrder == SortOrder.BY_DEADLINE_AND_PRIORITY
-        binding.showCompletedSwitch.isChecked = showCompleted
+        mBinding.showCompletedSwitch.isChecked = showCompleted
     }
 }

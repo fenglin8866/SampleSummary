@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sample.data.datastore.data
+package com.sample.data.datastore.data.tasks
 
 import java.util.Date
 

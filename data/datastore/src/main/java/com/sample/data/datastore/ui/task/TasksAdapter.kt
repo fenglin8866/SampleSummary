@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.sample.data.datastore.ui
+package com.sample.data.datastore.ui.task
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.sample.data.datastore.data.Task
+import com.sample.data.datastore.data.tasks.Task
 
 class TasksAdapter : ListAdapter<Task, TaskViewHolder>(TASKS_COMPARATOR) {
 

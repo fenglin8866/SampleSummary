@@ -1,29 +1,12 @@
-/*
- * Copyright 2020 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package com.sample.data.datastore.data
+package com.sample.data.datastore.data.proto
 
 import android.util.Log
 import androidx.datastore.core.DataStore
 import com.sample.data.datastore.proto.UserPreferences
-import com.sample.data.datastore.proto.UserPreferences.SortOrder
 import com.sample.data.datastore.proto.copy
-import java.io.IOException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import java.io.IOException
 import javax.inject.Inject
 
 /**
@@ -58,16 +41,16 @@ class UserPreferencesRepository @Inject constructor(private val dataStore: DataS
 
             val newSortOrder =
                 if (enable) {
-                    if (currentOrder == SortOrder.BY_PRIORITY) {
-                        SortOrder.BY_DEADLINE_AND_PRIORITY
+                    if (currentOrder == UserPreferences.SortOrder.BY_PRIORITY) {
+                        UserPreferences.SortOrder.BY_DEADLINE_AND_PRIORITY
                     } else {
-                        SortOrder.BY_DEADLINE
+                        UserPreferences.SortOrder.BY_DEADLINE
                     }
                 } else {
-                    if (currentOrder == SortOrder.BY_DEADLINE_AND_PRIORITY) {
-                        SortOrder.BY_PRIORITY
+                    if (currentOrder == UserPreferences.SortOrder.BY_DEADLINE_AND_PRIORITY) {
+                        UserPreferences.SortOrder.BY_PRIORITY
                     } else {
-                        SortOrder.NONE
+                        UserPreferences.SortOrder.NONE
                     }
                 }
             Log.i("xxh1234", "enableSortByDeadline enable=$enable sortOrder=${newSortOrder.name}")
@@ -89,16 +72,16 @@ class UserPreferencesRepository @Inject constructor(private val dataStore: DataS
 
             val newSortOrder =
                 if (enable) {
-                    if (currentOrder == SortOrder.BY_DEADLINE) {
-                        SortOrder.BY_DEADLINE_AND_PRIORITY
+                    if (currentOrder == UserPreferences.SortOrder.BY_DEADLINE) {
+                        UserPreferences.SortOrder.BY_DEADLINE_AND_PRIORITY
                     } else {
-                        SortOrder.BY_PRIORITY
+                        UserPreferences.SortOrder.BY_PRIORITY
                     }
                 } else {
-                    if (currentOrder == SortOrder.BY_DEADLINE_AND_PRIORITY) {
-                        SortOrder.BY_DEADLINE
+                    if (currentOrder == UserPreferences.SortOrder.BY_DEADLINE_AND_PRIORITY) {
+                        UserPreferences.SortOrder.BY_DEADLINE
                     } else {
-                        SortOrder.NONE
+                        UserPreferences.SortOrder.NONE
                     }
                 }
             Log.i("xxh1234", "enableSortByPriority enable=$enable sortOrder=${newSortOrder.name}")

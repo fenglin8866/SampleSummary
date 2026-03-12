@@ -1,4 +1,4 @@
-package com.sample.data.datastore.data
+package com.sample.data.datastore.data.proto
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -34,13 +34,3 @@ val Context.dataStore: DataStore<UserPreferences> by dataStore(
         )
     }
 )
-
-/*
-val Context.dataStore by preferencesDataStore(
-    name = USER_PREFERENCES_NAME,
-    produceMigrations = { context ->
-        // Since we're migrating from SharedPreferences, add a migration based on the
-        // SharedPreferences name
-        listOf(SharedPreferencesMigration(context, USER_PREFERENCES_NAME))
-    }
-)*/

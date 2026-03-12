@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.sample.data.datastore.ui
+package com.sample.data.datastore.ui.task
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sample.data.datastore.data.Task
-import com.sample.data.datastore.data.TasksRepository
-import com.sample.data.datastore.data.UserPreferencesRepository
+import com.sample.data.datastore.data.tasks.Task
+import com.sample.data.datastore.data.tasks.TasksRepository
+import com.sample.data.datastore.data.proto.UserPreferencesRepository
 import com.sample.data.datastore.proto.UserPreferences
 import com.sample.data.datastore.proto.UserPreferences.SortOrder
 import dagger.hilt.android.lifecycle.HiltViewModel
