@@ -61,16 +61,39 @@ c.ProtoDataStore
     建议在对应的模块中管理。
 
 3.多个DataStore怎么组合使用？
+https://my.feishu.cn/wiki/XQu8wcOK6iMhRlkFSrHczjKAnoc?from=from_copylink
 
 4.PreferenceDataStore存了很多配置，当其他一个变化时，会导致Flow变化，没变化配置怎么过滤？
-
+https://my.feishu.cn/wiki/XQu8wcOK6iMhRlkFSrHczjKAnoc?from=from_copylink
 
 其他
 1.SharedPreferences迁移DataStore
-2.多进程使用DataStore
-3.同步代码使用DataStore
-4.处理文件损坏
-5.数据是否安全
+参考“SharedPreferencesMigrationUtil”
+
+2.同步代码使用DataStore。
+val exampleData = runBlocking { context.dataStore.data.first() }
+lifecycleScope.launch {
+        context.dataStore.data.first()
+        // You should also handle IOExceptions here.
+    }
+不需要切换线程，因为 dataStore.data 是 Flow，可以在任何线程中使用。
+https://my.feishu.cn/wiki/EstGwfK6CiN7G3k93wzcXU3knXc?from=from_copylink
+
+3.处理文件损坏
+https://my.feishu.cn/wiki/NoNJwFbYBiBA6Dk8X9vcoleYnPh
+
+4.数据是否安全
+https://my.feishu.cn/wiki/OUPLwcts6icjxkkTBj4cotlWnwh?from=from_copylink
+
+5.多进程使用DataStore，只是构建DataStore有差异，其他操作保持不变。
+val dataStore = MultiProcessDataStoreFactory.create(
+    serializer = TimeSerializer,
+    produceFile = {
+        File("${context.cacheDir.path}/time.pb")
+    },
+    corruptionHandler = null
+)
+
 
 
 ======================================
