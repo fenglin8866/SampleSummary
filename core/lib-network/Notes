@@ -1,0 +1,26 @@
+1.NetworkManager
+是否有必要在Application中初始化NetworkManager，直接在调用的时候构建。
+
+2.token过期，自动刷新
+
+3.多个请求，存在依赖关系，怎么处理？
+
+=============================
+原则：
+1.公共组件，易于复用。
+2.符合android架构。
+3.公共组件，高内聚低耦合，一些配置通过参数传入。
+
+
+功能
+1.支持多个BaseUrl
+方案：
+多Retrofit实例，每个 BaseUrl 一个 Retrofit（推荐）参考：NetworkManagerMultiBaseUrl
+域名映射 + 拦截器 参考：MultiBaseUrlInterceptor
+Header动态切换（适合临时切） 参考：DynamicBaseUrlInterceptor
+
+2.支持全局配置
+
+扩展
+持久化环境（DataStore）
+Debug 悬浮窗
