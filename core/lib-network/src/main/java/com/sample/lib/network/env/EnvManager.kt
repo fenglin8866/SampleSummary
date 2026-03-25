@@ -1,6 +1,6 @@
 package com.sample.lib.network.env
 
-import com.sample.lib.network.core.NetworkManager
+import com.sample.lib.network.core.NetworkManagerMultiBaseUrl
 
 /**
  * 环境管理器
@@ -16,6 +16,6 @@ object EnvManager {
 
     fun switch(env: Env) {
         currentEnv = env
-        NetworkManager.onEnvChanged()
+        NetworkManagerMultiBaseUrl.onEnvChanged()
     }
 }

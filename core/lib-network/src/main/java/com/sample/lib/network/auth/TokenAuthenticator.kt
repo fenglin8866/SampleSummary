@@ -1,14 +1,13 @@
 package com.sample.lib.network.auth
 
+import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
-import java.net.Authenticator
 
 /**
  * Token 自动刷新
  */
-/*
 class TokenAuthenticator(
     private val refreshApi: AuthApi
 ) : Authenticator {
@@ -20,7 +19,7 @@ class TokenAuthenticator(
 
         val refreshToken = TokenManager.refreshToken ?: return null
 
-        synchronized(this) {
+        /*synchronized(this) {
             val newToken = runCatching {
                 refreshApi.refreshToken(mapOf("refreshToken" to refreshToken))
             }.getOrNull()
@@ -32,7 +31,7 @@ class TokenAuthenticator(
                     .header("Authorization", "Bearer ${it.token}")
                     .build()
             }
-        }
+        }*/
 
         return null
     }
@@ -46,4 +45,4 @@ class TokenAuthenticator(
         }
         return count
     }
-}*/
+}

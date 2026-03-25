@@ -15,8 +15,8 @@ object OkHttpFactory {
         debug: Boolean = false
     ): OkHttpClient {
         val builder = OkHttpClient.Builder()
-            .addInterceptor(createHeaderInterceptor())
-            .addInterceptor(DynamicBaseUrlInterceptor())
+          //  .addInterceptor(createHeaderInterceptor())
+          //  .addInterceptor(DynamicBaseUrlInterceptor())
             .addInterceptor(RetryInterceptor())
 
             .connectTimeout(15, TimeUnit.SECONDS)

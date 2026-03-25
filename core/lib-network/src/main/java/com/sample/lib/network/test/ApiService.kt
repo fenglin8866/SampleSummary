@@ -25,4 +25,13 @@ interface ApiService {
         @Header("Base-Url") baseUrl: String,
         @Body body: Any
     )
+
+    @POST("user/getList")
+    suspend fun getList(): BaseResponse<User>
+
+    @POST("user/search")
+    suspend fun search(
+        @Body keyword: String
+    ): BaseResponse<User>
+
 }

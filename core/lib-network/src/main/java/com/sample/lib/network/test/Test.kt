@@ -1,6 +1,8 @@
 package com.sample.lib.network.test
 
 import com.sample.lib.network.core.NetworkManager
+import com.sample.lib.network.dispatcher.RequestKey
+import com.sample.lib.network.dispatcher.RequestStrategy
 import com.sample.lib.network.ext.onLoading
 import com.sample.lib.network.ext.onSuccess
 import com.sample.lib.network.model.BaseResponse
@@ -14,8 +16,6 @@ class Test {
     private fun switchBaseUrl() {
         NetworkManager.switchBaseUrl("https://api.test.com/")
     }
-
-
 }
 
 

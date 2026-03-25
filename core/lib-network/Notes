@@ -1,9 +1,7 @@
 1.NetworkManager
 是否有必要在Application中初始化NetworkManager，直接在调用的时候构建。
 
-2.token过期，自动刷新
-
-3.多个请求，存在依赖关系，怎么处理？
+2.多个请求，存在依赖关系，怎么处理？
 
 =============================
 原则：
@@ -15,12 +13,66 @@
 功能
 1.支持多个BaseUrl
 方案：
-多Retrofit实例，每个 BaseUrl 一个 Retrofit（推荐）参考：NetworkManagerMultiBaseUrl
-域名映射 + 拦截器 参考：MultiBaseUrlInterceptor
-Header动态切换（适合临时切） 参考：DynamicBaseUrlInterceptor
+a.多Retrofit实例，每个 BaseUrl 一个 Retrofit（推荐）参考：NetworkManagerMultiBaseUrl
+b.域名映射 + 拦截器 参考：MultiBaseUrlInterceptor
+c.Header动态切换（适合临时切） 参考：DynamicBaseUrlInterceptor
 
 2.支持全局配置
+
+3.token过期，自动刷新
+401 拦截 → refreshToken → 重试
+👉 用 Authenticator
+
+4.超时重试 Retry + Timeout 封装
+.retry(2)
+.timeout(10_000)
+
+5.Flow 扩展链式调用
+fun <T> Flow<ResultState<T>>.onSuccess(block: (T?) -> Unit) = ...
+
+
+特点
+基础功能
+✔ Retrofit 负责：接口声明
+✔ OkHttp 负责：Header / Token / 日志
+✔ Repository 负责：统一结果封装
+✔ Flow 负责：响应式流
+==================
+升级功能
+✔ Token 自动刷新（无感登录）
+✔ 多环境切换（测试 / 生产）
+✔ Retrofit 动态 BaseUrl
+✔ 统一错误码映射
+✔ Flow + DSL 链式调用
+✔ 与 MVVM 模板完全融合
+=====================
+✔ 防抖（按钮狂点只发一次）
+✔ 请求去重（相同请求合并）
+✔ 自动取消旧请求（只保留最新）
+✔ 按 Tag 取消（页面销毁）
+✔ 优先级调度（高优先级优先执行）
+
 
 扩展
 持久化环境（DataStore）
 Debug 悬浮窗
+======================================
+核心设计
+Env（环境）
+  ↓
+HostManager（根据环境提供域名）
+  ↓
+NetworkManager（缓存 Retrofit）
+  ↓
+ApiService
+
+整体架构
+UI
+ ↓
+ViewModel
+ ↓
+Repository
+ ↓
+RequestDispatcher ⭐（核心）
+ ↓
+Retrofit
