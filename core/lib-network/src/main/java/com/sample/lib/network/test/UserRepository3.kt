@@ -18,7 +18,7 @@ class UserRepository3 : BaseRepositoryWithRequestDispatcher() {
     // ===== API =====
     private val api = NetworkManagerMultiBaseUrl.create(
         HostType.USER,
-        UserApi::class.java
+        UserApi2::class.java
     )
 
     // ===== 获取用户信息 =====
