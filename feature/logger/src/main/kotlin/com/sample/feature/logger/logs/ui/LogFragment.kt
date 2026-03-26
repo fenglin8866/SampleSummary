@@ -22,7 +22,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sample.core.basic2.event.UIEvent
-import com.sample.core.basic2.fragment.BaseStateAndDefaultEventFragment
+import com.sample.core.basic2.fragment.BaseStateDefaultEventFragment
 import com.sample.feature.logger.databinding.FragmentLogsBinding
 import com.sample.feature.logger.logs.ui.contract.LogUIEvent
 import com.sample.feature.logger.logs.ui.contract.LogUIIntent
@@ -37,7 +37,7 @@ import kotlinx.coroutines.flow.StateFlow
  * Fragment that displays the database logs.
  */
 @AndroidEntryPoint
-class LogFragment : BaseStateAndDefaultEventFragment<FragmentLogsBinding, LogUIState>() {
+class LogFragment : BaseStateDefaultEventFragment<FragmentLogsBinding, LogUIState>() {
 
     private val viewModel: LogViewModel by viewModels()
 

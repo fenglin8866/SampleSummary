@@ -14,10 +14,18 @@ open class BaseViewModel<State : Any>(initialState: State) : ViewModel() {
 
     protected fun updateState(reducer: State.() -> State) {
         // _uiState.value = _uiState.value.reducer()
-        _uiState.update(reducer)
+        val newState = _uiState.value.reducer()
+        if (newState != _uiState.value) {
+            _uiState.update { newState }
+        }
     }
 
+    /**
+     * 添加对状态更新的限制，避免不必要的更新
+     */
     protected fun updateState(state: State) {
-        _uiState.value = state
+        if (state != _uiState.value) {
+            _uiState.value = state
+        }
     }
 }

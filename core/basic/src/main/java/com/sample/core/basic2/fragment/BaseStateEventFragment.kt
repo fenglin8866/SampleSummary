@@ -8,8 +8,14 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 
 
-abstract class BaseStateAndEventFragment<T : ViewBinding, State : Any, Event : Any> :
-    BaseStateFragment<T, State>() {
+/**
+ * 具有状态和事件处理能力的基础 Fragment
+ * @param VB ViewBinding 类型
+ * @param S 状态类型
+ * @param E 事件类型
+ */
+abstract class BaseStateEventFragment<VB : ViewBinding, State : Any, Event : Any> :
+    BaseStateFragment<VB, State>() {
 
     override fun setup() {
         super.setup()

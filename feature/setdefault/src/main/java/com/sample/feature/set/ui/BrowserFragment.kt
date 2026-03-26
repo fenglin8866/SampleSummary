@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.fragment.app.viewModels
-import com.sample.core.basic2.fragment.BaseStateAndEventFragment
+import com.sample.core.basic2.fragment.BaseStateEventFragment
 import com.sample.feature.set.databinding.FragmentWebviewBinding
 import com.sample.feature.set.infra.DefaultBrowserLauncher
 import com.sample.feature.set.ui.contract.BrowserUiEvent
@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class BrowserFragment :
-    BaseStateAndEventFragment<FragmentWebviewBinding, BrowserUiState, BrowserUiEvent>() {
+    BaseStateEventFragment<FragmentWebviewBinding, BrowserUiState, BrowserUiEvent>() {
 
     private val viewModel: BrowserViewModel by viewModels {
         BrowserViewModel.Factory

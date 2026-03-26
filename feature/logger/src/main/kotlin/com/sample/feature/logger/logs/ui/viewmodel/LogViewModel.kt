@@ -2,7 +2,7 @@ package com.sample.feature.logger.logs.ui.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.sample.core.basic2.event.DefaultUiEvent
-import com.sample.core.basic2.viewmodel.BaseDefaultUIEventViewModel
+import com.sample.core.basic2.viewmodel.BaseDefaultEventViewModel
 import com.sample.feature.logger.logs.domain.ExportResult
 import com.sample.feature.logger.logs.domain.LogUserCase
 import com.sample.feature.logger.logs.ui.contract.LogUIEvent
@@ -16,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LogViewModel @Inject constructor(
     private val userCase: LogUserCase,
-) : BaseDefaultUIEventViewModel<LogUIState, LogUIIntent>(LogUIState.Empty) {
+) : BaseDefaultEventViewModel<LogUIState, LogUIIntent>(LogUIState.Empty) {
 
     /*val logs: StateFlow<List<Log>> =
         userCase.getAllLogs().stateIn(

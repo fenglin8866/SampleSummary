@@ -7,7 +7,12 @@ import androidx.viewbinding.ViewBinding
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-abstract class BaseStateFragment<T : ViewBinding, State : Any> : BaseFragment<T>() {
+/**
+ * 具有状态处理能力的基础 Fragment
+ * @param VB ViewBinding 类型
+ * @param S 状态类型
+ */
+abstract class BaseStateFragment<VB : ViewBinding, State : Any> : BaseFragment<VB>() {
 
     override fun setup() {
         super.setup()

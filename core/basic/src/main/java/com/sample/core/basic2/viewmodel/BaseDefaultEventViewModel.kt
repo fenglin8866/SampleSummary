@@ -6,7 +6,15 @@ import com.sample.core.basic2.event.UIEvent
 import kotlinx.coroutines.flow.SharedFlow
 
 /**
+ * 统一处理UI事件的ViewModel基类
+ * 该类结合了Intent处理能力和默认UI事件分发器
  *
+ * 优势：
+ * - 自动处理常见UI事件（Toast, Navigation, Snackbar等）
+ * - 统一的事件处理方式
+ * - 减少样板代码
+ *
+ * 使用示例：
  * 功能ViewModel
  * fun onListScrolledTop() {
  *    uiEventDispatcher.dispatch(
@@ -46,7 +54,7 @@ import kotlinx.coroutines.flow.SharedFlow
  * 处理的事件包含功能模块UI事件和全局UI事件
  * uiEvent不是密封类型，注意else->Unit的处理，但不要遗漏相关分支。
  */
-abstract class BaseDefaultUIEventViewModel<State : Any, Intent : Any>(initialState: State) :
+abstract class BaseDefaultEventViewModel<State : Any, Intent : Any>(initialState: State) :
     BaseIntentViewModel<State, Intent>(initialState) {
 
     protected val uiEventDispatcher = DefaultUIEventDispatcher<UIEvent>(viewModelScope)

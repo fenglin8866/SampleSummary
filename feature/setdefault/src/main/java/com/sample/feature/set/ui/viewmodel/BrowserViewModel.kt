@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.sample.core.basic2.viewmodel.BaseUIEventViewModel
+import com.sample.core.basic2.viewmodel.BaseEventViewModel
 import com.sample.feature.set.domain.DefaultBrowserGuideUseCase
 import com.sample.feature.set.infra.DefaultBrowserChecker
 import com.sample.feature.set.ui.contract.BrowserUiEvent
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 class BrowserViewModel(
     private val guideUseCase: DefaultBrowserGuideUseCase
-) : BaseUIEventViewModel<BrowserUiState, BrowserUiEvent>(BrowserUiState()) {
+) : BaseEventViewModel<BrowserUiState, BrowserUiEvent>(BrowserUiState()) {
 
     /** WebView 页面加载完成 */
     fun onPageLoaded(context: Context) {

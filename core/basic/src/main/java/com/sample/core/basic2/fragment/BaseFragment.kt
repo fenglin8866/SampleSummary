@@ -13,7 +13,10 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
     // This property is non-null between the onCreateView() and onDestroyView() lifecycle callbacks,
     // when the view hierarchy is attached to the fragment
     private var _binding: T? = null
-    protected val binding get() = _binding!!
+    protected val binding: T
+        get() = _binding ?: throw IllegalStateException(
+            "Binding is null. This should not happen if the fragment is properly initialized and not destroyed."
+        )
 
     override fun onCreateView(
         inflater: LayoutInflater,
