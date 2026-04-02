@@ -7,8 +7,8 @@ import retrofit2.http.POST
 
 interface ApiService {
 
-    @POST("user/login")
-    suspend fun login(
+    @POST("appstore/getRankList.do")
+    suspend fun getDownloadRankList(
         @Body body: LoginRequest
     ): BaseResponse<User>
 

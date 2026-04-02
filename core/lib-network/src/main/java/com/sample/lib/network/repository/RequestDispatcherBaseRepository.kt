@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 
-abstract class BaseRepositoryWithRequestDispatcher {
+abstract class RequestDispatcherBaseRepository {
 
     fun <T> request(
         scope: CoroutineScope,

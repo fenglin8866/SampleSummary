@@ -15,7 +15,7 @@ object OkHttpFactory {
         debug: Boolean = false
     ): OkHttpClient {
         val builder = OkHttpClient.Builder()
-          //  .addInterceptor(createHeaderInterceptor())
+            .addInterceptor(createHeaderInterceptor())
           //  .addInterceptor(DynamicBaseUrlInterceptor())
             .addInterceptor(RetryInterceptor())
 
@@ -45,7 +45,9 @@ object OkHttpFactory {
     fun createHeaderInterceptor(): HeaderInterceptor {
         return HeaderInterceptor {
             mapOf(
-                "Content-Type" to "application/json"
+                //"Content-Type" to "application/json"
+                "X-Requested-With" to "XML HttpRequest",
+                "User-Agent" to "Mozilla\\/5.0 (Linux; Android build_version; build_model Build\\/build_id) AppleWebKit\\/537.36(KHTML,like Gecko)Version\\/4.0 Chrome\\/42.0.2311.154 Mobile Safari\\/537.36\""
             )
         }
     }

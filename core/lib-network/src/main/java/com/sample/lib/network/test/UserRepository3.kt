@@ -1,19 +1,17 @@
 package com.sample.lib.network.test
 
-import com.sample.lib.network.core.NetworkManager
 import com.sample.lib.network.core.NetworkManagerMultiBaseUrl
 import com.sample.lib.network.dispatcher.RequestDispatcher
 import com.sample.lib.network.dispatcher.RequestKey
 import com.sample.lib.network.dispatcher.RequestStrategy
 import com.sample.lib.network.env.HostType
 import com.sample.lib.network.model.ResultState
-import com.sample.lib.network.repository.BaseRepository
-import com.sample.lib.network.repository.BaseRepositoryWithRequestDispatcher
+import com.sample.lib.network.repository.RequestDispatcherBaseRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
 
-class UserRepository3 : BaseRepositoryWithRequestDispatcher() {
+class UserRepository3 : RequestDispatcherBaseRepository() {
 
     // ===== API =====
     private val api = NetworkManagerMultiBaseUrl.create(

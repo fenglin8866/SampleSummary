@@ -26,10 +26,10 @@ class UserRepository : BaseRepository() {
 
     private val api = NetworkManager.create(ApiService::class.java)
 
-    fun login(username: String, password: String) =
+   /* fun login(username: String, password: String) =
         request {
             api.login(LoginRequest(username, password))
-        }
+        }*/
 
     private val api2 = NetworkManagerMultiBaseUrl.create(HostType.USER, UserApi::class.java)
 

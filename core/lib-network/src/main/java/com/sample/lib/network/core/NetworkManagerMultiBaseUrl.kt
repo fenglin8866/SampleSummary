@@ -9,6 +9,9 @@ import retrofit2.Retrofit
 /**
  * 网络管理器（多BaseUrl）
  * 每个BaseUrl构建一个Retrofit实例，支持动态切换BaseUrl
+ *
+ * 1.当多个Repository使用同一个API时，可以缓存API
+ * 2.不同的hostType需要使用不同的okHttpClient时，创建不同的Retrofit实例
  */
 object NetworkManagerMultiBaseUrl {
 

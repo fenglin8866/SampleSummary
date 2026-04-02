@@ -44,7 +44,7 @@ object DownloadManager {
         val current = _stateFlow.value[app.appId]
         if (current?.status == Status.DOWNLOADING) return
 
-        sdk.download(app.appId, app.downloadUrl, callback(app.appId))
+        sdk.download(app.packageName, callback(app.packageName))
 
         update(app.appId) {
             it.copy(status = Status.DOWNLOADING)
@@ -141,7 +141,6 @@ object DownloadManager {
 
     fun restore() {
         scope.launch {
-
             // 1. 从 DB 恢复
             val dbTasks = dao.getAll()
             val map = dbTasks.associate {

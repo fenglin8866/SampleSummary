@@ -3,25 +3,25 @@ package com.sample.lib.network.test
 import com.sample.lib.network.core.NetworkManager
 import com.sample.lib.network.dispatcher.RequestKey
 import com.sample.lib.network.dispatcher.RequestStrategy
-import com.sample.lib.network.repository.BaseRepositoryWithRequestDispatcher
+import com.sample.lib.network.repository.RequestDispatcherBaseRepository
 import kotlinx.coroutines.CoroutineScope
 
 
-class UserRepository2(val viewModelScope: CoroutineScope) : BaseRepositoryWithRequestDispatcher() {
+class UserRepository2(val viewModelScope: CoroutineScope) : RequestDispatcherBaseRepository() {
 
     private val api = NetworkManager.create(ApiService::class.java)
 
     /**
      *防重复点击（登录按钮）
      */
-    fun login(username: String, password: String) =
+   /* fun login(username: String, password: String) =
         request(
             scope = viewModelScope,
             key = RequestKey("login", username.hashCode()),
             strategy = RequestStrategy.DEBOUNCE
         ) {
             api.login(LoginRequest(username, password))
-        }
+        }*/
 
     /**
      * 请求去重（列表加载）

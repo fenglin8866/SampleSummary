@@ -1,56 +1,50 @@
 package com.xxh.summary.download.ui
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.xxh.summary.R
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.sample.core.basic2.fragment.BaseStateFragment
+import com.xxh.summary.databinding.FragmentAppBinding
 import com.xxh.summary.download.data.model.AppInfo
-import com.xxh.summary.download.data.model.DownloadState
-import com.xxh.summary.download.data.model.Status
+import com.xxh.summary.download.ui.adapter.AppAdapter
+import kotlinx.coroutines.flow.StateFlow
+import androidx.fragment.app.viewModels
 
-class AppFragment : Fragment() {
+class AppFragment : BaseStateFragment<FragmentAppBinding, AppListState>() {
 
-    private val vm: AppViewModel by lazy {
-        viewModel()
+
+    private  var appAdapter: AppAdapter?=null
+    private val viewModel: AppViewModel by viewModels { AppViewModel.Factory }
+
+    private var searchResults = mutableListOf<AppInfo>()
+    override fun bindView(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentAppBinding {
+        return FragmentAppBinding.inflate(inflater, container, false)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_app, container, false)
-    }
-
-    fun handleClick(app: AppInfo, state: DownloadState?) {
-        when (state?.status) {
-            null, Status.IDLE, Status.FAILED -> vm.download(app)
-            Status.DOWNLOADING -> vm.pause(app.appId)
-            Status.PAUSED -> vm.resume(app.appId)
-            Status.SUCCESS -> openApp()
+    override fun initView() {
+        super.initView()
+        appAdapter = AppAdapter(
+            searchResults
+        ){
+            viewModel.download(it)
         }
+        binding.appList.adapter = appAdapter
+        binding.appList.layoutManager = LinearLayoutManager(requireContext())
     }
 
-    fun a(){
-        lifecycleScope.launchWhenStarted {
-            viewModel.state.collect { state ->
+    override fun provideUIState(): StateFlow<AppListState> {
+        return viewModel.state
+    }
 
-                val uiList = state.list.map { app ->
-                    val ds = state.downloadMap[app.appId]
-                    Pair(app, ds)
-                }
-
-                adapter.submitList(uiList)
-            }
+    override fun render(state: AppListState) {
+        if (state.list.isNotEmpty()) {
+            searchResults.clear()
+            searchResults.addAll(state.list)
+            appAdapter?.updateAppList(searchResults)
         }
     }
 

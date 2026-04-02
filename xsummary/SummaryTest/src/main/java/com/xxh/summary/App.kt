@@ -9,11 +9,11 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
+        val sdk = RealAppCenterSdk()
+        sdk.initSdk(this)
         val db = AppDatabase.create(this)
-
         DownloadManager.init(
-            sdk = RealAppCenterSdk(),
+            sdk = sdk,
             dao = db.downloadDao()
         )
     }
