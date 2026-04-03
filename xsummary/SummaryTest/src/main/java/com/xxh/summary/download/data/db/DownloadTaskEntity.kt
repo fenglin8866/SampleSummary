@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "download_task")
 data class DownloadTaskEntity(
-    @PrimaryKey val appId: String,
+    @PrimaryKey val packageName: String,
     val status: Int,
     val progress: Int,
     val updateTime: Long

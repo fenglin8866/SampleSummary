@@ -7,6 +7,7 @@ import com.xxh.summary.net.NetworkUtil
 import com.xxh.summary.net.repository.BaseRepository
 
 class AppRepository(private val api: CmsApi) : BaseRepository() {
+
     /* suspend fun loadApps(): List<AppInfo>? {
          return api.getApps(NetworkUtil.getCommonParams()).data
      }*/

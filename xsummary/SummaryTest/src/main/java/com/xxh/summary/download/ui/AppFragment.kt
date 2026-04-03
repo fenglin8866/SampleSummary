@@ -3,6 +3,7 @@ package com.xxh.summary.download.ui
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.Nullable
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sample.core.basic2.fragment.BaseStateFragment
 import com.xxh.summary.databinding.FragmentAppBinding
@@ -41,6 +42,7 @@ class AppFragment : BaseStateFragment<FragmentAppBinding, AppListState>() {
     }
 
     override fun render(state: AppListState) {
+        Log.i("xxh123","render state: ${state.downloadMap}")
         if (state.list.isNotEmpty()) {
             searchResults.clear()
             searchResults.addAll(state.list)

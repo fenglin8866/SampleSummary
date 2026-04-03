@@ -14,6 +14,6 @@ interface DownloadDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: DownloadTaskEntity)
 
-    @Query("DELETE FROM download_task WHERE appId = :appId")
-    suspend fun delete(appId: String)
+    @Query("DELETE FROM download_task WHERE packageName = :packageName")
+    suspend fun delete(packageName: String)
 }

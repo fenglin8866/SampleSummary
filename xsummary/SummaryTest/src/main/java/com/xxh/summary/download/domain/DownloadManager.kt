@@ -33,7 +33,7 @@ object DownloadManager {
     ) {
         this.sdk = sdk
         this.dao = dao
-        restore()
+        // restore()
     }
 
     // =========================
@@ -41,50 +41,51 @@ object DownloadManager {
     // =========================
 
     fun start(app: AppInfo) {
-        val current = _stateFlow.value[app.appId]
+        val current = _stateFlow.value[app.packageName]
         if (current?.status == Status.DOWNLOADING) return
 
         sdk.download(app.packageName, callback(app.packageName))
 
-        update(app.appId) {
+        update(app.packageName) {
             it.copy(status = Status.DOWNLOADING)
         }
     }
 
-    fun pause(appId: String) {
-        sdk.pause(appId)
-        update(appId) { it.copy(status = Status.PAUSED) }
+    fun pause(packageName: String) {
+        sdk.pause(packageName)
+        update(packageName) { it.copy(status = Status.PAUSED) }
     }
 
-    fun resume(appId: String) {
-        sdk.resume(appId)
-        update(appId) { it.copy(status = Status.DOWNLOADING) }
+    fun resume(packageName: String) {
+        sdk.resume(packageName)
+        update(packageName) { it.copy(status = Status.DOWNLOADING) }
     }
 
     // =========================
     // 回调处理
     // =========================
 
-    private fun callback(appId: String) = object : DownloadCallback {
+    private fun callback(packageName: String) = object : DownloadCallback {
 
         override fun onProgress(progress: Int) {
-            update(appId) {
+            update(packageName) {
                 it.copy(progress = progress, status = Status.DOWNLOADING)
             }
         }
 
-        override fun onSuccess() {
-            update(appId) {
-                it.copy(progress = 100, status = Status.SUCCESS)
+        override fun onStatusChanged(status: Status) {
+            if (status == Status.SUCCESS) {
+                update(packageName) {
+                    it.copy(progress = 100, status = Status.SUCCESS)
+                }
+                deleteFromDB(packageName)
+            } else {
+                update(packageName) {
+                    it.copy(status = status)
+                }
             }
-            deleteFromDB(appId)
         }
 
-        override fun onFailed() {
-            update(appId) {
-                it.copy(status = Status.FAILED)
-            }
-        }
     }
 
     // =========================
@@ -92,14 +93,14 @@ object DownloadManager {
     // =========================
 
     private fun update(
-        appId: String,
+        packageName: String,
         block: (DownloadState) -> DownloadState
     ) {
         scope.launch {
             val map = _stateFlow.value.toMutableMap()
-            val old = map[appId] ?: DownloadState(appId)
+            val old = map[packageName] ?: DownloadState(packageName)
             val newState = block(old)
-            map[appId] = newState
+            map[packageName] = newState
             _stateFlow.emit(map)
 
             saveToDBThrottle(newState)
@@ -120,7 +121,7 @@ object DownloadManager {
         scope.launch {
             dao.insert(
                 DownloadTaskEntity(
-                    appId = state.appId,
+                    packageName = state.packageName,
                     status = state.status.ordinal,
                     progress = state.progress,
                     updateTime = now
@@ -129,9 +130,9 @@ object DownloadManager {
         }
     }
 
-    private fun deleteFromDB(appId: String) {
+    private fun deleteFromDB(packageName: String) {
         scope.launch {
-            dao.delete(appId)
+            dao.delete(packageName)
         }
     }
 
@@ -144,18 +145,18 @@ object DownloadManager {
             // 1. 从 DB 恢复
             val dbTasks = dao.getAll()
             val map = dbTasks.associate {
-                it.appId to DownloadState(
-                    appId = it.appId,
+                it.packageName to DownloadState(
+                    packageName = it.packageName,
                     progress = it.progress,
-                    status = Status.values()[it.status]
+                    status = Status.entries[it.status]
                 )
             }.toMutableMap()
 
             // 2. 从 SDK 同步
             val sdkTasks = sdk.getDownloadingList()
             sdkTasks.forEach {
-                map[it.appId] = DownloadState(
-                    appId = it.appId,
+                map[it.packageName] = DownloadState(
+                    packageName = it.packageName,
                     progress = it.progress,
                     status = Status.DOWNLOADING
                 )

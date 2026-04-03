@@ -1,7 +1,7 @@
 package com.xxh.summary.download.data.model
 
 data class DownloadState(
-    val appId: String,
+    val packageName: String,
     val progress: Int = 0,
     val status: Status = Status.IDLE
 )
@@ -11,5 +11,8 @@ enum class Status {
     DOWNLOADING,
     PAUSED,
     SUCCESS,
-    FAILED
+    FAILED,
+    INSTALLING,
+    INSTALLED,
+    UNKNOWN
 }

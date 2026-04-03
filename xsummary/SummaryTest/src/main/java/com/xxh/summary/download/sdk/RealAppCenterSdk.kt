@@ -10,6 +10,7 @@ import cn.nubia.ns_lib.download.DownloadStatus
 import cn.nubia.ns_lib.download.InitCallback
 import cn.nubia.ns_lib.download.NeoDownloadManager
 import cn.nubia.ns_lib.download.NeoDownloadManager.ConnectionExceptionHandler
+import com.xxh.summary.download.data.model.Status
 
 class RealAppCenterSdk : AppCenterSdk {
     private var downloadManager: NeoDownloadManager? = null
@@ -93,6 +94,17 @@ class RealAppCenterSdk : AppCenterSdk {
                             getLocalProgress(packageName)
                         }"
                     )
+                    val newStatus = when (status) {
+                        DownloadStatus.NOT_STARTED -> Status.IDLE
+                        DownloadStatus.DOWNLOADING -> Status.DOWNLOADING
+                        DownloadStatus.PAUSED -> Status.PAUSED
+                        DownloadStatus.SUCCESS -> Status.SUCCESS
+                        DownloadStatus.FAILED -> Status.FAILED
+                        DownloadStatus.INSTALLING -> Status.INSTALLING
+                        DownloadStatus.INSTALLED -> Status.INSTALLED
+                        else -> Status.UNKNOWN
+                    }
+                    callback.onStatusChanged(newStatus)
                 }
             }
 
@@ -104,6 +116,7 @@ class RealAppCenterSdk : AppCenterSdk {
                             getLocalProgress(packageName)
                         }"
                     )
+                    callback.onProgress(progress)
                 }
             }
         }

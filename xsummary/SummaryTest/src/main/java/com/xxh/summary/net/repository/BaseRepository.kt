@@ -1,6 +1,5 @@
 package com.xxh.summary.net.repository
 
-import android.util.Log
 import com.xxh.summary.net.model.ApiException
 import com.xxh.summary.net.model.BaseResponse
 import com.xxh.summary.net.model.ResultState

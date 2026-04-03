@@ -1,7 +1,9 @@
 package com.xxh.summary.download.sdk
 
+import com.xxh.summary.download.data.model.Status
+
 interface DownloadCallback {
     fun onProgress(progress: Int)
-    fun onSuccess()
-    fun onFailed()
+
+    fun onStatusChanged(status: Status)
 }
