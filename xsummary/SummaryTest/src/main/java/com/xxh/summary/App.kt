@@ -2,7 +2,7 @@ package com.xxh.summary
 
 import android.app.Application
 import com.xxh.summary.download.data.db.AppDatabase
-import com.xxh.summary.download.domain.DownloadManager
+import com.xxh.summary.download.data.repository.DownloadRepository
 import com.xxh.summary.download.sdk.RealAppCenterSdk
 
 class App : Application() {
@@ -12,7 +12,7 @@ class App : Application() {
         val sdk = RealAppCenterSdk()
         sdk.initSdk(this)
         val db = AppDatabase.create(this)
-        DownloadManager.init(
+        DownloadRepository.init(
             sdk = sdk,
             dao = db.downloadDao()
         )

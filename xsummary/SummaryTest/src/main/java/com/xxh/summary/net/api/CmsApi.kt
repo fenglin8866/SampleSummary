@@ -1,6 +1,6 @@
 package com.xxh.summary.net.api
 
-import com.xxh.summary.download.data.model.AppRankListResponse
+import com.xxh.summary.download.model.AppRankListResponse
 import com.xxh.summary.net.model.BaseResponse
 import retrofit2.http.FieldMap
 import retrofit2.http.FormUrlEncoded

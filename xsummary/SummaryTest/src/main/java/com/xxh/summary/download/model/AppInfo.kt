@@ -1,4 +1,4 @@
-package com.xxh.summary.download.data.model
+package com.xxh.summary.download.model
 
 import com.google.gson.annotations.SerializedName
 

@@ -10,7 +10,7 @@ import cn.nubia.ns_lib.download.DownloadStatus
 import cn.nubia.ns_lib.download.InitCallback
 import cn.nubia.ns_lib.download.NeoDownloadManager
 import cn.nubia.ns_lib.download.NeoDownloadManager.ConnectionExceptionHandler
-import com.xxh.summary.download.data.model.Status
+import com.xxh.summary.download.model.Status
 
 class RealAppCenterSdk : AppCenterSdk {
     private var downloadManager: NeoDownloadManager? = null
@@ -89,7 +89,7 @@ class RealAppCenterSdk : AppCenterSdk {
             override fun onStatusChanged(pkg: String?, status: DownloadStatus?) {
                 if (pkg == packageName && status != null) {
                     Log.d(
-                        TAG,
+                        "xxh123xx",
                         "开始下载: $packageName downloadStatus=$status progress=${
                             getLocalProgress(packageName)
                         }"
@@ -111,7 +111,7 @@ class RealAppCenterSdk : AppCenterSdk {
             override fun onProgressChanged(pkg: String?, progress: Int) {
                 if (pkg == packageName) {
                     Log.d(
-                        TAG,
+                        "xxh123",
                         "开始下载: $packageName downloadStatus=${getLocalStatus(packageName)} progress=${
                             getLocalProgress(packageName)
                         }"

@@ -1,10 +1,10 @@
-package com.xxh.summary.download.domain
+package com.xxh.summary.download.data.repository
 
 import com.xxh.summary.download.data.db.DownloadDao
 import com.xxh.summary.download.data.db.DownloadTaskEntity
-import com.xxh.summary.download.data.model.AppInfo
-import com.xxh.summary.download.data.model.DownloadState
-import com.xxh.summary.download.data.model.Status
+import com.xxh.summary.download.model.AppInfo
+import com.xxh.summary.download.model.DownloadState
+import com.xxh.summary.download.model.Status
 import com.xxh.summary.download.sdk.AppCenterSdk
 import com.xxh.summary.download.sdk.DownloadCallback
 import kotlinx.coroutines.CoroutineScope
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-object DownloadManager {
+object DownloadRepository {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
@@ -40,13 +40,13 @@ object DownloadManager {
     // 下载操作
     // =========================
 
-    fun start(app: AppInfo) {
-        val current = _stateFlow.value[app.packageName]
+    fun start(packageName: String) {
+        val current = _stateFlow.value[packageName]
         if (current?.status == Status.DOWNLOADING) return
 
-        sdk.download(app.packageName, callback(app.packageName))
+        sdk.download(packageName, callback(packageName))
 
-        update(app.packageName) {
+        update(packageName) {
             it.copy(status = Status.DOWNLOADING)
         }
     }

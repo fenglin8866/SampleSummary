@@ -11,10 +11,9 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import cn.nubia.neostore.aidl.download.NeoAppInfo
 import cn.nubia.ns_lib.download.DownloadStatus
 import com.xxh.summary.R
-import com.xxh.summary.download.data.model.AppInfo
+import com.xxh.summary.download.model.AppInfo
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.concurrent.Executors

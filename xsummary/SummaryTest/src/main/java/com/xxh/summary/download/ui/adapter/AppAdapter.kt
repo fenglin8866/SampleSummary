@@ -1,64 +1,85 @@
 package com.xxh.summary.download.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import cn.nubia.ns_lib.download.DownloadStatus
-import com.xxh.summary.R
-import com.xxh.summary.download.data.model.AppInfo
+import com.xxh.summary.databinding.ItemAppBinding
+import com.xxh.summary.download.model.AppUIModel
+import com.xxh.summary.download.model.Status
 
 class AppAdapter(
-    private var appList: List<AppInfo>,
-    private val onDownloadClick: (AppInfo) -> Unit,
-    /* private val onDownloadClick: (NeoAppInfo) -> Unit,
-     private val onPauseClick: (NeoAppInfo) -> Unit,
-     private val onResumeClick: (NeoAppInfo) -> Unit,
-     private val onDeleteClick: (NeoAppInfo) -> Unit,
-     private val onItemClick: (NeoAppInfo) -> Unit*/
-) : RecyclerView.Adapter<AppViewHolder>() {
+    private val onClick: (AppUIModel) -> Unit
+) : ListAdapter<AppUIModel, AppAdapter.VH>(Diff()) {
 
-    private val statusMap = mutableMapOf<String, Pair<DownloadStatus, Int>>()
+    class VH(val binding: ItemAppBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_app, parent, false)
-        return AppViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
+        val binding = ItemAppBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return VH(binding)
     }
 
-    override fun onBindViewHolder(holder: AppViewHolder, position: Int) {
-        val app = appList[position]
-        val (status, progress) = statusMap[app.packageName] ?: (DownloadStatus.NOT_STARTED to 0)
+    override fun onBindViewHolder(holder: VH, position: Int) {
+        bindFull(holder, getItem(position))
+    }
 
-        holder.bind(app, status, progress) { action ->
-            when (action) {
-                "download" -> onDownloadClick(app)
-              /*  "download" -> onDownloadClick(app)
-                "pause" -> onPauseClick(app)
-                "resume" -> onResumeClick(app)
-                "delete" -> onDeleteClick(app)
-                "click" -> onItemClick(app)*/
-            }
+    override fun onBindViewHolder(
+        holder: VH,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+        if (payloads.isNotEmpty()) {
+            updateDownload(holder, getItem(position))
+        } else {
+            bindFull(holder, getItem(position))
         }
     }
 
-    override fun getItemCount(): Int = appList.size
+    private fun bindFull(holder: VH, item: AppUIModel) {
+        holder.binding.tvAppName.text = item.name
+        holder.binding.tvPackageName.text = item.packageName
+        updateDownload(holder, item)
 
-    override fun onViewAttachedToWindow(holder: AppViewHolder) {
-        super.onViewAttachedToWindow(holder)
-        val position = holder.adapterPosition
-        if (position != RecyclerView.NO_POSITION) {
-            // 曝光埋点
+        holder.binding.btnAction.setOnClickListener {
+            onClick(item)
         }
     }
 
-    fun updateStatus(packageName: String, status: DownloadStatus, progress: Int) {
-        statusMap[packageName] = status to progress
-        notifyItemChanged(appList.indexOfFirst { it.packageName == packageName })
+    private fun updateDownload(holder: VH, item: AppUIModel) {
+        holder.binding.progressDownload.progress = item.progress
+        Log.i("xxh122","status = ${item.status}")
+        val str= when (item.status) {
+            Status.DOWNLOADING -> "暂停"
+            Status.PAUSED -> "继续"
+            Status.SUCCESS -> "安装"
+            Status.INSTALLING -> "安装中"
+            Status.INSTALLED -> "打开"
+            Status.FAILED -> "下载失败"
+            else -> "下载"
+        }
+        Log.i("xxh122","status = ${item.status} str=$str")
+        holder.binding.btnAction.text=str
     }
 
-    fun updateAppList(newList: List<AppInfo>) {
-        appList = newList
-        statusMap.clear()
-        notifyDataSetChanged()
+    class Diff : DiffUtil.ItemCallback<AppUIModel>() {
+
+        override fun areItemsTheSame(o: AppUIModel, n: AppUIModel) =
+            o.packageName == n.packageName
+
+        override fun areContentsTheSame(o: AppUIModel, n: AppUIModel) =
+            o == n
+
+        override fun getChangePayload(o: AppUIModel, n: AppUIModel): Any? {
+            return if (o.progress != n.progress || o.status != n.status) {
+                true
+            } else null
+        }
     }
 }

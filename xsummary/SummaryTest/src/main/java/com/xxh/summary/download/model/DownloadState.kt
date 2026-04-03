@@ -1,4 +1,4 @@
-package com.xxh.summary.download.data.model
+package com.xxh.summary.download.model
 
 data class DownloadState(
     val packageName: String,
