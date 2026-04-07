@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sample.core.basic2.fragment.BaseStateFragment
 import com.xxh.summary.databinding.FragmentAppBinding
-import com.xxh.summary.download.model.AppInfo
 import kotlinx.coroutines.flow.StateFlow
 import androidx.fragment.app.viewModels
 import com.xxh.summary.download.model.AppUIModel
@@ -13,7 +12,7 @@ import com.xxh.summary.download.ui.adapter.AppAdapter
 
 class AppFragment : BaseStateFragment<FragmentAppBinding, List<AppUIModel>>() {
 
-    private  var appAdapter: AppAdapter?=null
+    private var appAdapter: AppAdapter? = null
     private val viewModel: AppViewModel by viewModels { AppViewModel.Factory }
 
     override fun bindView(
@@ -26,7 +25,7 @@ class AppFragment : BaseStateFragment<FragmentAppBinding, List<AppUIModel>>() {
     override fun initView() {
         super.initView()
         appAdapter = AppAdapter {
-            viewModel.download(it.packageName)
+            viewModel.handleClick(it)
         }
         binding.appList.adapter = appAdapter
         binding.appList.layoutManager = LinearLayoutManager(requireContext())

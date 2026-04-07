@@ -1,8 +1,9 @@
 package com.xxh.summary.download.data.repository
 
+import android.content.Context
+import android.util.Log
 import com.xxh.summary.download.data.db.DownloadDao
 import com.xxh.summary.download.data.db.DownloadTaskEntity
-import com.xxh.summary.download.model.AppInfo
 import com.xxh.summary.download.model.DownloadState
 import com.xxh.summary.download.model.Status
 import com.xxh.summary.download.sdk.AppCenterSdk
@@ -19,8 +20,7 @@ object DownloadRepository {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    private val _stateFlow =
-        MutableStateFlow<Map<String, DownloadState>>(emptyMap())
+    private val _stateFlow = MutableStateFlow<Map<String, DownloadState>>(emptyMap())
     val stateFlow: StateFlow<Map<String, DownloadState>> =
         _stateFlow.asStateFlow()
 
@@ -28,13 +28,20 @@ object DownloadRepository {
     private lateinit var dao: DownloadDao
 
     fun init(
+        context: Context,
         sdk: AppCenterSdk,
         dao: DownloadDao
     ) {
         this.sdk = sdk
         this.dao = dao
-        // restore()
+        sdk.initSdk(context) { isSuccess ->
+            if (isSuccess) {
+                restore()
+            }
+        }
     }
+
+
 
     // =========================
     // 下载操作
@@ -46,19 +53,27 @@ object DownloadRepository {
 
         sdk.download(packageName, callback(packageName))
 
-        update(packageName) {
+        /*update(packageName) {
             it.copy(status = Status.DOWNLOADING)
-        }
+        }*/
     }
 
     fun pause(packageName: String) {
-        sdk.pause(packageName)
-        update(packageName) { it.copy(status = Status.PAUSED) }
+        Log.i("xxh222", "pause $packageName")
+        sdk.pause(packageName) { state ->
+            update(packageName) { it.copy(progress = state.progress, status = state.status) }
+        }
     }
 
     fun resume(packageName: String) {
-        sdk.resume(packageName)
-        update(packageName) { it.copy(status = Status.DOWNLOADING) }
+        sdk.resume(packageName) { state ->
+            update(packageName) { it.copy(progress = state.progress, status = state.status) }
+        }
+        // update(packageName) { it.copy(status = Status.DOWNLOADING) }
+    }
+
+    fun open(packageName: String) {
+        sdk.open(packageName)
     }
 
     // =========================
@@ -103,21 +118,19 @@ object DownloadRepository {
             map[packageName] = newState
             _stateFlow.emit(map)
 
-            saveToDBThrottle(newState)
+            saveToDB(newState)
         }
     }
 
-    // =========================
-    // Room 持久化（节流）
-    // =========================
-
     private var lastSaveTime = 0L
 
-    private fun saveToDBThrottle(state: DownloadState) {
+    private fun saveToDB(state: DownloadState) {
         val now = System.currentTimeMillis()
-        if (now - lastSaveTime < 1000) return
-        lastSaveTime = now
-
+        // 节流，避免频繁保存
+        if (state.status == Status.DOWNLOADING) {
+            if (now - lastSaveTime < 1000) return
+            lastSaveTime = now
+        }
         scope.launch {
             dao.insert(
                 DownloadTaskEntity(
@@ -153,13 +166,19 @@ object DownloadRepository {
             }.toMutableMap()
 
             // 2. 从 SDK 同步
-            val sdkTasks = sdk.getDownloadingList()
+            /*val sdkTasks = sdk.getDownloadingList()
             sdkTasks.forEach {
                 map[it.packageName] = DownloadState(
                     packageName = it.packageName,
                     progress = it.progress,
                     status = Status.DOWNLOADING
                 )
+            }*/
+
+            map.forEach { (packageName, state) ->
+                Log.i("xxh333", "${packageName}: $state")
+                sdk.queryDownloadStatus(packageName)
+
             }
 
             _stateFlow.emit(map)

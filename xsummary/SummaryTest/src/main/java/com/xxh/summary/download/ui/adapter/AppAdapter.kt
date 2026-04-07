@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.xxh.summary.databinding.ItemAppBinding
 import com.xxh.summary.download.model.AppUIModel
 import com.xxh.summary.download.model.Status
@@ -35,37 +36,39 @@ class AppAdapter(
         position: Int,
         payloads: MutableList<Any>
     ) {
+        val item = getItem(position)
         if (payloads.isNotEmpty()) {
-            updateDownload(holder, getItem(position))
+            updateDownload(holder, item)
         } else {
-            bindFull(holder, getItem(position))
+            bindFull(holder, item)
+        }
+        holder.binding.btnAction.setOnClickListener {
+            onClick(item)
         }
     }
 
     private fun bindFull(holder: VH, item: AppUIModel) {
         holder.binding.tvAppName.text = item.name
         holder.binding.tvPackageName.text = item.packageName
+        holder.binding.tvDownloadCount.text = item.summary
         updateDownload(holder, item)
-
-        holder.binding.btnAction.setOnClickListener {
-            onClick(item)
-        }
+        Glide.with(holder.binding.ivAppIcon.context).load(item.icon).into(holder.binding.ivAppIcon)
     }
 
     private fun updateDownload(holder: VH, item: AppUIModel) {
         holder.binding.progressDownload.progress = item.progress
-        Log.i("xxh122","status = ${item.status}")
-        val str= when (item.status) {
+        Log.i("xxh122", "status = ${item.status}")
+        val str = when (item.status) {
             Status.DOWNLOADING -> "暂停"
             Status.PAUSED -> "继续"
             Status.SUCCESS -> "安装"
             Status.INSTALLING -> "安装中"
             Status.INSTALLED -> "打开"
-            Status.FAILED -> "下载失败"
+            Status.FAILED -> "失败"
             else -> "下载"
         }
-        Log.i("xxh122","status = ${item.status} str=$str")
-        holder.binding.btnAction.text=str
+        Log.i("xxh122", "status = ${item.status} str=$str")
+        holder.binding.btnAction.text = str
     }
 
     class Diff : DiffUtil.ItemCallback<AppUIModel>() {

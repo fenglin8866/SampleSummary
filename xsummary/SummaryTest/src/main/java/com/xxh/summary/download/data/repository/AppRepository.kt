@@ -14,7 +14,7 @@ class AppRepository(private val api: CmsApi) : BaseRepository() {
         api.getApps(NetworkUtil.getCommonParams())
     }
 
-    fun startDownload(packageName: String) {
+   /* fun startDownload(packageName: String) {
         DownloadRepository.start(packageName)
     }
 
@@ -24,5 +24,5 @@ class AppRepository(private val api: CmsApi) : BaseRepository() {
 
     fun resume(appId: String) {
         DownloadRepository.resume(appId)
-    }
+    }*/
 }

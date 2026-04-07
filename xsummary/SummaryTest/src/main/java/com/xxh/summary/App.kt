@@ -10,9 +10,10 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         val sdk = RealAppCenterSdk()
-        sdk.initSdk(this)
+        // sdk.initSdk(this)
         val db = AppDatabase.create(this)
         DownloadRepository.init(
+            context = this,
             sdk = sdk,
             dao = db.downloadDao()
         )

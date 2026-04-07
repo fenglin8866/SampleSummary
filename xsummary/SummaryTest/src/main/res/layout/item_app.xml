@@ -60,6 +60,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:lines="1"
+                    android:ellipsize="middle"
                     android:text="100万下载"
                     android:textColor="#757575"
                     android:textSize="12sp" />
@@ -103,7 +105,7 @@
 
             <Button
                 android:id="@+id/btn_action"
-                android:layout_width="80dp"
+                android:layout_width="100dp"
                 android:layout_height="36dp"
                 android:background="@drawable/bg_app_button"
                 android:text="下载"

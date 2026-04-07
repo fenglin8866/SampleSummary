@@ -10,6 +10,7 @@ import com.xxh.summary.download.data.repository.AppRepository
 import com.xxh.summary.download.data.repository.DownloadRepository
 import com.xxh.summary.download.model.AppUIModel
 import com.xxh.summary.download.model.DownloadState
+import com.xxh.summary.download.model.Status
 import com.xxh.summary.net.api.CmsApi
 import com.xxh.summary.net.core.NetworkManagerMultiBaseUrl
 import com.xxh.summary.net.env.HostType
@@ -21,11 +22,11 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class AppViewModel(
-    private val repo: AppRepository
+    private val repo: AppRepository,
+    private val downloadRepository: DownloadRepository = DownloadRepository
 ) : ViewModel() {
 
     private val _apps = MutableStateFlow<List<AppInfo>>(emptyList())
-
 
 
     /*val uiList = combine(
@@ -51,10 +52,9 @@ class AppViewModel(
     )*/
 
 
-
-    val state= combine(
+    val state = combine(
         _apps,
-        DownloadRepository.stateFlow
+        downloadRepository.stateFlow
     ) { apps, downloadMap ->
         downloadMap.forEach { (string, state) ->
             Log.i("xxh123", "string: $string, state: $state")
@@ -86,7 +86,7 @@ class AppViewModel(
     fun load() {
         viewModelScope.launch {
             repo.loadApps().collect {
-                when(it) {
+                when (it) {
                     is ResultState.Success -> _apps.value = it.data?.dataList ?: emptyList()
                     is ResultState.Error -> {}
                     else -> {}
@@ -95,11 +95,16 @@ class AppViewModel(
         }
     }
 
-    fun download(app: String) = repo.startDownload(app)
-
-    fun pause(appId: String) = repo.pause(appId)
-
-    fun resume(appId: String) = repo.resume(appId)
+    fun handleClick(app: AppUIModel) {
+        Log.i("xxh222", "handleClick status: ${app.status}")
+        when (app.status) {
+            Status.IDLE -> downloadRepository.start(app.packageName)
+            Status.DOWNLOADING -> downloadRepository.pause(app.packageName)
+            Status.PAUSED, Status.FAILED -> downloadRepository.resume(app.packageName)
+            Status.INSTALLED -> downloadRepository.open(app.packageName)
+            else -> {}
+        }
+    }
 
     companion object {
 
