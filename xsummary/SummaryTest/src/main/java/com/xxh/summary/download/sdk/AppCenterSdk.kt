@@ -18,7 +18,7 @@ interface AppCenterSdk {
 
     fun open(packageName: String)
 
-    fun queryDownloadStatus(packageName: String)
+    fun queryDownloadStatus(packageName: String): DownloadState?
 
-    fun getDownloadingList(): List<DownloadTask>
+    fun registerCallback(state: DownloadState, callback: DownloadCallback)
 }

@@ -93,10 +93,14 @@ object DownloadRepository {
                 update(packageName) {
                     it.copy(progress = 100, status = Status.SUCCESS)
                 }
-                deleteFromDB(packageName)
+               // deleteFromDB(packageName)
             } else {
+                var progress: Int? = null
+                if (status == Status.IDLE) {
+                    progress = 0
+                }
                 update(packageName) {
-                    it.copy(status = status)
+                    it.copy(status = status, progress = progress ?: it.progress)
                 }
             }
         }
@@ -177,8 +181,15 @@ object DownloadRepository {
 
             map.forEach { (packageName, state) ->
                 Log.i("xxh333", "${packageName}: $state")
-                sdk.queryDownloadStatus(packageName)
-
+                var restoreState = state
+                val remoteState = sdk.queryDownloadStatus(packageName)
+                if (remoteState != null) {
+                    restoreState = remoteState
+                    map[packageName] = restoreState
+                    saveToDB(restoreState)
+                }
+                // 冷启动恢复没有回调，需要手动注册
+                sdk.registerCallback(restoreState, callback(packageName))
             }
 
             _stateFlow.emit(map)

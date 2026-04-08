@@ -64,7 +64,7 @@ class AppAdapter(
             Status.SUCCESS -> "安装"
             Status.INSTALLING -> "安装中"
             Status.INSTALLED -> "打开"
-            Status.FAILED -> "失败"
+            Status.FAILED -> "重试"
             else -> "下载"
         }
         Log.i("xxh122", "status = ${item.status} str=$str")

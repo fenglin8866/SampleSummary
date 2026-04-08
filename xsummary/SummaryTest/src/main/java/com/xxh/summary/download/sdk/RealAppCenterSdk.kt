@@ -7,6 +7,7 @@ import cn.nubia.ns_lib.LoggerManager
 import cn.nubia.ns_lib.download.DownloadListener
 import cn.nubia.ns_lib.download.DownloadRequest
 import cn.nubia.ns_lib.download.DownloadStatus
+import cn.nubia.ns_lib.download.DownloadTask
 import cn.nubia.ns_lib.download.InitCallback
 import cn.nubia.ns_lib.download.NeoDownloadManager
 import cn.nubia.ns_lib.download.NeoDownloadManager.ConnectionExceptionHandler
@@ -15,7 +16,7 @@ import com.xxh.summary.download.model.Status
 
 class RealAppCenterSdk : AppCenterSdk {
     private var downloadManager: NeoDownloadManager? = null
-    override fun initSdk(context: Context,callback: ((Boolean) -> Unit)?) {
+    override fun initSdk(context: Context, callback: ((Boolean) -> Unit)?) {
         downloadManager = NeoDownloadManager.getInstance()
         // 2. 初始化服务连接
         downloadManager?.init(context, object : InitCallback {
@@ -87,47 +88,9 @@ class RealAppCenterSdk : AppCenterSdk {
         val request = DownloadRequest()
         request.packageName = packageName
         request.isAllowMobileNetwork = false
-
-        val listener = object : DownloadListener {
-            override fun onStatusChanged(pkg: String?, status: DownloadStatus?) {
-                if (pkg == packageName && status != null) {
-                    Log.i("xxh444", "download onStatusChanged: $pkg $status")
-                    Log.d(
-                        "xxh123xx",
-                        "开始下载: $packageName downloadStatus=$status progress=${
-                            getLocalProgress(packageName)
-                        }"
-                    )
-                    val newStatus = when (status) {
-                        DownloadStatus.NOT_STARTED -> Status.IDLE
-                        DownloadStatus.DOWNLOADING -> Status.DOWNLOADING
-                        DownloadStatus.PAUSED -> Status.PAUSED
-                        DownloadStatus.SUCCESS -> Status.SUCCESS
-                        DownloadStatus.FAILED -> Status.FAILED
-                        DownloadStatus.INSTALLING -> Status.INSTALLING
-                        DownloadStatus.INSTALLED -> Status.INSTALLED
-                        else -> Status.UNKNOWN
-                    }
-                    callback.onStatusChanged(newStatus)
-                }
-            }
-
-            override fun onProgressChanged(pkg: String?, progress: Int) {
-                if (pkg == packageName) {
-                    Log.i("xxh444", "download onProgressChanged: $pkg $progress")
-                    Log.d(
-                        "xxh123",
-                        "开始下载: $packageName downloadStatus=${getLocalStatus(packageName)} progress=${
-                            getLocalProgress(packageName)
-                        }"
-                    )
-                    callback.onProgress(progress)
-                }
-            }
-        }
-
         try {
-            val result = downloadManager?.startDownload(request, listener)
+            val result =
+                downloadManager?.startDownload(request, getDownloadListener(packageName, callback))
             if (result != null && NeoDownloadManager.isSuccess(result)) {
                 Log.d(TAG, "开始下载: $packageName")
             } else {
@@ -140,6 +103,10 @@ class RealAppCenterSdk : AppCenterSdk {
 
     private fun getLocalProgress(packageName: String): Int {
         return downloadManager?.getLocalDownloadProgress(packageName) ?: 0
+    }
+
+    private fun getRemoteProgress(packageName: String): Int {
+        return downloadManager?.getDownloadProgress(packageName)?.getInt(NeoDownloadManager.RESULT) ?: 0
     }
 
     private fun getLocalStatus(packageName: String): DownloadStatus {
@@ -196,7 +163,7 @@ class RealAppCenterSdk : AppCenterSdk {
     }
 
 
-    override fun queryDownloadStatus(packageName: String) {
+    override fun queryDownloadStatus(packageName: String): DownloadState? {
         try {
             val result = downloadManager?.getDownloadStatus(packageName)
             if (result == null) {
@@ -204,7 +171,7 @@ class RealAppCenterSdk : AppCenterSdk {
                     TAG,
                     "查询失败：返回结果为空 getDownloadStatus returned null for package: $packageName"
                 )
-                return
+                return null
             }
 
             // 解析结果
@@ -215,7 +182,7 @@ class RealAppCenterSdk : AppCenterSdk {
             // 判断调用是否成功
             val isCallSuccess = NeoDownloadManager.isSuccess(result)
 
-            // 获取下载状态
+            /*// 获取下载状态
             val status = when (statusCode) {
                 0 -> "任务不存在"
                 1 -> "下载中"
@@ -227,6 +194,18 @@ class RealAppCenterSdk : AppCenterSdk {
                 8 -> "未开始"
                 9 -> "任务被删除"
                 else -> "未知状态"
+            }*/
+
+            // 获取下载状态
+            val status = when (statusCode) {
+                0, 8, 9 -> Status.IDLE
+                1 -> Status.DOWNLOADING
+                2 -> Status.PAUSED
+                3 -> Status.SUCCESS
+                4 -> Status.FAILED
+                5 -> Status.INSTALLING
+                6 -> Status.INSTALLED
+                else -> Status.UNKNOWN
             }
 
             // 构建结果显示
@@ -242,33 +221,69 @@ class RealAppCenterSdk : AppCenterSdk {
             resultBuilder.append("状态码: $statusCode\n")
             Log.d(TAG, "Query download status for $packageName: $resultBuilder")
 
+            Log.i("xxh777", "progress=${getRemoteProgress(packageName)}")
+
+            return DownloadState(packageName, getRemoteProgress(packageName), status)
         } catch (e: Exception) {
             val errorMsg = "查询失败：发生异常 - ${e.message}"
             Log.e(TAG, "Exception when calling getDownloadStatus", e)
+            return null
         }
     }
 
-    private fun registerCallback(packageName: String) {
-        downloadManager?.registerCallback(cn.nubia.ns_lib.download.DownloadTask(packageName),
-            object :
-                DownloadListener {
-                override fun onStatusChanged(
-                    p0: String?,
-                    p1: DownloadStatus?
-                ) {
-                    Log.i("xxh444", "packageName: $packageName onStatusChanged: $p0 $p1")
-                }
-
-                override fun onProgressChanged(p0: String?, p1: Int) {
-                    Log.i("xxh444", "packageName: $packageName onProgressChanged: $p0 $p1")
-                }
-            })
+    override fun registerCallback(state: DownloadState, callback: DownloadCallback) {
+        val task = DownloadTask(state.packageName)
+        //设置下载进度
+        task.progress = state.progress
+        downloadManager?.registerCallback(
+            task,
+            getDownloadListener(state.packageName, callback)
+        )
     }
 
 
+    private fun getDownloadListener(
+        packageName: String,
+        callback: DownloadCallback
+    ): DownloadListener {
+        return object : DownloadListener {
+            override fun onStatusChanged(pkg: String?, status: DownloadStatus?) {
+                if (pkg == packageName && status != null) {
+                    Log.i("xxh444", "download onStatusChanged: $pkg $status")
+                    Log.d(
+                        "xxh123xx",
+                        "开始下载: $packageName downloadStatus=$status progress=${
+                            getLocalProgress(packageName)
+                        }"
+                    )
+                    val newStatus = when (status) {
+                        DownloadStatus.NOT_STARTED -> Status.IDLE
+                        DownloadStatus.DOWNLOADING -> Status.DOWNLOADING
+                        DownloadStatus.PAUSED -> Status.PAUSED
+                        DownloadStatus.SUCCESS -> Status.SUCCESS
+                        DownloadStatus.FAILED -> Status.FAILED
+                        DownloadStatus.INSTALLING -> Status.INSTALLING
+                        DownloadStatus.INSTALLED -> Status.INSTALLED
+                        DownloadStatus.DELETED -> Status.IDLE
+                        else -> Status.UNKNOWN
+                    }
+                    callback.onStatusChanged(newStatus)
+                }
+            }
 
-    override fun getDownloadingList(): List<DownloadTask> {
-        TODO("Not yet implemented")
+            override fun onProgressChanged(pkg: String?, progress: Int) {
+                if (pkg == packageName) {
+                    Log.i("xxh444", "download onProgressChanged: $pkg $progress")
+                    Log.d(
+                        "xxh123",
+                        "开始下载: $packageName downloadStatus=${getLocalStatus(packageName)} progress=${
+                            getLocalProgress(packageName)
+                        }"
+                    )
+                    callback.onProgress(progress)
+                }
+            }
+        }
     }
 
 

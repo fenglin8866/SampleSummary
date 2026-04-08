@@ -98,7 +98,7 @@ class AppViewModel(
     fun handleClick(app: AppUIModel) {
         Log.i("xxh222", "handleClick status: ${app.status}")
         when (app.status) {
-            Status.IDLE -> downloadRepository.start(app.packageName)
+            Status.IDLE, Status.SUCCESS -> downloadRepository.start(app.packageName)
             Status.DOWNLOADING -> downloadRepository.pause(app.packageName)
             Status.PAUSED, Status.FAILED -> downloadRepository.resume(app.packageName)
             Status.INSTALLED -> downloadRepository.open(app.packageName)
