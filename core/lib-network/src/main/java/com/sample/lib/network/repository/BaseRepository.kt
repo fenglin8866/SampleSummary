@@ -20,7 +20,7 @@ abstract class BaseRepository {
         if (response.code == 0) {
             emit(ResultState.Success(response.data))
         } else {
-            throw ApiException(response.code, response.message)
+            throw ApiException(response.code, response.message.toString())
         }
 
     }.catch { e ->

@@ -38,8 +38,10 @@ class AppAdapter(
     ) {
         val item = getItem(position)
         if (payloads.isNotEmpty()) {
+            Log.i("xxh0000", "onBindViewHolder position=$position")
             updateDownload(holder, item)
         } else {
+            Log.i("xxh0001", "onBindViewHolder position=$position")
             bindFull(holder, item)
         }
         holder.binding.btnAction.setOnClickListener {
@@ -57,7 +59,7 @@ class AppAdapter(
 
     private fun updateDownload(holder: VH, item: AppUIModel) {
         holder.binding.progressDownload.progress = item.progress
-        Log.i("xxh122", "status = ${item.status}")
+        Log.i("xxh0002", "status = ${item.status}")
         val str = when (item.status) {
             Status.DOWNLOADING -> "暂停"
             Status.PAUSED -> "继续"

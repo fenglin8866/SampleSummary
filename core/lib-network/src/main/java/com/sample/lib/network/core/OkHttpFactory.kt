@@ -1,8 +1,8 @@
 package com.sample.lib.network.core
 
-import com.sample.lib.network.interceptor.DynamicBaseUrlInterceptor
 import com.sample.lib.network.interceptor.HeaderInterceptor
 import com.sample.lib.network.interceptor.RetryInterceptor
+import com.sample.lib.network.util.NetLog
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -12,18 +12,16 @@ object OkHttpFactory {
 
     fun create(
         extraInterceptors: List<Interceptor> = emptyList(),
-        debug: Boolean = false
     ): OkHttpClient {
         val builder = OkHttpClient.Builder()
-            .addInterceptor(createHeaderInterceptor())
-          //  .addInterceptor(DynamicBaseUrlInterceptor())
+            //.addInterceptor(createHeaderInterceptor())
+            //.addInterceptor(DynamicBaseUrlInterceptor())
             .addInterceptor(RetryInterceptor())
-
             .connectTimeout(15, TimeUnit.SECONDS)
             .readTimeout(15, TimeUnit.SECONDS)
 
         // 日志
-        if (debug) {
+        if (NetLog.isEnabled) {
             builder.addInterceptor(createLoggingInterceptor())
         }
 

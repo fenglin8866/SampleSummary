@@ -31,7 +31,7 @@ abstract class RequestDispatcherBaseRepository {
             val result: ResultState<T> = if (response.code == 0) {
                 ResultState.Success(response.data)
             } else {
-                throw ApiException(response.code, response.message)
+                throw ApiException(response.code, response.message.toString())
             }
             result
         }.onStart { emit(ResultState.Loading) }

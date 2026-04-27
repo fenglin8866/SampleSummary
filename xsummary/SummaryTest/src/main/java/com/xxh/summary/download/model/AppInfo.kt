@@ -1,12 +1,15 @@
 package com.xxh.summary.download.model
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 
-data class AppRankListResponse(
+@Keep
+data class AppListResponse(
     @SerializedName("dataList")
     val dataList: List<AppInfo>
 )
 
+@Keep
 data class AppInfo(
     @SerializedName("softId")
     val appId: String,

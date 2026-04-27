@@ -5,6 +5,6 @@ import androidx.annotation.Keep
 @Keep
 open class BaseResponse<T>(
     val code: Int,
-    val message: String,
+    val message: Any,
     val data: T?
 )

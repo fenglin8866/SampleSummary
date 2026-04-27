@@ -1,3 +1,8 @@
+说明
+1.网络基础库，包含 Retrofit、OkHttp、Retrofit-Converter-Gson、Retrofit-Adapter-Kotlin-Flow，不应该包含任何业务逻辑。
+2.环境Host配置，接口请求由业务实现。
+
+==============================================================================
 1.NetworkManager
 是否有必要在Application中初始化NetworkManager，直接在调用的时候构建。
 

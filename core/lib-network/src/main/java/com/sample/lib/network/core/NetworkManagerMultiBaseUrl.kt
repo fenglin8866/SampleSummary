@@ -1,6 +1,5 @@
 package com.sample.lib.network.core
 
-import com.sample.lib.network.env.HostManager
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -18,37 +17,90 @@ object NetworkManagerMultiBaseUrl {
     // ===== 全局配置 =====
 
     private val retrofitCache = mutableMapOf<String, Retrofit>()
-    private lateinit var okHttpClient: OkHttpClient
 
-    // ===== 初始化 =====
-    fun init(
-        debug: Boolean = false,
-        extraInterceptors: List<Interceptor> = emptyList()
-    ) {
-        okHttpClient = OkHttpFactory.create(extraInterceptors, debug)
+    //Service 缓存（避免重复创建）
+    private val serviceCache = mutableMapOf<Class<*>, Any>()
+
+
+    private val okHttpClient: OkHttpClient by lazy {
+        OkHttpFactory.create()
     }
 
-    /** 创建 API（推荐方式） */
+   /*
+   为了使网络库更灵活，移除相关配置信息
+   fun <T> createCache(hostType: String, service: Class<T>): T {
+        return serviceCache.getOrPut(service) {
+            create(hostType, service) as Any
+        } as T
+    }
+
+    fun <T> createInterceptors(
+        hostType: String,
+        service: Class<T>,
+        extraInterceptors: List<Interceptor> = emptyList()
+    ): T {
+        val baseUrl = HostManager.getBaseUrl(hostType)
+        val retrofit = getOrCreateRetrofit(baseUrl, extraInterceptors)
+        return retrofit.create(service)
+    }
+
+    //创建 API（推荐方式）
     fun <T> create(hostType: String, service: Class<T>): T {
         val baseUrl = HostManager.getBaseUrl(hostType)
         val retrofit = getOrCreateRetrofit(baseUrl)
         return retrofit.create(service)
     }
 
-    /** 创建通用API*/
+        //创建通用API
     fun <T> createForBaseUrl(baseUrl: String, service: Class<T>): T {
         val retrofit = getOrCreateRetrofit(baseUrl)
         return retrofit.create(service)
     }
 
+    */
+
+    fun <T> createCache(baseUrl: String, service: Class<T>): T {
+        return serviceCache.getOrPut(service) {
+            create(baseUrl, service) as Any
+        } as T
+    }
+
+    fun <T> create(baseUrl: String, service: Class<T>): T {
+        val retrofit = getOrCreateRetrofit(baseUrl)
+        return retrofit.create(service)
+    }
+
+    fun <T> createInterceptors(
+        baseUrl: String,
+        service: Class<T>,
+        extraInterceptors: List<Interceptor> = emptyList()
+    ): T {
+        val retrofit = getOrCreateRetrofit(baseUrl, extraInterceptors)
+        return retrofit.create(service)
+    }
+
     /** 环境切换时调用 */
     fun onEnvChanged() {
-        retrofitCache.clear() // ⭐关键：清空缓存
+        retrofitCache.clear() // 清空retrofit缓存
+        serviceCache.clear() //  清空service缓存
+    }
+
+    private fun getOrCreateRetrofit(
+        baseUrl: String,
+        extraInterceptors: List<Interceptor> = emptyList()
+    ): Retrofit {
+        return retrofitCache.getOrPut(baseUrl) {
+            val okHttpClient = OkHttpFactory.create(extraInterceptors)
+            RetrofitFactory.create(baseUrl, okHttpClient)
+        }
     }
 
     private fun getOrCreateRetrofit(baseUrl: String): Retrofit {
         return retrofitCache.getOrPut(baseUrl) {
-            RetrofitFactory.create(baseUrl, okHttpClient)
+            RetrofitFactory.create(
+                baseUrl,
+                okHttpClient
+            )
         }
     }
 

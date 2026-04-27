@@ -1,28 +1,29 @@
 package com.xxh.summary.download.data.repository
 
-import com.xxh.summary.net.api.CmsApi
-import com.xxh.summary.net.NetworkUtil
-import com.xxh.summary.net.repository.BaseRepository
+import com.sample.lib.network.repository.BaseRepository
+import com.xxh.summary.download.data.remote.api.AppApi
+import com.xxh.summary.download.data.remote.NetworkUtil
 
-class AppRepository(private val api: CmsApi) : BaseRepository() {
+class AppRepository(private val api: AppApi) : BaseRepository() {
 
     /* suspend fun loadApps(): List<AppInfo>? {
          return api.getApps(NetworkUtil.getCommonParams()).data
      }*/
 
-    fun loadApps() = request {
-        api.getApps(NetworkUtil.getCommonParams())
+    fun loadTopApps() = request {
+        api.getTopApps(NetworkUtil.getCommonParams())
     }
 
-   /* fun startDownload(packageName: String) {
-        DownloadRepository.start(packageName)
+    fun loadHotApps() = request {
+        val params = mutableMapOf<String, String>()
+        params["pageSize"] = "10"
+        api.getHotApps(NetworkUtil.getCommonParams(params))
     }
 
-    fun pause(appId: String) {
-        DownloadRepository.pause(appId)
+    fun loadRecentApps(packageName: String? = null) = request {
+        val params = mutableMapOf<String, String>()
+        params["pkgName"] = packageName ?: ""
+        api.getRecentApps(NetworkUtil.getCommonParams(params))
     }
 
-    fun resume(appId: String) {
-        DownloadRepository.resume(appId)
-    }*/
 }

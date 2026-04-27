@@ -22,7 +22,6 @@ object NetworkManager {
 
     // ===== 全局配置 =====
     private var baseUrl: String = ""
-    private var debug: Boolean = false
 
     private lateinit var okHttpClient: OkHttpClient
     private lateinit var retrofit: Retrofit
@@ -33,11 +32,9 @@ object NetworkManager {
     // ===== 初始化 =====
     fun init(
         baseUrl: String,
-        debug: Boolean = false,
         extraInterceptors: List<Interceptor> = emptyList()
     ) {
         this.baseUrl = baseUrl
-        this.debug = debug
         okHttpClient = OkHttpFactory.create(extraInterceptors)
         retrofit = RetrofitFactory.create(baseUrl, okHttpClient)
     }

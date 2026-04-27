@@ -1,6 +1,6 @@
 package com.sample.lib.network.interceptor
 
-import com.sample.lib.network.env.HostManager
+import com.sample.lib.test.env.HostManager
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -13,6 +13,7 @@ import okhttp3.Response
  *     @Header("Host-Type") hostType: String
  * )
  */
+@Deprecated("Use DynamicBaseUrlInterceptor instead")
 class MultiBaseUrlInterceptor : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {

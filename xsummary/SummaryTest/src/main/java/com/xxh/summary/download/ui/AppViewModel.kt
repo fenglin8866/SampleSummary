@@ -5,16 +5,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.sample.lib.network.core.NetworkManagerMultiBaseUrl
+import com.sample.lib.network.model.ResultState
 import com.xxh.summary.download.model.AppInfo
 import com.xxh.summary.download.data.repository.AppRepository
 import com.xxh.summary.download.data.repository.DownloadRepository
 import com.xxh.summary.download.model.AppUIModel
 import com.xxh.summary.download.model.DownloadState
 import com.xxh.summary.download.model.Status
-import com.xxh.summary.net.api.CmsApi
-import com.xxh.summary.net.core.NetworkManagerMultiBaseUrl
-import com.xxh.summary.net.env.HostType
-import com.xxh.summary.net.model.ResultState
+import com.xxh.summary.download.data.remote.api.AppApi
+import com.xxh.summary.download.data.remote.config.HostManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -85,7 +85,7 @@ class AppViewModel(
 
     fun load() {
         viewModelScope.launch {
-            repo.loadApps().collect {
+            repo.loadTopApps().collect {
                 when (it) {
                     is ResultState.Success -> _apps.value = it.data?.dataList ?: emptyList()
                     is ResultState.Error -> {}
@@ -114,7 +114,7 @@ class AppViewModel(
                 modelClass: Class<T>,
                 extras: CreationExtras
             ): T {
-                val api = NetworkManagerMultiBaseUrl.create(HostType.CMS, CmsApi::class.java)
+                val api = NetworkManagerMultiBaseUrl.create(HostManager.getAppBaseUrl(), AppApi::class.java)
                 val repository = AppRepository(api)
                 return AppViewModel(
                     repository
