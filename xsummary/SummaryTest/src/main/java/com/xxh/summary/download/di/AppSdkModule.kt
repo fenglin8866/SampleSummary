@@ -13,5 +13,5 @@ import javax.inject.Singleton
 interface AppSdkModule {
     @Singleton
     @Binds
-    fun bindsCarRepository(repository: RealAppCenterSdk): AppCenterSdk
+    fun bindAppCenterSdk(sdk: RealAppCenterSdk): AppCenterSdk
 }

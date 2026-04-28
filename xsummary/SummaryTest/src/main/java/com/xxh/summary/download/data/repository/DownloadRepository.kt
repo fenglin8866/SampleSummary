@@ -17,8 +17,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.coroutines.resume
 
 @Singleton
 class DownloadRepository @Inject constructor(
@@ -165,27 +167,54 @@ class DownloadRepository @Inject constructor(
                 )
             }.toMutableMap()
 
+
+            /*
+            ueryDownloadStatus 是异步回调，但 _stateFlow.emit(map) 在 forEach 结束后同步执行，可能导致远程状态还没回来就 emit 了旧数据
+            使用 suspendCancellableCoroutine 把 queryDownloadStatus 包装为挂起函数，确保所有查询完成后再 emit。
+            map.forEach { (packageName, state) ->
+                  Log.i(TAG, " ${packageName}: $state")
+                  var restoreState = state
+                  sdk.queryDownloadStatus(packageName) { remoteState ->
+                      if (remoteState != null) {
+                          restoreState = remoteState
+                          map[packageName] = restoreState
+                          updateToDB(restoreState)
+                      }
+                  }
+                  // 冷启动恢复没有回调，需要手动注册
+                  sdk.registerCallback(
+                      restoreState.packageName,
+                      restoreState.progress,
+                      callback(packageName)
+                  )
+              }*/
+
             // 2. 从 SDK 同步
             map.forEach { (packageName, state) ->
-                Log.i(TAG, " ${packageName}: $state")
-                var restoreState = state
-                sdk.queryDownloadStatus(packageName) { remoteState ->
-                    if (remoteState != null) {
-                        restoreState = remoteState
-                        map[packageName] = restoreState
-                        updateToDB(restoreState)
-                    }
+                val remoteState = queryDownloadStatusSync(packageName)
+                if (remoteState != null) {
+                    map[packageName] = remoteState
+                    saveToDB(remoteState)
                 }
+
                 // 冷启动恢复没有回调，需要手动注册
                 sdk.registerCallback(
-                    restoreState.packageName,
-                    restoreState.progress,
+                    remoteState?.packageName ?: packageName,
+                    remoteState?.progress ?: state.progress,
                     callback(packageName)
                 )
             }
+
             _stateFlow.emit(map)
         }
     }
+
+    private suspend fun queryDownloadStatusSync(packageName: String): DownloadState? =
+        suspendCancellableCoroutine { continuation ->
+            sdk.queryDownloadStatus(packageName) { result ->
+                continuation.resume(result)
+            }
+        }
 
     fun addAppDownloadListener(packageName: String) {
         sdk.registerCallback(packageName, 0, callback(packageName))
@@ -205,12 +234,11 @@ class DownloadRepository @Inject constructor(
      * UI 监听进度、状态同步
      *
      */
-    fun downloadCallback(downloadApps: ((Map<String, DownloadState>) -> Unit)?) {
+    fun setDownloadListener(listener: ((Map<String, DownloadState>) -> Unit)?) {
         callbackJob?.cancel()
+        listener ?: return
         callbackJob = scope.launch {
-            stateFlow.collect {
-                downloadApps?.invoke(it)
-            }
+            stateFlow.collect { listener(it) }
         }
     }
 

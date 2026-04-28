@@ -14,7 +14,9 @@ import cn.nubia.ns_lib.download.NeoDownloadManager
 import cn.nubia.ns_lib.download.Result
 import com.xxh.summary.download.model.DownloadState
 import com.xxh.summary.download.model.Status
+import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
+import kotlin.coroutines.resume
 
 /**
  * 调用接口是耗时操作，不要在主线程调用。
@@ -127,6 +129,18 @@ class RealAppCenterSdk @Inject constructor() : AppCenterSdk {
         }
     }
 
+    suspend fun getRemoteProgress(packageName: String): Int =
+        suspendCancellableCoroutine { continuation ->
+            downloadManager?.getDownloadProgress(packageName) { result ->
+                if (NeoDownloadManager.isSuccess(result)) {
+                    val progress = result.getInt(NeoDownloadManager.RESULT, 0)
+                    continuation.resume(progress)
+                } else {
+                    continuation.resume(0)
+                }
+            }
+        }
+
     private fun getLocalStatus(packageName: String): DownloadStatus {
         val status = downloadManager?.getLocalDownloadStatus(packageName)
         return status ?: DownloadStatus.NOT_STARTED
@@ -225,6 +239,36 @@ class RealAppCenterSdk @Inject constructor() : AppCenterSdk {
             callback(null)
         }
     }
+
+    // 在 SDK 层提供 suspend 函数
+/*    suspend fun queryDownloadStatus(packageName: String): DownloadState? =
+        suspendCancellableCoroutine { continuation ->
+            downloadManager?.getDownloadStatus(packageName) { result ->
+                if (NeoDownloadManager.isSuccess(result)) {
+                    val statusCode = result.getInt(NeoDownloadManager.RESULT, 0)
+                    // 获取下载状态
+                    val status = when (statusCode) {
+                        0, 8, 9 -> Status.IDLE
+                        1 -> Status.DOWNLOADING
+                        2 -> Status.PAUSED
+                        3 -> Status.SUCCESS
+                        4 -> Status.FAILED
+                        5 -> Status.INSTALLING
+                        6 -> Status.INSTALLED
+                        else -> Status.UNKNOWN
+                    }
+
+                    *//*getRemoteProgress(packageName) { progress ->
+                        callback(DownloadState(packageName, progress, status))
+                    }*//*
+                    continuation.resume(DownloadState(packageName, progress, status))
+                } else {
+                    continuation.resume(null)
+                }
+            }
+        }*/
+
+
 
     override fun registerCallback(packageName: String, progress: Int, callback: DownloadCallback) {
         val task = DownloadTask(packageName)
