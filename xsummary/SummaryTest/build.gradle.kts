@@ -12,7 +12,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.xxh.summary"
+        applicationId = "cn.nubia.neostore.client"
         minSdk = 24
         targetSdk = 36
         versionCode = 1

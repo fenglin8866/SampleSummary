@@ -23,7 +23,7 @@ import javax.inject.Inject
 class RealAppCenterSdk @Inject constructor() : AppCenterSdk {
     private var downloadManager: NeoDownloadManager? = null
 
-    private var isSupportDownload: Boolean? = null
+    private var isSupportDownload: Boolean = true
 
     private var ctaStatus: Boolean? = null
 
@@ -53,7 +53,6 @@ class RealAppCenterSdk @Inject constructor() : AppCenterSdk {
             BaseNeoDownloadManager.ConnectionExceptionHandler {
             override fun onServiceDisconnected() {
                 Log.d(TAG, "服务连接断开，正在重新连接...")
-                isSupportDownload = true
             }
 
             override fun onStoreAppNotInstalled() {
@@ -243,7 +242,7 @@ class RealAppCenterSdk @Inject constructor() : AppCenterSdk {
                 ctaStatus = it
             }
         }
-        return isSupportDownload == true && ctaStatus == true
+        return isSupportDownload && ctaStatus == true
     }
 
 
