@@ -14,12 +14,13 @@ import cn.nubia.ns_lib.download.NeoDownloadManager
 import cn.nubia.ns_lib.download.Result
 import com.xxh.summary.download.model.DownloadState
 import com.xxh.summary.download.model.Status
+import javax.inject.Inject
 
 /**
  * 调用接口是耗时操作，不要在主线程调用。
  * 建议：可以增加异步处理，避免阻塞主线程。例如使用协程或者回调。
  */
-class RealAppCenterSdk : AppCenterSdk {
+class RealAppCenterSdk @Inject constructor() : AppCenterSdk {
     private var downloadManager: NeoDownloadManager? = null
 
     private var isSupportDownload: Boolean? = null
@@ -93,7 +94,7 @@ class RealAppCenterSdk : AppCenterSdk {
     override fun download(packageName: String, callback: DownloadCallback) {
         val request = DownloadRequest()
         request.packageName = packageName
-        request.isAllowMobileNetwork = false
+        request.isAllowMobileNetwork = true
         try {
             downloadManager?.startDownload(
                 request,

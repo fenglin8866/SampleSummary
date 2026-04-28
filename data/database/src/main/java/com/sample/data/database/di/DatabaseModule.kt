@@ -26,6 +26,4 @@ class DatabaseModule {
         return AppDatabase.getInstance(context)
     }
 
-
-
 }

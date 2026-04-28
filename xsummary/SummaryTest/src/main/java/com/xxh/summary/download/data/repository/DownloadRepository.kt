@@ -8,6 +8,7 @@ import com.xxh.summary.download.model.DownloadState
 import com.xxh.summary.download.model.Status
 import com.xxh.summary.download.data.sdk.AppCenterSdk
 import com.xxh.summary.download.data.sdk.DownloadCallback
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -16,25 +17,22 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object DownloadRepository {
+@Singleton
+class DownloadRepository @Inject constructor(
+    @ApplicationContext context: Context,
+    val sdk: AppCenterSdk,
+    val dao: DownloadDao
+) {
 
-    private const val TAG = "DownloadRepository"
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private val _stateFlow = MutableStateFlow<Map<String, DownloadState>>(emptyMap())
     val stateFlow: StateFlow<Map<String, DownloadState>> = _stateFlow.asStateFlow()
 
-    private lateinit var sdk: AppCenterSdk
-    private lateinit var dao: DownloadDao
-
-    fun init(
-        context: Context,
-        sdk: AppCenterSdk,
-        dao: DownloadDao
-    ) {
-        this.sdk = sdk
-        this.dao = dao
+    init {
         sdk.initSdk(context) { isSuccess ->
             if (isSuccess) {
                 restore()
@@ -123,15 +121,13 @@ object DownloadRepository {
         }
     }
 
-    private var lastSaveTime = 0L
+    private val lastSaveTimeMap = mutableMapOf<String, Long>()
 
     private suspend fun saveToDB(state: DownloadState) {
         val now = System.currentTimeMillis()
-        // 节流，避免频繁保存
-        if (state.status == Status.DOWNLOADING) {
-            if (now - lastSaveTime < 1000) return
-            lastSaveTime = now
-        }
+        val last = lastSaveTimeMap[state.packageName] ?: 0
+        if (state.status == Status.DOWNLOADING && now - last < 1000) return
+        lastSaveTimeMap[state.packageName] = now
         dao.insert(
             DownloadTaskEntity(
                 packageName = state.packageName,
@@ -216,6 +212,10 @@ object DownloadRepository {
                 downloadApps?.invoke(it)
             }
         }
+    }
+
+    companion object {
+        private const val TAG = "DownloadRepository"
     }
 
 }

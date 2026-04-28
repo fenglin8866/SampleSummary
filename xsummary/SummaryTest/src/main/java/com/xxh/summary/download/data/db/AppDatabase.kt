@@ -14,12 +14,21 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun downloadDao(): DownloadDao
 
     companion object {
-        fun create(context: Context): AppDatabase {
-            return Room.databaseBuilder(
-                context,
-                AppDatabase::class.java,
-                "download.db"
-            ).build()
+
+        @Volatile
+        private var INSTANCE: AppDatabase? = null
+
+
+        fun getInstance(context: Context): AppDatabase {
+            return INSTANCE ?: synchronized(this) {
+                val instance = Room.databaseBuilder(
+                    context,
+                   AppDatabase::class.java,
+                    "download.db"
+                ).build()
+                INSTANCE = instance
+                instance
+            }
         }
     }
 }

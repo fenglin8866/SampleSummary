@@ -9,10 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.xxh.summary.databinding.ItemAppBinding
 import com.xxh.summary.download.model.AppUIModel
+import com.xxh.summary.download.model.ClickType
 import com.xxh.summary.download.model.Status
 
 class AppAdapter(
-    private val onClick: (AppUIModel) -> Unit
+    private val onClick: (ClickType,AppUIModel) -> Unit
 ) : ListAdapter<AppUIModel, AppAdapter.VH>(Diff()) {
 
     class VH(val binding: ItemAppBinding) :
@@ -45,7 +46,10 @@ class AppAdapter(
             bindFull(holder, item)
         }
         holder.binding.btnAction.setOnClickListener {
-            onClick(item)
+            onClick(ClickType.DOWNLOAD,item)
+        }
+        holder.binding.root.setOnClickListener {
+            onClick(ClickType.ITEM,item)
         }
     }
 

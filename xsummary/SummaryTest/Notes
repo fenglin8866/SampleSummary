@@ -30,6 +30,7 @@ Flow，StateFlow，SharedFlow的异同点，使用场景
   2.9 业务逻辑与UI逻辑分离，不要在UI层处理业务逻辑，不要在业务层处理UI逻辑。创建不同的UserCase，UIBinder。例如：DownloadAppUserCase，DownloadButtonBinder
   2.10 不同层的数据模型存在转换，特别是UI层使用State封装，不要直接将数据模型抛给UI层，因为UI层存在多种状态切换。例如：AppUiState。
   2.11 复用业务逻辑使用UserCase封装。
+  2.12 Hilt的限制作用域，不能太大也不能太小。
 
 3.业务实践
   3.1 对应的新版本 && CTA同意 && 初始化成功 才能使用统一组件，同时做好老版本，不能使用统一组件的处理。

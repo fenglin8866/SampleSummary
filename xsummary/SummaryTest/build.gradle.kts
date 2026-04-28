@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.common.room)
+    alias(libs.plugins.common.hilt)
 }
 
 android {

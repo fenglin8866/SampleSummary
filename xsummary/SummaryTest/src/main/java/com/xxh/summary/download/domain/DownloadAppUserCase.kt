@@ -3,29 +3,32 @@ package com.xxh.summary.download.domain
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import com.sample.lib.network.model.ResultState
+import com.xxh.summary.download.data.repository.AppRepository
 import com.xxh.summary.download.data.repository.DownloadRepository
-import com.xxh.summary.download.model.AppListResponse
 import com.xxh.summary.download.model.AppUIModel
 import com.xxh.summary.download.model.AppUiState
 import com.xxh.summary.download.model.ClickType
 import com.xxh.summary.download.model.DownloadState
 import com.xxh.summary.download.model.Status
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
-class DownloadAppUserCase {
+
+class DownloadAppUserCase @Inject constructor(
+    private val appRepository: AppRepository,
+    private val  downloadRepository: DownloadRepository
+) {
 
     fun getShowAppsFlow(
-        apiResult: Flow<ResultState<AppListResponse>>,
         scope: CoroutineScope
     ): StateFlow<AppUiState> {
         return combine(
-            apiResult,
-            DownloadRepository.stateFlow
+            appRepository.loadTopApps(),
+             downloadRepository.stateFlow
         )
         { result, downloadMap ->
             when (result) {
@@ -67,7 +70,7 @@ class DownloadAppUserCase {
 
     fun handleAction(type: ClickType, app: AppUIModel) {
         if (isInstalled(app.packageName)) {
-            DownloadRepository.open(app.packageName)
+             downloadRepository.open(app.packageName)
         } else {
             when (type) {
                 ClickType.ITEM -> clickItem(app.packageName, app.detailUrl)
@@ -88,11 +91,11 @@ class DownloadAppUserCase {
     fun clickDownload(packageName: String, downloadUrl: String, state: Status) {
         if (isSupportDownload()) {
             when (state) {
-                Status.IDLE, Status.SUCCESS -> DownloadRepository.start(packageName)
-                Status.DOWNLOADING -> DownloadRepository.pause(packageName)
-                Status.PAUSED -> DownloadRepository.resume(packageName)
-                Status.FAILED -> DownloadRepository.start(packageName)
-                Status.INSTALLED -> DownloadRepository.open(packageName)
+                Status.IDLE, Status.SUCCESS ->  downloadRepository.start(packageName)
+                Status.DOWNLOADING ->  downloadRepository.pause(packageName)
+                Status.PAUSED ->  downloadRepository.resume(packageName)
+                Status.FAILED ->  downloadRepository.start(packageName)
+                Status.INSTALLED ->  downloadRepository.open(packageName)
                 else -> Unit
             }
         } else {
@@ -102,7 +105,7 @@ class DownloadAppUserCase {
 
 
     fun isSupportDownload(): Boolean {
-        return DownloadRepository.isDownloadEnabled()
+        return  downloadRepository.isDownloadEnabled()
     }
 
     fun isInstalled(packageName: String): Boolean {
@@ -114,16 +117,16 @@ class DownloadAppUserCase {
     }
 
     fun downloadCallback(downloadApps: ((Map<String, DownloadState>) -> Unit)?) {
-        DownloadRepository.downloadCallback(downloadApps)
+         downloadRepository.downloadCallback(downloadApps)
     }
 
     fun getDownloadStateLiveData(): LiveData<Map<String, DownloadState>> {
-        return DownloadRepository.stateFlow.asLiveData()
+        return  downloadRepository.stateFlow.asLiveData()
     }
 
     fun registerDetailDownloadListener(packageName: String?) {
         if (isSupportDownload() && !packageName.isNullOrEmpty()) {
-            DownloadRepository.addAppDownloadListener(packageName)
+             downloadRepository.addAppDownloadListener(packageName)
         }
     }
 }

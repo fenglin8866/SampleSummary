@@ -3,8 +3,10 @@ package com.xxh.summary.download.data.repository
 import com.sample.lib.network.repository.BaseRepository
 import com.xxh.summary.download.data.remote.api.AppApi
 import com.xxh.summary.download.data.remote.NetworkUtil
+import javax.inject.Inject
 
-class AppRepository(private val api: AppApi) : BaseRepository() {
+
+class AppRepository @Inject constructor(private val api: AppApi) : BaseRepository() {
 
     /* suspend fun loadApps(): List<AppInfo>? {
          return api.getApps(NetworkUtil.getCommonParams()).data
