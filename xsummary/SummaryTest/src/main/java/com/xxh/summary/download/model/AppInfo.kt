@@ -28,7 +28,7 @@ data class AppInfo(
     @SerializedName("summary")
     val summary: String,
     @SerializedName("fileSize")
-    val fileSize: String,
+    val appSize: String,
     @SerializedName("itemName")
     val itemType: String
 )

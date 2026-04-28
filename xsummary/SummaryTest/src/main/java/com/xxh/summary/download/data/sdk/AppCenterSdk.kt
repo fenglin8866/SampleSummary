@@ -1,4 +1,4 @@
-package com.xxh.summary.download.sdk
+package com.xxh.summary.download.data.sdk
 
 import android.content.Context
 import com.xxh.summary.download.model.DownloadState
@@ -18,7 +18,9 @@ interface AppCenterSdk {
 
     fun open(packageName: String)
 
-    fun queryDownloadStatus(packageName: String): DownloadState?
+    fun queryDownloadStatus(packageName: String, callback: (DownloadState?) -> Unit)
 
-    fun registerCallback(state: DownloadState, callback: DownloadCallback)
+    fun registerCallback(packageName: String, progress: Int, callback: DownloadCallback)
+
+    fun isDownloadEnabled(): Boolean
 }

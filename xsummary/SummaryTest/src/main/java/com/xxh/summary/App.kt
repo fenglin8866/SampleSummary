@@ -4,7 +4,7 @@ import android.app.Application
 import com.sample.lib.network.util.NetLog
 import com.xxh.summary.download.data.db.AppDatabase
 import com.xxh.summary.download.data.repository.DownloadRepository
-import com.xxh.summary.download.sdk.RealAppCenterSdk
+import com.xxh.summary.download.data.sdk.RealAppCenterSdk
 
 class App : Application() {
 
@@ -12,7 +12,6 @@ class App : Application() {
         super.onCreate()
         NetLog.setEnable(true)
         val sdk = RealAppCenterSdk()
-        // sdk.initSdk(this)
         val db = AppDatabase.create(this)
         DownloadRepository.init(
             context = this,

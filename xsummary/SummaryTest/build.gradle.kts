@@ -43,6 +43,7 @@ android {
 dependencies {
 
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar","*.aar"))))
+    implementation(files("libs/AppStoreLib-10.2-20260427103918-release.aar"))
     implementation(project(":core:basic"))
     implementation(project(":core:lib-network"))
 

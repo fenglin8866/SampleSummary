@@ -6,94 +6,20 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.sample.lib.network.core.NetworkManagerMultiBaseUrl
-import com.sample.lib.network.model.ResultState
-import com.xxh.summary.download.model.AppInfo
 import com.xxh.summary.download.data.repository.AppRepository
 import com.xxh.summary.download.data.repository.DownloadRepository
 import com.xxh.summary.download.model.AppUIModel
-import com.xxh.summary.download.model.DownloadState
 import com.xxh.summary.download.model.Status
 import com.xxh.summary.download.data.remote.api.AppApi
 import com.xxh.summary.download.data.remote.config.HostManager
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
+import com.xxh.summary.download.domain.DownloadAppUserCase
 
 class AppViewModel(
     private val repo: AppRepository,
     private val downloadRepository: DownloadRepository = DownloadRepository
 ) : ViewModel() {
 
-    private val _apps = MutableStateFlow<List<AppInfo>>(emptyList())
-
-
-    /*val uiList = combine(
-        repo.loadApps(),
-        DownloadRepository.stateFlow
-    ) { list, stateMap ->
-
-        list.map { app ->
-            val state = stateMap[app.appId] ?: DownloadState(app.appId)
-            AppUIModel(
-                appId = app.appId,
-                name = app.name,
-                icon = app.icon,
-                progress = state.progress,
-                status = state.status
-            )
-        }
-
-    }.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(5000),
-        emptyList()
-    )*/
-
-
-    val state = combine(
-        _apps,
-        downloadRepository.stateFlow
-    ) { apps, downloadMap ->
-        downloadMap.forEach { (string, state) ->
-            Log.i("xxh123", "string: $string, state: $state")
-
-        }
-        apps.map { app ->
-            val state = downloadMap[app.packageName] ?: DownloadState(app.packageName)
-            AppUIModel(
-                appId = app.appId,
-                name = app.name,
-                icon = app.icon,
-                packageName = app.packageName,
-                appSize = app.fileSize,
-                summary = app.summary,
-                progress = state.progress,
-                status = state.status
-            )
-        }
-    }.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(5000),
-        emptyList()
-    )
-
-    init {
-        load()
-    }
-
-    fun load() {
-        viewModelScope.launch {
-            repo.loadTopApps().collect {
-                when (it) {
-                    is ResultState.Success -> _apps.value = it.data?.dataList ?: emptyList()
-                    is ResultState.Error -> {}
-                    else -> {}
-                }
-            }
-        }
-    }
+    val state = DownloadAppUserCase().getShowAppsFlow(repo.loadTopApps(), viewModelScope)
 
     fun handleClick(app: AppUIModel) {
         Log.i("xxh222", "handleClick status: ${app.status}")

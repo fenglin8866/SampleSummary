@@ -5,12 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sample.core.basic2.fragment.BaseStateFragment
 import com.xxh.summary.databinding.FragmentAppBinding
-import kotlinx.coroutines.flow.StateFlow
 import androidx.fragment.app.viewModels
-import com.xxh.summary.download.model.AppUIModel
+import com.xxh.summary.download.model.AppUiState
 import com.xxh.summary.download.ui.adapter.AppAdapter
+import kotlinx.coroutines.flow.StateFlow
 
-class AppFragment : BaseStateFragment<FragmentAppBinding, List<AppUIModel>>() {
+class AppFragment : BaseStateFragment<FragmentAppBinding, AppUiState>() {
 
     private var appAdapter: AppAdapter? = null
     private val viewModel: AppViewModel by viewModels { AppViewModel.Factory }
@@ -31,13 +31,23 @@ class AppFragment : BaseStateFragment<FragmentAppBinding, List<AppUIModel>>() {
         binding.appList.layoutManager = LinearLayoutManager(requireContext())
     }
 
-    override fun provideUIState(): StateFlow<List<AppUIModel>> {
+    override fun provideUIState(): StateFlow<AppUiState> {
         return viewModel.state
     }
 
-    override fun render(state: List<AppUIModel>) {
-        appAdapter?.submitList(state)
+    override fun render(state: AppUiState) {
+        when (state) {
+            is AppUiState.Success -> {
+                appAdapter?.submitList(state.data)
+            }
+            is AppUiState.Error -> {
+                // Handle error
+            }
+            is AppUiState.Loading -> {
+                // Handle loading
+            }
+            else -> Unit
+        }
     }
-
 
 }

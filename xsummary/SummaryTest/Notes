@@ -1,0 +1,40 @@
+一、统一组件封装
+1.基本知识点
+RecyclerView刷新问题
+  1.1 整体刷新，出现闪屏，使用Diff。
+  1.2 使用ListAdapter
+  1.3 调用submitList，注意Diff的复写，
+  1.4 更新时，不要只修改对象内的内容，由于对象没有变化，导致刷新没变化。
+
+协程问题
+stateFlow.value 单次快照
+行为：只获取当前值，后续变化不通知
+场景：查询一次性状态
+
+stateFlow.collect
+行为：立即收到当前值，后续变化持续通知
+场景：UI 监听进度、状态同步
+
+Flow，StateFlow，SharedFlow的异同点，使用场景
+参考README.md文档
+
+2.开发实践
+  2.1 综合判断哪些是类使用object，哪些使用hilt，
+  2.2 不同层级之间的解耦，耦合。例如数据层，领域层，UI层，不一定是一一对应的，例如AppRepository可能对应多个UI层。
+  2.3 穷尽所有异常处理，并进行对应的处理，注意异常是一层层传递的，不要在UI层处理数据层的异常。
+  2.4 异常处理，尽量在当前处理，转换为上传能识别的信息，不要传null这些信息，让上传去转换，可以转为默认值或对应的状态。例如：getRemoteProgress()方法，不要传null，应该传0。
+  2.5 用户点击去抖操作，避免重复点击，可以使用debounce。
+  2.6 当接口方法参数不多的时候，不要使用对象封装，直接使用多个参数，更灵活通用。例如：registerCallback(state: DownloadState, callback: DownloadCallback)改为registerCallback(packageName: String, progress: Int, callback: DownloadCallback)
+  2.7 当多个位置使用同一个回调类时，定义一个回调对象提供器。例如 getDownloadListener()方法
+  2.8 在java代码中怎么使用Flow，转换为asLiveData或者改为接口回调。
+  2.9 业务逻辑与UI逻辑分离，不要在UI层处理业务逻辑，不要在业务层处理UI逻辑。创建不同的UserCase，UIBinder。例如：DownloadAppUserCase，DownloadButtonBinder
+  2.10 不同层的数据模型存在转换，特别是UI层使用State封装，不要直接将数据模型抛给UI层，因为UI层存在多种状态切换。例如：AppUiState。
+  2.11 复用业务逻辑使用UserCase封装。
+
+3.业务实践
+  3.1 对应的新版本 && CTA同意 && 初始化成功 才能使用统一组件，同时做好老版本，不能使用统一组件的处理。
+  3.2 暂停异常，不用处理，因为当前是下载中状态，如果处理会进入死循环，可以考虑添加Toast提示。
+  3.3 AIDL接口断开，处理正在下载状态，修改为暂停；用户操作，减检查是否连接状态，没连接尝试连接一次，连接成功继续执行上传动作。注意如果连接是长的耗时，需要考虑添加loading提示。或者立即返回失败，再去重连
+  3.4 点击详情页，绑定该应用的监听，当用户点击下载并返回时，应用立即更新UI。注意注册是在内存，当用户触发下载才同步到数据库中。
+
+

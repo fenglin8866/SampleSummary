@@ -5,8 +5,10 @@ data class AppUIModel(
     val name: String,
     val icon: String,
     val packageName: String,
-    val appSize:String,
+    val appSize: String,
     val summary: String,
-    val progress: Int,
-    val status: Status
+    val downloadUrl:String,
+    val detailUrl:String,
+    val progress: Int = 0,
+    val status: Status = Status.IDLE,
 )

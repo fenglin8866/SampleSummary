@@ -1,4 +1,4 @@
-package com.xxh.summary.download.sdk
+package com.xxh.summary.download.data.sdk
 
 import com.xxh.summary.download.model.Status
 

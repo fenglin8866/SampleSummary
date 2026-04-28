@@ -6,10 +6,11 @@ import com.xxh.summary.download.data.db.DownloadDao
 import com.xxh.summary.download.data.db.DownloadTaskEntity
 import com.xxh.summary.download.model.DownloadState
 import com.xxh.summary.download.model.Status
-import com.xxh.summary.download.sdk.AppCenterSdk
-import com.xxh.summary.download.sdk.DownloadCallback
+import com.xxh.summary.download.data.sdk.AppCenterSdk
+import com.xxh.summary.download.data.sdk.DownloadCallback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,11 +19,11 @@ import kotlinx.coroutines.launch
 
 object DownloadRepository {
 
+    private const val TAG = "DownloadRepository"
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private val _stateFlow = MutableStateFlow<Map<String, DownloadState>>(emptyMap())
-    val stateFlow: StateFlow<Map<String, DownloadState>> =
-        _stateFlow.asStateFlow()
+    val stateFlow: StateFlow<Map<String, DownloadState>> = _stateFlow.asStateFlow()
 
     private lateinit var sdk: AppCenterSdk
     private lateinit var dao: DownloadDao
@@ -41,7 +42,9 @@ object DownloadRepository {
         }
     }
 
-
+    fun isDownloadEnabled(): Boolean {
+        return sdk.isDownloadEnabled()
+    }
 
     // =========================
     // 下载操作
@@ -52,14 +55,9 @@ object DownloadRepository {
         if (current?.status == Status.DOWNLOADING) return
 
         sdk.download(packageName, callback(packageName))
-
-        /*update(packageName) {
-            it.copy(status = Status.DOWNLOADING)
-        }*/
     }
 
     fun pause(packageName: String) {
-        Log.i("xxh222", "pause $packageName")
         sdk.pause(packageName) { state ->
             update(packageName) { it.copy(progress = state.progress, status = state.status) }
         }
@@ -69,7 +67,6 @@ object DownloadRepository {
         sdk.resume(packageName) { state ->
             update(packageName) { it.copy(progress = state.progress, status = state.status) }
         }
-        // update(packageName) { it.copy(status = Status.DOWNLOADING) }
     }
 
     fun open(packageName: String) {
@@ -93,7 +90,7 @@ object DownloadRepository {
                 update(packageName) {
                     it.copy(progress = 100, status = Status.SUCCESS)
                 }
-               // deleteFromDB(packageName)
+                // deleteFromDB(packageName)
             } else {
                 var progress: Int? = null
                 if (status == Status.IDLE) {
@@ -128,29 +125,32 @@ object DownloadRepository {
 
     private var lastSaveTime = 0L
 
-    private fun saveToDB(state: DownloadState) {
+    private suspend fun saveToDB(state: DownloadState) {
         val now = System.currentTimeMillis()
         // 节流，避免频繁保存
         if (state.status == Status.DOWNLOADING) {
             if (now - lastSaveTime < 1000) return
             lastSaveTime = now
         }
-        scope.launch {
-            dao.insert(
-                DownloadTaskEntity(
-                    packageName = state.packageName,
-                    status = state.status.ordinal,
-                    progress = state.progress,
-                    updateTime = now
-                )
+        dao.insert(
+            DownloadTaskEntity(
+                packageName = state.packageName,
+                status = state.status.ordinal,
+                progress = state.progress,
+                updateTime = now
             )
+        )
+    }
+
+    private fun updateToDB(state: DownloadState) {
+        scope.launch {
+            saveToDB(state)
         }
     }
 
-    private fun deleteFromDB(packageName: String) {
-        scope.launch {
-            dao.delete(packageName)
-        }
+
+    private suspend fun deleteFromDB(packageName: String) {
+        dao.delete(packageName)
     }
 
     // =========================
@@ -170,29 +170,52 @@ object DownloadRepository {
             }.toMutableMap()
 
             // 2. 从 SDK 同步
-            /*val sdkTasks = sdk.getDownloadingList()
-            sdkTasks.forEach {
-                map[it.packageName] = DownloadState(
-                    packageName = it.packageName,
-                    progress = it.progress,
-                    status = Status.DOWNLOADING
-                )
-            }*/
-
             map.forEach { (packageName, state) ->
-                Log.i("xxh333", "${packageName}: $state")
+                Log.i(TAG, " ${packageName}: $state")
                 var restoreState = state
-                val remoteState = sdk.queryDownloadStatus(packageName)
-                if (remoteState != null) {
-                    restoreState = remoteState
-                    map[packageName] = restoreState
-                    saveToDB(restoreState)
+                sdk.queryDownloadStatus(packageName) { remoteState ->
+                    if (remoteState != null) {
+                        restoreState = remoteState
+                        map[packageName] = restoreState
+                        updateToDB(restoreState)
+                    }
                 }
                 // 冷启动恢复没有回调，需要手动注册
-                sdk.registerCallback(restoreState, callback(packageName))
+                sdk.registerCallback(
+                    restoreState.packageName,
+                    restoreState.progress,
+                    callback(packageName)
+                )
             }
-
             _stateFlow.emit(map)
         }
     }
+
+    fun addAppDownloadListener(packageName: String) {
+        sdk.registerCallback(packageName, 0, callback(packageName))
+    }
+
+
+    private var callbackJob: Job? = null
+
+    /**
+     * 避免重复订阅导致泄漏，不要使用stateFlow.value
+     *
+     * stateFlow.value 单次快照
+     * 只获取当前值，后续变化不通知
+     * 查询一次性状态
+     * stateFlow.collect
+     * 立即收到当前值，后续变化持续通知
+     * UI 监听进度、状态同步
+     *
+     */
+    fun downloadCallback(downloadApps: ((Map<String, DownloadState>) -> Unit)?) {
+        callbackJob?.cancel()
+        callbackJob = scope.launch {
+            stateFlow.collect {
+                downloadApps?.invoke(it)
+            }
+        }
+    }
+
 }
