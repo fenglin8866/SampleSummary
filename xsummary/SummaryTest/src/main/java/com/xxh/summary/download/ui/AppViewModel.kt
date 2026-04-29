@@ -16,15 +16,15 @@ import javax.inject.Inject
 @HiltViewModel
 class AppViewModel @Inject constructor(
     private val userCase: DownloadAppUserCase,
-    private val appRepository: AppRepository
+   // private val appRepository: AppRepository
 ) : ViewModel() {
 
-    // 缓存 API 结果，避免重复请求
+   /* // 缓存 API 结果，避免重复请求
     private val apiResult = appRepository.loadTopApps()
-        .stateIn(viewModelScope, SharingStarted.Eagerly, ResultState.Loading)
+        .stateIn(viewModelScope, SharingStarted.Eagerly, ResultState.Loading)*/
 
 
-    val state = userCase.getShowAppsFlow(viewModelScope, apiResult)
+    val state = userCase.getShowAppsFlow(viewModelScope)
 
     fun handleAction(type: ClickType, app: AppUIModel) {
         Log.i("xxh222", "handleClick status: ${app.status}")

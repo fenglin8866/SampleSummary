@@ -12,7 +12,6 @@ import com.xxh.summary.download.model.ClickType
 import com.xxh.summary.download.model.DownloadState
 import com.xxh.summary.download.model.Status
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
