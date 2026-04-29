@@ -1,16 +1,18 @@
 package com.xxh.summary.download.domain
 
+import android.content.Context
+import android.content.Intent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import com.sample.lib.network.model.ResultState
 import com.xxh.summary.download.data.repository.AppRepository
 import com.xxh.summary.download.data.repository.DownloadRepository
-import com.xxh.summary.download.model.AppListResponse
 import com.xxh.summary.download.model.AppUIModel
 import com.xxh.summary.download.model.AppUiState
 import com.xxh.summary.download.model.ClickType
 import com.xxh.summary.download.model.DownloadState
 import com.xxh.summary.download.model.Status
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -19,7 +21,8 @@ import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 
-class DownloadAppUserCase @Inject constructor(
+class DownloadAppUseCase @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val appRepository: AppRepository,
     private val downloadRepository: DownloadRepository
 ) {
@@ -29,52 +32,6 @@ class DownloadAppUserCase @Inject constructor(
     ): StateFlow<AppUiState> {
         return combine(
             appRepository.loadTopApps(),
-            downloadRepository.stateFlow
-        )
-        { result, downloadMap ->
-            when (result) {
-                is ResultState.Success -> {
-                    val apps = result.data?.dataList ?: emptyList()
-                    if (apps.isEmpty()) {
-                        AppUiState.Error("No data")
-                    } else {
-                        val model = apps.map { app ->
-                            val state =
-                                downloadMap[app.packageName] ?: DownloadState(app.packageName)
-                            AppUIModel(
-                                app.appId,
-                                app.name,
-                                app.icon,
-                                app.packageName,
-                                app.appSize,
-                                app.summary,
-                                app.downloadUrl,
-                                app.detailUrl,
-                                state.progress,
-                                state.status
-                            )
-                        }
-                        AppUiState.Success(model)
-                    }
-                }
-
-                is ResultState.Error -> AppUiState.Error(result.error.message ?: "")
-                is ResultState.Loading -> AppUiState.Loading
-                is ResultState.Idle -> AppUiState.Idle
-            }
-        }.stateIn(
-            scope,
-            SharingStarted.WhileSubscribed(5000),
-            AppUiState.Loading
-        )
-    }
-
-    fun getShowAppsFlow(
-        scope: CoroutineScope,
-        appResult: StateFlow<ResultState<AppListResponse>>
-    ): StateFlow<AppUiState> {
-        return combine(
-            appResult,
             downloadRepository.stateFlow
         )
         { result, downloadMap ->
@@ -161,7 +118,16 @@ class DownloadAppUserCase @Inject constructor(
     }
 
     fun jumpDeepLink(url: String) {
-
+        try {
+            val intent=Intent.parseUri(url, Intent.URI_INTENT_SCHEME)
+            intent.flags=Intent.FLAG_ACTIVITY_NEW_TASK
+            if(url.startsWith("market://")){
+                intent.setPackage("cn.nubia.neostore")
+            }
+            context.startActivity(intent)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     fun downloadCallback(downloadApps: ((Map<String, DownloadState>) -> Unit)?) {

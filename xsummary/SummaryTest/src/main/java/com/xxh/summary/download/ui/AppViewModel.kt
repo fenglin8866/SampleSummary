@@ -3,19 +3,15 @@ package com.xxh.summary.download.ui
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sample.lib.network.model.ResultState
-import com.xxh.summary.download.data.repository.AppRepository
 import com.xxh.summary.download.model.AppUIModel
-import com.xxh.summary.download.domain.DownloadAppUserCase
+import com.xxh.summary.download.domain.DownloadAppUseCase
 import com.xxh.summary.download.model.ClickType
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
 class AppViewModel @Inject constructor(
-    private val userCase: DownloadAppUserCase,
+    private val userCase: DownloadAppUseCase,
    // private val appRepository: AppRepository
 ) : ViewModel() {
 
