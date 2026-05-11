@@ -14,6 +14,7 @@ class AppRepository @Inject constructor(private val api: AppApi) : BaseRepositor
     /* suspend fun loadApps(): List<AppInfo>? {
          return api.getApps(NetworkUtil.getCommonParams()).data
      }*/
+    //根据场景添加不同的过期机制。
     private var cache: BaseResponse<AppListResponse>? = null
 
     fun loadTopApps() = request {
