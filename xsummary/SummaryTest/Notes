@@ -23,6 +23,8 @@ stateFlow.collect
 Flow，StateFlow，SharedFlow的异同点，使用场景
 参考README.md文档
 
+注意协程中线程的切换，UI更新不能再IO线程中操作。
+
 2.开发实践
   2.1 综合判断哪些是类使用object，哪些使用hilt，
   2.2 不同层级之间的解耦，耦合。例如数据层，领域层，UI层，不一定是一一对应的，例如AppRepository可能对应多个UI层。
